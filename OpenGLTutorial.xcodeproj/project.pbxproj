@@ -24,7 +24,7 @@
 		9204468F19FB755800A43D6A /* TestEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9204468D19FB755800A43D6A /* TestEvents.cpp */; };
 		9204469219FB915500A43D6A /* TestTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9204469019FB915500A43D6A /* TestTests.cpp */; };
 		9204469719FBE3FE00A43D6A /* Testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9204469619FBE3FE00A43D6A /* Testing.cpp */; };
-		923ED9C119E5BDE500E202F1 /* ConfigFile2.m in Sources */ = {isa = PBXBuildFile; fileRef = 923ED9C019E5BDE500E202F1 /* ConfigFile2.m */; };
+		9216C8971A02416B009E1BAE /* Playground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9216C8951A02416B009E1BAE /* Playground.cpp */; };
 		92758F3719E1A8B70091A35F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 92758F3619E1A8B70091A35F /* main.m */; };
 		92758F3A19E1A8B70091A35F /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92758F3919E1A8B70091A35F /* AppDelegate.mm */; };
 		92758F3C19E1A8B80091A35F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92758F3B19E1A8B80091A35F /* Images.xcassets */; };
@@ -41,7 +41,6 @@
 		92758F7019E1CD960091A35F /* ConfigFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 92758F6819E1CD960091A35F /* ConfigFile.m */; };
 		92758F7119E1CD960091A35F /* ResourceFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 92758F6A19E1CD960091A35F /* ResourceFile.m */; };
 		929A135919FBF5D800CA42A2 /* CPPEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 929A135719FBF5D800CA42A2 /* CPPEventHandler.cpp */; };
-		929A135C19FBFDB600CA42A2 /* TestEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 929A135A19FBFDB600CA42A2 /* TestEventHandler.cpp */; };
 		929A135F19FC24A000CA42A2 /* CPPEventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 929A135D19FC24A000CA42A2 /* CPPEventManager.cpp */; };
 		92B09B7519FBECED008D7B03 /* CPPQueue.h in Sources */ = {isa = PBXBuildFile; fileRef = 9204467C19FB384700A43D6A /* CPPQueue.h */; };
 /* End PBXBuildFile section */
@@ -93,8 +92,8 @@
 		9204469019FB915500A43D6A /* TestTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestTests.cpp; sourceTree = "<group>"; };
 		9204469119FB915500A43D6A /* TestTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTests.h; sourceTree = "<group>"; };
 		9204469619FBE3FE00A43D6A /* Testing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Testing.cpp; sourceTree = "<group>"; };
-		923ED9BF19E5BDE500E202F1 /* ConfigFile2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigFile2.h; sourceTree = "<group>"; };
-		923ED9C019E5BDE500E202F1 /* ConfigFile2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigFile2.m; sourceTree = "<group>"; };
+		9216C8951A02416B009E1BAE /* Playground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Playground.cpp; sourceTree = "<group>"; };
+		9216C8961A02416B009E1BAE /* Playground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playground.h; sourceTree = "<group>"; };
 		92758F3119E1A8B70091A35F /* OpenGLTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenGLTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92758F3519E1A8B70091A35F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92758F3619E1A8B70091A35F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -127,8 +126,6 @@
 		92758F6A19E1CD960091A35F /* ResourceFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceFile.m; sourceTree = "<group>"; };
 		929A135719FBF5D800CA42A2 /* CPPEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CPPEventHandler.cpp; sourceTree = "<group>"; };
 		929A135819FBF5D800CA42A2 /* CPPEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPEventHandler.h; sourceTree = "<group>"; };
-		929A135A19FBFDB600CA42A2 /* TestEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestEventHandler.cpp; sourceTree = "<group>"; };
-		929A135B19FBFDB600CA42A2 /* TestEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestEventHandler.h; sourceTree = "<group>"; };
 		929A135D19FC24A000CA42A2 /* CPPEventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CPPEventManager.cpp; sourceTree = "<group>"; };
 		929A135E19FC24A000CA42A2 /* CPPEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPEventManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -268,6 +265,8 @@
 				9204467E19FB420B00A43D6A /* TestResult.cpp */,
 				9204468B19FB6B1A00A43D6A /* Testing.h */,
 				9204469619FBE3FE00A43D6A /* Testing.cpp */,
+				9216C8951A02416B009E1BAE /* Playground.cpp */,
+				9216C8961A02416B009E1BAE /* Playground.h */,
 			);
 			name = Test;
 			sourceTree = "<group>";
@@ -302,8 +301,6 @@
 		92758F2819E1A8B70091A35F = {
 			isa = PBXGroup;
 			children = (
-				923ED9BF19E5BDE500E202F1 /* ConfigFile2.h */,
-				923ED9C019E5BDE500E202F1 /* ConfigFile2.m */,
 				92758F3319E1A8B70091A35F /* OpenGLTutorial */,
 				92758F4719E1A8B80091A35F /* OpenGLTutorialTests */,
 				92758F3219E1A8B70091A35F /* Products */,
@@ -385,8 +382,6 @@
 			children = (
 				9204468E19FB755800A43D6A /* TestEvents.h */,
 				9204468D19FB755800A43D6A /* TestEvents.cpp */,
-				929A135B19FBFDB600CA42A2 /* TestEventHandler.h */,
-				929A135A19FBFDB600CA42A2 /* TestEventHandler.cpp */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -492,12 +487,11 @@
 			files = (
 				92758F6F19E1CD960091A35F /* Configuration.m in Sources */,
 				9204465C19FAE1E100A43D6A /* LoggerEvent.m in Sources */,
+				9216C8971A02416B009E1BAE /* Playground.cpp in Sources */,
 				9204468919FB64C300A43D6A /* CPPEventType.cpp in Sources */,
 				9204466619FB1B0A00A43D6A /* LogHandler.m in Sources */,
 				92758F3A19E1A8B70091A35F /* AppDelegate.mm in Sources */,
-				923ED9C119E5BDE500E202F1 /* ConfigFile2.m in Sources */,
 				92758F7019E1CD960091A35F /* ConfigFile.m in Sources */,
-				929A135C19FBFDB600CA42A2 /* TestEventHandler.cpp in Sources */,
 				929A135919FBF5D800CA42A2 /* CPPEventHandler.cpp in Sources */,
 				9204467319FB309C00A43D6A /* CPPIdentifiable.cpp in Sources */,
 				9204469719FBE3FE00A43D6A /* Testing.cpp in Sources */,

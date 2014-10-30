@@ -13,14 +13,21 @@
 #include "CPPQueue.h"
 #include <memory>
 #include <map>
+#include <set>
 #include "CPPEventHandler.h"
 #include "CPPEvent.h"
 
 class CPPEventManager : public CPPIdentifiable{
 public:
-    
+    static CPPEventManager GED;
+    CPPEventManager();
+    void registerEvent(std::shared_ptr<CPPEvent> event);
+    void notifyByID(unsigned long handlerID, std::shared_ptr<CPPEvent> event);
+    void notifyByType(CPPEventType type, std::shared_ptr<CPPEvent> event);
+    void registerEventHandler(std::shared_ptr<CPPEventHandler> handler);
 private:
+    static CPPEventManager _GolbalEventDispatcher;
     std::map<unsigned long, std::shared_ptr<CPPEventHandler>> _handlersById;
-    CPPQueue<std::shared_ptr<CPPEvent>> _eventQueue;
+    std::map<CPPEventType, std::set<unsigned long>> _handlerIdsByType;
 };
 #endif /* defined(__OpenGLTutorial__CPPEventManager__) */

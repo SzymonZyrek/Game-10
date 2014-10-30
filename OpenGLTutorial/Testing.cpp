@@ -11,19 +11,19 @@
 #include "TestTests.h"
 #include "TestUtils.h"
 #include "TestEvents.h"
-#include "TestEventHandler.h"
+#include "Playground.h"
 
 TestResult Testing::performTests(bool stopOnFailure)
 {
+    Playground::p_main();
 testContext(
     TestTests tt;
     TestUtils tu;
     TestEvents te;
-    TestEventHandler teh;
             
     testModule(tt,"TestsModule")
     testModule(tu,"UtilsModule")
     testModule(te,"EventModule:Event")
-    testModule(teh,"EventModule:EventHandler")
+    //testModule(teh,"EventModule:EventHandler")
 )
 }
