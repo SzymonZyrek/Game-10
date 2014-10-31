@@ -42,12 +42,22 @@ testContext(
     for (int i = 0; i < 4; i++)
     {
         assert(!queue.isFull(),"Queue is \"full\" while it shouldn't be")
-        assert(queue.enqueue(i),"Could not enqueue, when it should work")
+        try {
+            queue.enqueue(i);
+        } catch (std::runtime_error &e) {
+            assert(false, "Could not enqueue, when it should work")
+        }
         assert(!queue.isEmpty(),"Queue is \"empty\" while it shouldn't be")
     }
     assert(queue.isFull(),"Queue isn't \"full\" while it should be")
     assertEquals(queue.getSize(),4,"Queue size is wrong")
-    assert(!queue.enqueue(6),"Queue allowed to enqueue when full")
+    try{
+        queue.enqueue(6);
+        assert(false, "Queue allowed to enqueue when full")
+    } catch (std::runtime_error &e) {
+        // all ok, this should happen
+    }
+            
     for (int i = 0; i < 4; i++)
     {
         assert(!queue.isEmpty(),"Queue is \"empty\" while it shouldn't be")

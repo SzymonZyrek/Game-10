@@ -27,3 +27,13 @@ std::vector<CPPEventType> CPPEventHandler::getHandledTypes() const
 {
     return _types;
 }
+std::ostream& operator<<(std::ostream& os, const CPPEventHandler& e)
+{
+    const CPPIdentifiable & b(e);
+    os << "#" << b.getId()  << "CPPEventHandler for types ";
+    for (CPPEventType typ : e.getHandledTypes())
+    {
+        os << CPPEventUtil::eventTypeAsString(typ) << ",";
+    }
+    return os;
+};

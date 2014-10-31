@@ -1,0 +1,24 @@
+//
+//  Component.h
+//  OpenGLTutorial
+//
+//  Created by Szymon Żyrek on 31/10/14.
+//  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
+//
+
+#ifndef __OpenGLTutorial__Component__
+#define __OpenGLTutorial__Component__
+
+#include <iostream>
+
+class Component {
+public:
+    Component();
+    void setDaddyId(int daddy);
+    int getDaddyId();
+    virtual void update(double dT) = 0;
+protected:
+    int _daddyId;
+};
+
+#endif /* defined(__OpenGLTutorial__Component__) */

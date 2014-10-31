@@ -21,6 +21,7 @@ public:
     virtual ~CPPEventHandler();
     std::vector<CPPEventType> getHandledTypes() const;
     virtual void handleEvent(std::shared_ptr<CPPEvent> event) = 0;
+    friend std::ostream& operator<<(std::ostream& os, const CPPEventHandler& e);
 private:
     std::vector<CPPEventType> _types;
 };

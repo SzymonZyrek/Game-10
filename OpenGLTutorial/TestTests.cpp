@@ -32,7 +32,7 @@ TestResult TestTests::testTestContext(bool stopOnFailure)
 TestResult TestTests::testAssert(bool stopOnFailure)
 {
     testContext(
-        std::string message = "True is false..";
+        std::string message = "True is false.. thas usually not a good sign ;)";
         assert(true, message)
         assert(!false, message)
     )

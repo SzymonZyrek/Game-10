@@ -21,13 +21,16 @@ class CPPEventManager : public CPPIdentifiable{
 public:
     static CPPEventManager GED;
     CPPEventManager();
-    void registerEvent(std::shared_ptr<CPPEvent> event);
+    CPPEventManager(int queueeSize);
+    void notify(std::shared_ptr<CPPEvent> event);
     void notifyByID(unsigned long handlerID, std::shared_ptr<CPPEvent> event);
     void notifyByType(CPPEventType type, std::shared_ptr<CPPEvent> event);
     void registerEventHandler(std::shared_ptr<CPPEventHandler> handler);
+    void handleEvents();
+    void printHandlers();
 private:
-    static CPPEventManager _GolbalEventDispatcher;
     std::map<unsigned long, std::shared_ptr<CPPEventHandler>> _handlersById;
     std::map<CPPEventType, std::set<unsigned long>> _handlerIdsByType;
+    CPPQueue<std::shared_ptr<CPPEvent>> _eventQueue;
 };
 #endif /* defined(__OpenGLTutorial__CPPEventManager__) */

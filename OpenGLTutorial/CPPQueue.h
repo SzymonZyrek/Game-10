@@ -13,6 +13,7 @@
 #include <vector>
 #include <iostream>
 #include "TestResult.h"
+#include <exception>
 
 template <class T> class CPPQueue {
 public:
@@ -49,22 +50,21 @@ public:
     {
         return _full;
     }
-    TestResult enqueue(T elem)
+    void enqueue(T elem)
     {
         if (!_full)
         {
-            std::vector<int>::iterator iter = _inner_vector.begin() + _tail;
+            auto iter = _inner_vector.begin() + _tail;
             _inner_vector.insert(iter, elem);
             _empty = false;
         }else{
-            return TestResult("Queue is full! Cant add more elements");
+            throw std::runtime_error("Queue is full! Cant add more elements");
         }
         _tail = (_tail+1)%_size;
         if (_tail == _head)
         {
             _full = true;
         }
-        return TestResult();
     }
     T dequeue()
     {
@@ -72,7 +72,7 @@ public:
         {
             return 0;
         }
-        T result = _inner_vector[_head];
+        auto result = _inner_vector[_head];
         _full = false;
         _head = (_head + 1)%_size;
         if (_head == _tail)

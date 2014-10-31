@@ -8,6 +8,7 @@
 
 #include "Playground.h"
 #include <stdio.h>
+#include "CPPEventManager.h"
 void Playground::p_main()
 {
     printf("Hello, %s\n", "Szymon");
