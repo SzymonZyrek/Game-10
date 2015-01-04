@@ -44,9 +44,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\DEV\Projects\Game10\lib\glm-0.9.4.0;C:\DEV\Projects\Game10\lib\glew-1.9.0\include;C:\DEV\Projects\Game10\lib\glfw-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\DEV\Projects\Game10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32d.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,6 +68,68 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Aggregation.cpp" />
+    <ClCompile Include="..\..\src\AIComponent.cpp" />
+    <ClCompile Include="..\..\src\BaseRenderer.cpp" />
+    <ClCompile Include="..\..\src\Component.cpp" />
+    <ClCompile Include="..\..\src\Config.cpp" />
+    <ClCompile Include="..\..\src\CPPEvent.cpp" />
+    <ClCompile Include="..\..\src\CPPEventHandler.cpp" />
+    <ClCompile Include="..\..\src\CPPEventManager.cpp" />
+    <ClCompile Include="..\..\src\CPPEventType.cpp" />
+    <ClCompile Include="..\..\src\CPPIdentifiable.cpp" />
+    <ClCompile Include="..\..\src\CPPLogger.cpp" />
+    <ClCompile Include="..\..\src\GameLoop.cpp" />
+    <ClCompile Include="..\..\src\GameObject.cpp" />
+    <ClCompile Include="..\..\src\GameObjectIds.cpp" />
+    <ClCompile Include="..\..\src\InputComponent.cpp" />
+    <ClCompile Include="..\..\src\PhysicalComponent.cpp" />
+    <ClCompile Include="..\..\src\Playground.cpp" />
+    <ClCompile Include="..\..\src\RenderableComponent.cpp" />
+    <ClCompile Include="..\..\src\Scene.cpp" />
+    <ClCompile Include="..\..\src\TestConfig.cpp" />
+    <ClCompile Include="..\..\src\TestEvents.cpp" />
+    <ClCompile Include="..\..\src\TestGameObjects.cpp" />
+    <ClCompile Include="..\..\src\Testing.cpp" />
+    <ClCompile Include="..\..\src\TestResult.cpp" />
+    <ClCompile Include="..\..\src\TestTests.cpp" />
+    <ClCompile Include="..\..\src\TestUtils.cpp" />
+    <ClCompile Include="..\..\src\TestWorlds.cpp" />
+    <ClCompile Include="..\..\src\Tut01Renderer.cpp" />
+    <ClCompile Include="..\..\src\Win32EntryPoint.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Aggregation.h" />
+    <ClInclude Include="..\..\src\AIComponent.h" />
+    <ClInclude Include="..\..\src\BaseRenderer.h" />
+    <ClInclude Include="..\..\src\Component.h" />
+    <ClInclude Include="..\..\src\Config.h" />
+    <ClInclude Include="..\..\src\CPPEvent.h" />
+    <ClInclude Include="..\..\src\CPPEventHandler.h" />
+    <ClInclude Include="..\..\src\CPPEventManager.h" />
+    <ClInclude Include="..\..\src\CPPEventType.h" />
+    <ClInclude Include="..\..\src\CPPIdentifiable.h" />
+    <ClInclude Include="..\..\src\CPPLogger.h" />
+    <ClInclude Include="..\..\src\CPPQueue.h" />
+    <ClInclude Include="..\..\src\GameLoop.h" />
+    <ClInclude Include="..\..\src\GameObject.h" />
+    <ClInclude Include="..\..\src\GameObjectIds.h" />
+    <ClInclude Include="..\..\src\Errors.h" />
+    <ClInclude Include="..\..\src\InputComponent.h" />
+    <ClInclude Include="..\..\src\PhysicalComponent.h" />
+    <ClInclude Include="..\..\src\Playground.h" />
+    <ClInclude Include="..\..\src\RenderableComponent.h" />
+    <ClInclude Include="..\..\src\Scene.h" />
+    <ClInclude Include="..\..\src\TestConfig.h" />
+    <ClInclude Include="..\..\src\TestEvents.h" />
+    <ClInclude Include="..\..\src\TestGameObjects.h" />
+    <ClInclude Include="..\..\src\Testing.h" />
+    <ClInclude Include="..\..\src\TestResult.h" />
+    <ClInclude Include="..\..\src\TestTests.h" />
+    <ClInclude Include="..\..\src\TestUtils.h" />
+    <ClInclude Include="..\..\src\TestWorlds.h" />
+    <ClInclude Include="..\..\src\Tut01Renderer.h" />
+    <ClInclude Include="..\..\src\Win32EntryPoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

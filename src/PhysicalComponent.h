@@ -15,6 +15,8 @@ class GameObjectIds;
 
 class PhysicalComponent : public Component {
 public:
+	PhysicalComponent();
+	PhysicalComponent(PhysicalComponent& other);
     virtual void update(double dT);
     void initWith(PhysicalComponent &component);
 };

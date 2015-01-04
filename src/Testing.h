@@ -25,10 +25,14 @@
 #include<cstdarg>
 #include<iostream>
 #include<stdio.h>
+
+
+
 class TestResult;
 class Testing{
 public:
-    static TestResult performTests(bool stopOnFailure);
+
+	static TestResult performTests(bool stopOnFailure);
 };
 class Test {
 public:

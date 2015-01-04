@@ -8,7 +8,7 @@
 
 #include "TestUtils.h"
 #include "CPPIdentifiable.h"
-#include <memory.h>
+#include <memory>
 #include <iostream>
 #include "CPPQueue.h"
 #include "TestResult.h"

@@ -25,12 +25,16 @@ void CPPEventManager::printHandlers()
     }
 }
 
-CPPEventManager::CPPEventManager() : _eventQueue(BASE_EVENT_QUEUEE_SIZE)
+CPPEventManager::CPPEventManager() : _eventQueueSize(BASE_EVENT_QUEUEE_SIZE)
 {
     
 }
 
-CPPEventManager::CPPEventManager(int queueeSize) : _eventQueue(queueeSize)
+CPPEventManager::~CPPEventManager()
+{
+}
+
+CPPEventManager::CPPEventManager(int queueeSize) : _eventQueueSize(queueeSize)
 {
     
 }
@@ -44,7 +48,11 @@ void CPPEventManager::registerEventHandler(std::shared_ptr<CPPEventHandler> hand
 
 void CPPEventManager::notify(std::shared_ptr<CPPEvent> event)
 {
-    _eventQueue.enqueue(event);
+	if (_eventQueue.size() >= _eventQueueSize)
+	{
+		throw std::runtime_error("Event queue is full! Cant add more elements");
+	}
+    _eventQueue.push(event);
 }
 void CPPEventManager::notifyByID(unsigned long handlerID, std::shared_ptr<CPPEvent> event)
 {
@@ -57,9 +65,9 @@ void CPPEventManager::notifyByType(CPPEventType type, std::shared_ptr<CPPEvent> 
 void CPPEventManager::handleEvents()
 {
     bool handled = false;
-    while (!_eventQueue.isEmpty())
+    while (!_eventQueue.empty())
     {
-        std::shared_ptr<CPPEvent> theEvent = _eventQueue.dequeue();
+		std::shared_ptr<CPPEvent> theEvent = _eventQueue.front();
         for (unsigned long handlerID: _handlerIdsByType[theEvent->getType()])
         {
             _handlersById[handlerID]->handleEvent(theEvent);
@@ -69,5 +77,6 @@ void CPPEventManager::handleEvents()
         {
             //std::cout << "Event " << theEvent << " gone unnoticed!\n";
         }
+		_eventQueue.pop();
     }
 }

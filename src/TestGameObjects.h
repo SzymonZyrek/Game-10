@@ -12,11 +12,14 @@
 
 #include "Testing.h"
 
+class GameObject;
+
 class TestGameObjects : public Test {
 public:
     TestResult doTest(bool stopOnFailure);
+	static GameObject* getTestGamaObject();
 private:
-
+	static GameObject* testGameObject;
 };
 
 #endif /* defined(__OpenGLTutorial__TestGameObjects__) */

@@ -17,15 +17,19 @@ class RenderableComponent;
 class PhysicalComponent;
 class AIComponent;
 class InputComponent;
+class GameObjectIds;
 
 class GameObject {
 public:
     GameObject();
-    void setRenderableComponent(RenderableComponent* component);
+	GameObject(GameObject &other);
+	void setRenderableComponent(RenderableComponent* component);
     void setPhysicalComponent(PhysicalComponent* component);
     void setInputComponent(InputComponent* component);
     void setAIComponent(AIComponent* component);
     void addSpecialComponent(Component* component);
+
+	GameObjectIds* id;
 
     RenderableComponent* getRenderableComponent();
     PhysicalComponent* getPhysicalComponent();

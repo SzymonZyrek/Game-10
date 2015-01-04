@@ -8,13 +8,11 @@
 
 #include "TestWorlds.h"
 #include "TestResult.h"
+#include "Errors.h"
 #include "GameObject.h"
 #include "GameObjectIds.h"
 #include "Scene.h"
-#include "RenderableComponent.h"
-#include "PhysicalComponent.h"
-#include "AIComponent.h"
-#include "InputComponent.h"
+#include "TestGameObjects.h"
 
 TestResult TestWorlds::doTest(bool stopOnFailure)
 {
@@ -24,14 +22,23 @@ TestResult TestWorlds::doTest(bool stopOnFailure)
 }
 TestResult TestWorlds::testScene(bool stopOnFailure)
 {
-    testContext(
-                GameObject* object = new GameObject;
-                object->setAIComponent(new AIComponent());
-                object->setInputComponent(new InputComponent());
-                object->setPhysicalComponent(new PhysicalComponent());
-                object->setRenderableComponent(new RenderableComponent());
+	TestResult result;
                 Scene scene;
-                scene.registerGameObject(object);
-                
-    )
+				GameObject objprt = *TestGameObjects::getTestGamaObject();
+				scene.registerGameObject(&objprt);
+				try
+				{
+					scene.registerGameObject(&objprt);
+				}
+				catch (ErrorCodes err)
+				{
+					if (err != ErrorCodes::REGISTERING_REGISTERED_OBJECT){
+						throw err;
+					}
+				}
+				scene.registerGameObject(new GameObject(objprt));
+				for (int i = 0; i < 10000; i++){
+					scene.update(0.1);
+				}
+	return result;
 }

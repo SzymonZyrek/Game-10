@@ -14,10 +14,11 @@
 #include "CPPEventType.h"
 #include "CPPIdentifiable.h"
 #include <memory>
+#include <initializer_list>
 
 class CPPEventHandler : public CPPIdentifiable {
 public:
-    CPPEventHandler(int num, ...);
+	CPPEventHandler(std::initializer_list<CPPEventType> &types);
     virtual ~CPPEventHandler();
     std::vector<CPPEventType> getHandledTypes() const;
     virtual void handleEvent(std::shared_ptr<CPPEvent> event) = 0;

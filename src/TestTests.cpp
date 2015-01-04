@@ -12,7 +12,6 @@
 #include<iostream>
 
 
-
 TestResult TestTests::doTest(bool stopOnFailure)
 {
     testContext(

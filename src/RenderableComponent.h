@@ -15,7 +15,10 @@ class GameObjectIds;
 
 class RenderableComponent : public Component{
 public:
+	RenderableComponent();
+	RenderableComponent(RenderableComponent& other);
     virtual void update(double dT);
+	void render();
     void initWith(RenderableComponent &component);
 };
 

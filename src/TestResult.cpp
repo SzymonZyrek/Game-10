@@ -36,20 +36,20 @@ std::vector<std::string> TestResult::getErrors() const {
 }
 void TestResult::print(std::string prefix)
 {
-    std::cout << prefix << ":";
+    std::cout << "- " << prefix << ":";
     print();
 }
 void TestResult::print()
 {
     std::stringstream ss;
     if (errors.size()==0){
-        ss << "Result ok";
+        ss << " OK";
     }else{
         ss << "ERRORS:" << std::endl;
         for (std::string str : errors){
             ss << str << std::endl;
         }
     }
-    ss << std::endl;
-    std::cout << ss.str();
+	ss << std::endl;
+	std::cout << ss.str();
 }

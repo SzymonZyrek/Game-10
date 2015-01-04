@@ -8,16 +8,14 @@
 
 #include "CPPEventHandler.h"
 #include "CPPEventType.h"
+#include <initializer_list>
 
-CPPEventHandler::CPPEventHandler(int num, ...)
+CPPEventHandler::CPPEventHandler(std::initializer_list<CPPEventType> &types)
 {
-    va_list arguments;
-    va_start(arguments, num);
-    for (int j = 0; j < num; j++) {
-        CPPEventType type = (CPPEventType)va_arg(arguments, int);
+	for (auto it = types.begin(); it != types.end(); ++it) {
+		CPPEventType type = *it;
         this->_types.push_back(type);
     }
-    va_end(arguments);
 }
 CPPEventHandler::~CPPEventHandler()
 {

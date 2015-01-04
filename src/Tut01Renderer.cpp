@@ -1,34 +1,60 @@
-//
-//  Tut01Renderer.cpp
-//  OpenGLTutorial
-//
-//  Created by Szymon Żyrek on 05/10/14.
-//  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
-//
+
+
 
 #include "Tut01Renderer.h"
-#include <OpenGl/gl.h>
+#include <GL/glew.h>
+#include "GLFW\glfw3.h"
 #include <iostream>
 #include "CPPIdentifiable.h"
 #include <memory>
 #include "Testing.h"
 #include "TestResult.h"
-
-static void another_silly_a_la_main_for_prototyping()
-{
-    Testing::performTests(false);
-}
+#include <glm/glm.hpp>
+#include "CPPLogger.h"
 
 void Tut01Renderer::init()
 {
-    shitfDirection = 1;
-    shitf = 0.0f;
-    another_silly_a_la_main_for_prototyping();
+	
+
+	glfwMakeContextCurrent(window);
+
+	glewExperimental = true;
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Failed to initialize GLEW\n");
+	}
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
+
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	shitfDirection = 1;
+	shitf = 0.0f;
+
+	// Enable depth test
+	//glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	//glDepthFunc(GL_LESS);
+
+	// Cull triangles which normal is not towards the camera
+	//glEnable(GL_CULL_FACE);
+
+	//glGenVertexArrays(1, &VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
+
+	// Create and compile our GLSL program from the shaders
+	//programID = LoadShaders("TransformVertexShader.vertexshader", "TextureFragmentShader.fragmentshader");
+
+	// Shader data placeholders
+	//MatrixID = glGetUniformLocation(programID, "MVP");
+	//TextureID = glGetUniformLocation(programID, "myTextureSampler");
+	//this->camera = std::make_shared<Camera>(window);
+    
 }
 
 void Tut01Renderer::update()
 {
-#define SHIFT_MOVE 0.005f
+#define SHIFT_MOVE 0.f
     if (shitfDirection==1)
     {
         shitf += SHIFT_MOVE;
@@ -41,6 +67,7 @@ void Tut01Renderer::update()
             shitfDirection = 1;
         }
     }
+	Log::debug("Update",DebugKey::RENDERING);
 }
 
 void Tut01Renderer::render()

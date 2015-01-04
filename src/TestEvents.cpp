@@ -53,9 +53,9 @@ TestResult TestEvents::testEventHandlers(bool stopOnFailure)
 
 void fireEvent()
 {
-    TestEvent* eP = &tev;
-    CPPEventManager::GED.notify(std::shared_ptr<TestEvent>(eP));
-    //CPPEventManager::GED.notify(std::make_shared<TestEvent>(TEST_PAYLOAD2));
+    //TestEvent* eP = &tev;
+    //CPPEventManager::GED.notify(std::make_shared<TestEvent>(eP));
+    CPPEventManager::GED.notify(std::make_shared<TestEvent>(TEST_PAYLOAD2));
 }
 
 TestResult TestEvents::testGlobalEventManager(bool stopOnFailure)
@@ -96,6 +96,7 @@ TestResult TestEvents::testEventManager(bool stopOnFailure)
                 // enqueuee some more, should work as queuee just got emptied
                 manager.notify(std::make_shared<TestEvent>(5));
                 manager.notify(std::make_shared<TestEvent>(6));
+				manager.handleEvents();
     )
 }
 
@@ -110,7 +111,7 @@ TestEvent::TestEvent(int load) : CPPEvent(Events_TEST)
 
 // TestHandler test class- example handler for TestEvent
 //---------------------------------------------------
-TestHandler::TestHandler() : CPPEventHandler(1, Events_TEST){}
+TestHandler::TestHandler() : CPPEventHandler(std::initializer_list<CPPEventType>{ Events_TEST }){}
 void TestHandler::handleEvent(std::shared_ptr<CPPEvent> event)
 {
     std::shared_ptr<TestEvent> derived =

@@ -17,35 +17,35 @@ void GameObjectIds::setPhysicalComponent(int index){
     this->_bodyIndex = index;
 }
 void GameObjectIds::setInputComponent(int index){
-    this->_inputIndex = index;
+	this->_inputIndex = index;
 }
 void GameObjectIds::setAIComponent(int index){
-    this->_aiIndex = index;
+	this->_aiIndex = index;
 }
 void GameObjectIds::addSpecialComponent(int index){
-    this->_specialComponentIndices.push_back(index);
+	this->_specialComponentIndices.push_back(index);
 }
 
 bool GameObjectIds::hasRenderableComponent(){
-    return (_renderableIndex!=-1);
+	return (_renderableIndex != -1);
 }
 bool GameObjectIds::hasPhysicalComponent(){
-    return (_bodyIndex!=-1);
+	return (_bodyIndex != -1);
 }
 bool GameObjectIds::hasInputComponent(){
-    return (_inputIndex!=-1);
+	return (_inputIndex != -1);
 }
 bool GameObjectIds::hasAIComponent(){
-    return (_aiIndex!=-1);
+	return (_aiIndex != -1);
 }
 bool GameObjectIds::hasSpecialComponents(){
-    return (_specialComponentIndices.size() > 0);
+	return (_specialComponentIndices.size() > 0);
 }
 bool GameObjectIds::isActive()
 {
-    return _active;
+	return _active;
 }
 void GameObjectIds::setActive(bool value)
 {
-    this->_active = value;
+	this->_active = value;
 }

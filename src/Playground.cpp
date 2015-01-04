@@ -9,7 +9,16 @@
 #include "Playground.h"
 #include <stdio.h>
 #include "CPPEventManager.h"
+#include <iostream>
+#include "GameLoop.h"
+
 void Playground::p_main()
 {
+	std::cout 
+		<< "----------------------\n"
+		<< "|     Playground     |\n"
+		<< "----------------------\n";
     printf("Hello, %s\n", "Szymon");
+	GameLoop loop;
+	loop.start();
 }

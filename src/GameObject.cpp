@@ -7,10 +7,30 @@
 //
 
 #include "GameObject.h"
+#include "AIComponent.h"
+#include "RenderableComponent.h"
+#include "InputComponent.h"
+#include "PhysicalComponent.h"
+#include "CPPLogger.h"
 
 GameObject::GameObject()
 {
     this->_active = false;
+	Log::debug("GameObject constrcuted with default constructor\n", DebugKey::OBJECT_CREATION);
+}
+GameObject::GameObject(GameObject &other)
+{
+	//reset id, will be re-assigned on registration
+	this->id = nullptr;
+	if (other.hasAIComponent())
+		this->_ai = new AIComponent(*other.getAIComponent());
+	if (other.hasInputComponent())
+		this->_input = new InputComponent(*other.getInputComponent());
+	if (other.hasPhysicalComponent())
+		this->_body = new PhysicalComponent(*other.getPhysicalComponent());
+	if (other.hasRenderableComponent())
+		this->_renderable = new RenderableComponent(*other.getRenderableComponent());
+	Log::debug("GameObject constrcuted with ref copy construcor\n", DebugKey::OBJECT_CREATION);
 }
 void GameObject::setRenderableComponent(RenderableComponent* component)
 {
@@ -41,19 +61,19 @@ std::vector<Component*> GameObject::getSpecialComponents(){return _specialCompon
 
 bool GameObject::hasRenderableComponent()
 {
-    return _renderable;
+    return (_renderable!=NULL);
 }
 bool GameObject::hasPhysicalComponent()
 {
-    return _body;
+	return (_body != NULL);
 }
 bool GameObject::hasInputComponent()
 {
-    return _input;
+	return (_input != NULL);
 }
 bool GameObject::hasAIComponent()
 {
-    return _ai;
+	return (_ai != NULL);
 }
 bool GameObject::hasSpecialComponents()
 {

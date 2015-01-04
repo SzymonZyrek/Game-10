@@ -7,6 +7,9 @@
 //
 
 #include "Scene.h"
+#include "GameObjectIds.h"
+#include <sstream>
+#include "Errors.h"
 
 Scene::Scene() {
     
@@ -19,35 +22,27 @@ void Scene::update(double dT)
         AIComponent &tais = _ais[i];
         if (_gameObjects[tais.getDaddyId()].isActive()){
             _ais[i].update(dT);
-        }else{
-            break;
         }
     }
     for (int i = 0; i < _inputsCount; i++)
     {
         InputComponent &ti = _inputs[i];
         if (_gameObjects[ti.getDaddyId()].isActive()){
-            _ais[i].update(dT);
-        }else{
-            break;
+			_inputs[i].update(dT);
         }
     }
-    for (int i = 0; i < _aisCount; i++)
+    for (int i = 0; i < _bodiesCount; i++)
     {
-        AIComponent &tais = _ais[i];
-        if (_gameObjects[tais.getDaddyId()].isActive()){
-            _ais[i].update(dT);
-        }else{
-            break;
+        PhysicalComponent &body = _bodies[i];
+		if (_gameObjects[body.getDaddyId()].isActive()){
+            _bodies[i].update(dT);
         }
     }
-    for (int i = 0; i < _aisCount; i++)
+    for (int i = 0; i < _renderablesCount; i++)
     {
-        AIComponent &tais = _ais[i];
-        if (_gameObjects[tais.getDaddyId()].isActive()){
-            _ais[i].update(dT);
-        }else{
-            break;
+        RenderableComponent &renderable = _renderables[i];
+        if (_gameObjects[renderable.getDaddyId()].isActive()){
+            _renderables[i].update(dT);
         }
     }
 }
@@ -55,14 +50,20 @@ void Scene::update(double dT)
 void Scene::registerGameObject(GameObject* object)
 {
     if (_gameObjectsCount >= MAX_GAME_OBJECTS){
-        throw "TOO MANY OBJECTS!";
+        throw ErrorCodes::GAMEOBJECTS_OVERFLOW;
     }
+	if (object->id != nullptr) {
+		throw ErrorCodes::REGISTERING_REGISTERED_OBJECT;
+	}
+	else{
+		object->id = &_gameObjects[_gameObjectsCount];
+	}
     // register all components
     int daddyId = _gameObjectsCount;
     if (object->hasAIComponent())
     {
         if (_aisCount >= MAX_GAME_OBJECTS){
-            throw "TOO MANY AIs!";
+            throw ErrorCodes::AI_OVERFLOW;
         }
         _ais[_aisCount].initWith(*object->getAIComponent());
         _ais[_aisCount].setDaddyId(daddyId);
@@ -72,7 +73,7 @@ void Scene::registerGameObject(GameObject* object)
     if (object->hasInputComponent())
     {
         if (_inputsCount >= MAX_GAME_OBJECTS){
-            throw "TOO MANY inputs!";
+            throw ErrorCodes::INPUTS_OVERFLOW;
         }
         _inputs[_inputsCount].initWith(*object->getInputComponent());
         _inputs[_inputsCount].setDaddyId(daddyId);
@@ -82,7 +83,7 @@ void Scene::registerGameObject(GameObject* object)
     if (object->hasPhysicalComponent())
     {
         if (_bodiesCount >= MAX_GAME_OBJECTS){
-            throw "TOO MANY bodies!";
+            throw ErrorCodes::BODIES_OVERFLOW;
         }
         _bodies[_bodiesCount].initWith(*object->getPhysicalComponent());
         _bodies[_bodiesCount].setDaddyId(daddyId);
@@ -92,7 +93,7 @@ void Scene::registerGameObject(GameObject* object)
     if (object->hasRenderableComponent())
     {
         if (_renderablesCount >= MAX_GAME_OBJECTS){
-            throw "TOO MANY renderables!";
+			throw ErrorCodes::RENDERABLES_OVERFLOW;
         }
         _renderables[_renderablesCount].initWith(*object->getRenderableComponent());
         _renderables[_renderablesCount].setDaddyId(daddyId);

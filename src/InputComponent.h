@@ -16,7 +16,9 @@ class GameObjectIds;
 class InputComponent : public Component{
 public:
     virtual void update(double dT);
-    void initWith(InputComponent &component);
+	InputComponent();
+	InputComponent(InputComponent& other);
+	void initWith(InputComponent &component);
 };
 
 #endif /* defined(__OpenGLTutorial__InputComponent__) */

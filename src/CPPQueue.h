@@ -26,6 +26,9 @@ public:
         _empty = true;
         _full = false;
     }
+	~CPPQueue(){
+		_inner_vector.clear();
+	}
     int getHead()
     {
         return _head;
@@ -70,7 +73,7 @@ public:
     {
         if (_empty)
         {
-            return 0;
+            return NULL;
         }
         auto result = _inner_vector[_head];
         _full = false;

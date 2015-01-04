@@ -10,10 +10,10 @@
 #define __OpenGLTutorial__CPPEventManager__
 
 #include "CPPIdentifiable.h"
-#include "CPPQueue.h"
 #include <memory>
 #include <map>
 #include <set>
+#include <queue>
 #include "CPPEventHandler.h"
 #include "CPPEvent.h"
 
@@ -21,6 +21,7 @@ class CPPEventManager : public CPPIdentifiable{
 public:
     static CPPEventManager GED;
     CPPEventManager();
+	~CPPEventManager();
     CPPEventManager(int queueeSize);
     void notify(std::shared_ptr<CPPEvent> event);
     void notifyByID(unsigned long handlerID, std::shared_ptr<CPPEvent> event);
@@ -31,6 +32,7 @@ public:
 private:
     std::map<unsigned long, std::shared_ptr<CPPEventHandler>> _handlersById;
     std::map<CPPEventType, std::set<unsigned long>> _handlerIdsByType;
-    CPPQueue<std::shared_ptr<CPPEvent>> _eventQueue;
+    std::queue<std::shared_ptr<CPPEvent>> _eventQueue;
+	int _eventQueueSize;
 };
 #endif /* defined(__OpenGLTutorial__CPPEventManager__) */

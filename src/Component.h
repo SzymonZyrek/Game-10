@@ -16,9 +16,13 @@ public:
     Component();
     void setDaddyId(int daddy);
     int getDaddyId();
+	bool isActive();
     virtual void update(double dT) = 0;
 protected:
-    int _daddyId;
+    int _daddyId = -1;
+	bool _active = false;
+protected:
+	unsigned int _logPeriodicKey;
 };
 
 #endif /* defined(__OpenGLTutorial__Component__) */

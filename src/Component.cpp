@@ -7,15 +7,21 @@
 //
 
 #include "Component.h"
+#include "CPPLogger.h"
 
 Component::Component()
 {
-    
+	this->_logPeriodicKey = Log::getInstance()->getLogPeriodicKey(2.0);
 }
 void Component::setDaddyId(int daddy){
-    this->_daddyId = daddy;
+	this->_daddyId = daddy;
+	this->_active = true;
 }
 int Component::getDaddyId()
 {
-    return this->_daddyId;
+	return this->_daddyId;
+}
+bool Component::isActive()
+{
+	return _active;
 }

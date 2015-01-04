@@ -11,12 +11,21 @@
 
 #include "Component.h"
 
+enum Attitude { SCARED, FRIENDLY, ALLY, INDIFFERENT, ANGRY, HOSTILE };
+
 class GameObjectIds;
 
 class AIComponent : public Component{
 public:
+	AIComponent();
+	AIComponent(AIComponent& other);
+	AIComponent(Attitude att);
     virtual void update(double dT);
     void initWith(AIComponent &component);
+	Attitude getAttitude();
+	void setAttitude(Attitude att);
+private:
+	Attitude _attitude;
 };
 
 #endif /* defined(__OpenGLTutorial__AIComponent__) */
