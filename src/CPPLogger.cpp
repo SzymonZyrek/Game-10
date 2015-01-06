@@ -26,7 +26,8 @@ std::map<DebugKey, std::string> Log::getDebugKeyToString() {
 		{ DebugKey::OBJECT_DESTRUCTION, "OBJECT_DESTRUCTION" },
 		{ DebugKey::COPY_CONSTRUCTORS, "COPY_CONSTRUCTORS" },
 		{ DebugKey::RENDERING, "RENDERING" },
-		{ DebugKey::ACCUMULATOR, "ACCUMULATOR" }
+		{ DebugKey::ACCUMULATOR, "ACCUMULATOR" },
+		{ DebugKey::GL_ERRORS, "GL_ERRORS" }
 	};
 	return result;
 }
@@ -41,7 +42,8 @@ std::map<std::string, DebugKey> Log::getStringToDebugKey() {
 		{ "OBJECT_DESTRUCTION", DebugKey::OBJECT_DESTRUCTION },
 		{ "COPY_CONSTRUCTORS", DebugKey::COPY_CONSTRUCTORS },
 		{ "RENDERING", DebugKey::RENDERING },
-		{ "ACCUMULATOR", DebugKey::ACCUMULATOR }
+		{ "ACCUMULATOR", DebugKey::ACCUMULATOR },
+		{ "GL_ERRORS", DebugKey::GL_ERRORS }
 	};
 	return result;
 }
@@ -205,65 +207,79 @@ void Log::debugPeriodic(std::string msg, int key, DebugKey dkey)
 				message << "/" << debugKeyAsString(dkey) << "/: ";
 			}
 			message << msg;
-			_instance->printToLogFile(message.str());
+			if (Config::isDebugToFile())
+			{
+				_instance->printToLogFile(message.str());
+			}
+			if (Config::isDebugToConsole())
+			{
+				std::stringstream tempss;
+				tempss << message.str() << std::endl;
+				_instance->printToConsole(tempss.str());
+			}
 			_instance->_lastLogByKey[key] = clock() / CLOCKS_PER_SEC;
 		}
 	}
 }
 
-void populateParams(std::string message, std::vector<std::vector<std::string>> &params)
+void  Log::periodicAggregate(std::string msg, std::vector<std::string(*)(std::vector<std::string>&)> functions, int key, DebugKey dkey)
 {
-	std::vector<std::string> paramsRow;
-	//param is everyting surrounded with "[" and "]"
-	std::regex param("^(.*)\\[(.*)\\](.*)");
-	//this formatter extracts param value from above regex
-	std::string extract("$2");
-	//this formatter uses above param regex to cut out the param and leave rest of text for futher processing
-	std::string cutOut("$1$3");
+	if (_instance->_activeDebugKeys.find(dkey) != _instance->_activeDebugKeys.end()){
+		clock_t now = clock() / CLOCKS_PER_SEC;
+		double last = _instance->_lastLogByKey[key];
+		double period = _instance->_periodsByKey[key];
 
-	std::string temp = message;
+		populateParams(msg, _instance->_aggregationParamsByKey[key]);
 
-	//read params from "one" text into vector
-	while (std::regex_match(temp, param)){
-		std::string extracted = std::regex_replace(temp, param, extract, std::regex_constants::format_default);
-		paramsRow.push_back(extracted);
-		temp = std::regex_replace(temp, param, cutOut, std::regex_constants::format_default);
+		if (now - last > period){
+			int paramNumber = 0;
+			std::string temp = msg;
+			for (int i = functions.size() - 1; i >= 0; i--)
+			{
+				temp = aggregate(temp, _instance->_aggregationParamsByKey[key], paramNumber++, functions[i]);
+			}
+			std::stringstream message;
+			message << "DEBUG:";
+			if (Config::isShowDebugKeys()){
+				message << "/" << debugKeyAsString(dkey) << "/: ";
+			}
+			message << temp;
+			if (Config::isDebugToFile())
+			{
+				_instance->printToLogFile(message.str());
+			}
+			if (Config::isDebugToConsole())
+			{
+				std::stringstream tempss;
+				tempss << message.str() << std::endl;
+				_instance->printToConsole(tempss.str());
+			}
+			_instance->_lastLogByKey[key] = clock() / CLOCKS_PER_SEC;
+			_instance->_aggregationParamsByKey[key].clear();
+		}
 	}
-
-	params.push_back(paramsRow);
 }
-
-void Log::periodicAggregate(std::string msg, int key, std::vector<std::string(*)(std::string input, std::vector<std::vector<std::string>> &params, int paramNumber)> functions)
+void Log::periodicAggregate(std::string msg, std::vector<std::string(*)(std::vector<std::string>&)> functions, int key)
 {
 	clock_t now = clock() / CLOCKS_PER_SEC;
 	double last = _instance->_lastLogByKey[key];
 	double period = _instance->_periodsByKey[key];
 	
-	if (_instance->_aggregationSumByKey.find(key) == _instance->_aggregationSumByKey.end() || _instance->_aggregationSumByKey[key] == "")
-	{
-		populateParams(msg, _instance->_aggregationParamsByKey[key]);
-		_instance->_aggregationSumByKey[key] = msg;
-	}
-	else
-	{
-		populateParams(msg, _instance->_aggregationParamsByKey[key]);
-		int paramNumber = 0;
-		std::string temp=msg;
-		for (int i = functions.size()-1; i >= 0; i--)
-		{
-			temp = functions[i](temp, _instance->_aggregationParamsByKey[key], paramNumber++);
-		}
-		_instance->_aggregationSumByKey[key] = temp;
-	}
+	populateParams(msg, _instance->_aggregationParamsByKey[key]);
 	
 	if (now - last > period){
+		int paramNumber = 0;
+		std::string temp = msg;
+		for (int i = functions.size() - 1; i >= 0; i--)
+		{
+			temp = aggregate(temp, _instance->_aggregationParamsByKey[key], paramNumber++, functions[i]);
+		}
 		std::stringstream message;
-		message << "AGGREGATE:" << _instance->_aggregationSumByKey[key] << std::endl;
+		message << "INFO:" << temp;
 		if (Config::isDebugToFile())
 		_instance->printToLogFile(message.str());
 		_instance->printToConsole(message.str());
 		_instance->_lastLogByKey[key] = clock() / CLOCKS_PER_SEC;
-		_instance->_aggregationSumByKey[key] = "";
 		_instance->_aggregationParamsByKey[key].clear();
 	}
 }

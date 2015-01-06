@@ -3,6 +3,7 @@
 #include "CPPLogger.h"
 #include <sstream>
 #include <regex>
+#include <random>
 #include "Tut01Renderer.h"
 #define STEP 1/60
 
@@ -11,6 +12,7 @@ float GameLoop::deltaTime;
 float GameLoop::fps;
 
 unsigned int accumulatorLogKey = Log::getInstance()->getLogPeriodicKey(5.0);
+unsigned int accumulatorLogKey2 = Log::getInstance()->getLogPeriodicKey(3.0);
 
 GameLoop::GameLoop()
 {
@@ -47,23 +49,39 @@ void GameLoop::pause()
 
 void GameLoop::run()
 {
-	frameTime = (float)glfwGetTime();
-	deltaTime = float(frameTime - _lastTime);
-	_accumulator += deltaTime;
-	fps = 1 / deltaTime;
-
-	if (_accumulator >= STEP)
+	try
 	{
-		std::stringstream ss;
-		std::stringstream paramstream;
-		paramstream << _accumulator - STEP;
-		std::string param = AGGREGATION_PARAM(paramstream.str());
-		ss << "Accumulator overflow: Min: " << param << " Max: " << param << " Avg: " << param;
-		Log::periodicAggregate(ss.str(), accumulatorLogKey, { MIN_DOUBLE, MAX_DOUBLE, AVERAGE_DOUBLE});
-		_renderer.update();
-		_renderer.render();
-		_accumulator = 0;
-	}
+		static std::default_random_engine generator;
+		static std::uniform_int_distribution<int> distribution(1, 100);
 
-	_lastTime = frameTime;
+		frameTime = (float)glfwGetTime();
+		deltaTime = float(frameTime - _lastTime);
+		_accumulator += deltaTime;
+		fps = 1 / deltaTime;
+
+		if (_accumulator >= STEP)
+		{
+			std::stringstream ss;
+			std::stringstream paramstream;
+			paramstream << _accumulator - STEP;
+			AggregationParam param = AggregationParam(paramstream.str(), AggregationParamType::DOUBLE);
+			ss << "Accumulator overflow: Min: " << param << " Max: " << param << " Avg: " << param;
+			Log::periodicAggregate(ss.str(), { AGGREGATE_MIN, AGGREGATE_MAX, AGGREGATE_AVERAGE }, accumulatorLogKey, DebugKey::ACCUMULATOR);
+
+
+			_renderer.update();
+			_renderer.render();
+			_accumulator = 0;
+		}
+
+		_lastTime = frameTime;
+	}
+	catch (std::string err)
+	{
+		Log::error(err);
+	}
+	catch (char *err)
+	{
+		Log::error(std::string(err));
+	}
 }

@@ -8,7 +8,7 @@
 #include "Aggregation.h"
 
 enum DebugKey {
-	EVENTS, OBJECT_CREATION, OBJECT_DESTRUCTION, COPY_CONSTRUCTORS, CONFIGURATION, LOGGING, RENDERING, ACCUMULATOR
+	EVENTS, OBJECT_CREATION, OBJECT_DESTRUCTION, COPY_CONSTRUCTORS, CONFIGURATION, LOGGING, RENDERING, ACCUMULATOR, GL_ERRORS
 };
 
 class Log
@@ -30,7 +30,8 @@ public:
 	static void debug(std::string msg, DebugKey key);
 	static void debugPeriodic(std::string msg, int key, DebugKey dkey);
 	static DebugKey debugKeyFromString(std::string keyAsString);
-	static void periodicAggregate(std::string msg, int key, std::vector<std::string(*)(std::string input, std::vector<std::vector<std::string>> &params, int paramNumber)> functions);
+	static void periodicAggregate(std::string msg, std::vector<std::string(*)(std::vector<std::string>&)> functions, int key);
+	static void periodicAggregate(std::string msg, std::vector<std::string(*)(std::vector<std::string>&)> functions, int key, DebugKey dkey);
 	static std::string debugKeyAsString(DebugKey key);
 	void flush();
 private:
@@ -38,7 +39,6 @@ private:
 	bool _logToConsole = false;
 	std::map<int, double> _periodsByKey;
 	std::map<int, double> _lastLogByKey;
-	std::map<int, std::string> _aggregationSumByKey;
 	std::map<int, std::vector<std::vector<std::string>>> _aggregationParamsByKey;
 	static std::set<DebugKey> _activeDebugKeys;
 	bool _logToFile;

@@ -2,9 +2,13 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <sstream>
+#include "CPPLogger.h"
+
 
 BaseRenderer::BaseRenderer()
 {
+	glErrorlogPeriodicKey = Log::getInstance()->getLogPeriodicKey(2);
 	if (!glfwInit())
 	{
 		fprintf(stderr, "Failed to initialize GLFW\n");
@@ -27,6 +31,17 @@ void BaseRenderer::clear(float r, float g, float b, float a, bool depth)
     {
         glClear(GL_COLOR_BUFFER_BIT);
     }
+}
+void BaseRenderer::checkGLError(){
+	int err = glGetError();
+	if (err != 0){
+		std::stringstream ss;
+		ss << glewGetErrorString(glGetError());
+		AggregationParam param(ss.str(), AggregationParamType::COUNT);
+		std::stringstream ss2;
+		ss2 << "GLErrors: " << ss.str();
+		Log::periodicAggregate(ss2.str(), { AGGREGATE_SELECT_DISTINCT }, glErrorlogPeriodicKey, DebugKey::GL_ERRORS);
+	}
 }
 void BaseRenderer::flush()
 {
