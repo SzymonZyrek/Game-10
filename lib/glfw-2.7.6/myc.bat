@@ -1,2 +1,0 @@
-call compile.bat
-pause
