@@ -13,9 +13,13 @@ std::string Config::getMainConfigFilePath(){
 }
 
 const static std::map<std::string, std::string> __defaults = {
-		{LOG_FILE_PATH, "E:\\temp\\game10.log"},
+		{ LOG_FILE_PATH, "E:\\temp\\game10.log"},
 		{ SHOW_DEBUG_KEY, "NO" },
-		{ FLUSH_LOGFILE, "NO"}
+		{ FLUSH_LOGFILE, "NO"},
+		{ DEFAULT_FRAGMENT_SHADER_FILE_NAME, "TextureFragmentShader.glsl"},
+		{ DEFAULT_VERTEX_SHADER_FILE_NAME, "TransformVertexShader.glsl" },
+		{ DEFAULT_MODEL_FILE_NAME, "monkey.obj"},
+		{ DEFAULT_TEXTURE_FILE_NAME, "grass.jpg"}
 };
 
 Config Config::_mainConfig;
@@ -79,7 +83,7 @@ Config::Config()
 		std::string line;
 		std::stringstream ss;
 
-		ss << "- Loading defaults: " << path << std::endl;
+		ss << "- Loading defaults: " << std::endl;
 		std::cout << ss.str() << std::endl;
 		for (auto& pair : __defaults) {
 			_properties[pair.first] = pair.second;

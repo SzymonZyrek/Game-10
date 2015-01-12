@@ -25,12 +25,9 @@ GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 
 	if (data == nullptr){
 		std::stringstream ss;
-		ss << "Failed to load texture " << imagepath;
+		ss << "Failed to load texture " << imagepath << std::endl;
 		logger << ss;
 	}
-	ss = std::stringstream("");
-	ss << "Loaded texture: width " << x << ",  height: " << y << ", n: " << n << ", data size: " << (x*y*n);
-	logger << ss;
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -48,7 +45,7 @@ GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(data);
 	ss = std::stringstream("");
-	ss << "Successfully registered texture: " << imagepath;
+	ss << "Texture " << imagepath << ": width " << x << ",  height: " << y << ", n: " << n << ", data size: " << (x*y*n) << " loaded successfully" << std::endl;
 	logger << ss;
 	return textureID;
 }

@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "BaseRenderer.h"
 #include "ModelLoader.h"
+#include <memory>
+#include "Camera.h"
 
 class SimpleRenderer : public BaseRenderer
 {
@@ -31,5 +33,12 @@ private:
 	GLuint textureBuffer;		//texture buffer id
 	GLuint vertexBuffer;		//vertex buffer id
 	GLuint uvBuffer;			//normals buffer id
+
+	/*std::vector<glm::vec3> vertices = model.indexedVertices;
+	std::vector<glm::vec2> uvs = model.indexedUv;*/
+	
+	std::shared_ptr<Camera> camera;
+	glm::vec3 renderablePosition;
+	glm::vec3 renderableRotation;
 };
 

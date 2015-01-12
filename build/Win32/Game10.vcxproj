@@ -71,6 +71,7 @@
     <ClCompile Include="..\..\src\Aggregation.cpp" />
     <ClCompile Include="..\..\src\AIComponent.cpp" />
     <ClCompile Include="..\..\src\BaseRenderer.cpp" />
+    <ClCompile Include="..\..\src\Camera.cpp" />
     <ClCompile Include="..\..\src\Component.cpp" />
     <ClCompile Include="..\..\src\Config.cpp" />
     <ClCompile Include="..\..\src\CPPEvent.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="..\..\src\Aggregation.h" />
     <ClInclude Include="..\..\src\AIComponent.h" />
     <ClInclude Include="..\..\src\BaseRenderer.h" />
+    <ClInclude Include="..\..\src\Camera.h" />
     <ClInclude Include="..\..\src\Component.h" />
     <ClInclude Include="..\..\src\Config.h" />
     <ClInclude Include="..\..\src\CPPEvent.h" />
@@ -139,6 +141,17 @@
     <ClInclude Include="..\..\src\SimpleRenderer.h" />
     <ClInclude Include="..\..\src\TextureLoader.h" />
     <ClInclude Include="..\..\src\Win32EntryPoint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\resources\shaders\SimplestFragmentShader.glsl" />
+    <None Include="..\..\resources\shaders\SimplestVertexShader.glsl" />
+    <None Include="..\..\resources\shaders\TextureFragmentShader.glsl" />
+    <None Include="..\..\resources\shaders\TransformVertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\resources\textures\fabric.jpg" />
+    <Image Include="..\..\resources\textures\fur.jpg" />
+    <Image Include="..\..\resources\textures\grass.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

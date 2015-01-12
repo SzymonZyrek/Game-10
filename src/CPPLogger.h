@@ -12,7 +12,7 @@
 #define LOG Logger::_sdg78su(""); logger<<(Logger::_sdg78su
 
 enum DebugKey {
-	EVENTS, OBJECT_CREATION, OBJECT_DESTRUCTION, COPY_CONSTRUCTORS, CONFIGURATION, LOGGING, RENDERING, ACCUMULATOR, GL_ERRORS, SHADERS, MODEL_LOADING, TEXTURES
+	EVENTS, OBJECT_CREATION, OBJECT_DESTRUCTION, COPY_CONSTRUCTORS, CONFIGURATION, LOGGING, RENDERING, ACCUMULATOR, GL_ERRORS, SHADERS, MODEL_LOADING, TEXTURES, CAMERA
 };
 enum LoggingMode {
 	INFO, ERROR, DEBUG, AGGREGATION, INFO_PERIODIC, DEBUG_PERIODIC, DEBUG_AGGREGATION
@@ -27,7 +27,7 @@ public:
 	Logger(unsigned int periodicKey);
 	Logger(std::vector<std::string(*)(std::vector<std::string>&)> functions, unsigned int periodicKey);
 	Logger(std::vector<std::string(*)(std::vector<std::string>&)> functions, unsigned int periodicKey, DebugKey);
-	
+	static void error(std::string error);
 	LoggingMode mode;
 	DebugKey debugKey;
 	unsigned int periodicKey;

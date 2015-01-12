@@ -37,9 +37,14 @@
     </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{f34fb0a6-5922-463a-bc90-c2c06a03b008}</UniqueIdentifier>
+      <ParseFiles>false</ParseFiles>
     </Filter>
     <Filter Include="Source\Rendering">
       <UniqueIdentifier>{e06e9bb3-a866-4ce6-9fa1-b0b4d6493e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{2e5a2b4f-c7be-42e3-9823-54b6c20c0a24}</UniqueIdentifier>
+      <ParseFiles>false</ParseFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +145,9 @@
       <Filter>Source\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\TextureLoader.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Camera.cpp">
       <Filter>Source\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
@@ -252,5 +260,33 @@
     <ClInclude Include="..\..\src\STBImage.h">
       <Filter>Source\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Camera.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\resources\shaders\SimplestFragmentShader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\..\resources\shaders\SimplestVertexShader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\..\resources\shaders\TextureFragmentShader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\..\resources\shaders\TransformVertexShader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\resources\textures\fabric.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\resources\textures\fur.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\resources\textures\grass.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

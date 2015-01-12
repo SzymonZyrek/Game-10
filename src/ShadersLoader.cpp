@@ -52,9 +52,6 @@ GLuint ShadersLoader::loadShaders(const char * vertex_file_path, const char * fr
 
 
 	ss = std::stringstream("");
-	// Compile Vertex Shader
-	ss << "Compiling shader: " << vertex_file_path;
-	logger << (ss << "\n");
 	
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
@@ -68,13 +65,11 @@ GLuint ShadersLoader::loadShaders(const char * vertex_file_path, const char * fr
 	
 	ss = std::stringstream("");
 	ss << &VertexShaderErrorMessage[0];
-	logger << (ss << "\n");
+	if (ss.str().size() > 2)
+	{
+		logger << ss;
+	}
 
-
-	// Compile Fragment Shader
-	ss = std::stringstream("");
-	ss << "Compiling shader: " << fragment_file_path;
-	logger << (ss << "\n");
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
 	glCompileShader(FragmentShaderID);
@@ -86,15 +81,11 @@ GLuint ShadersLoader::loadShaders(const char * vertex_file_path, const char * fr
 	glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
 	ss = std::stringstream("");
 	ss << &FragmentShaderErrorMessage[0];
-	logger << (ss << "\n");
+	if (ss.str().size() > 2)
+	{
+		logger << ss;
+	}
 
-
-
-
-	// Link the program
-	ss = std::stringstream("");
-	ss << "Linking program";
-	logger << (ss << "\n");
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
@@ -107,7 +98,16 @@ GLuint ShadersLoader::loadShaders(const char * vertex_file_path, const char * fr
 	glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 	ss = std::stringstream("");
 	ss << &ProgramErrorMessage[0];
-	logger << (ss << "\n");
+	if (ss.str().size() > 2)
+	{
+		logger << ss;
+	}
+	else
+	{
+		std::stringstream resultMsg;
+		resultMsg << "Shaders " << vertex_file_path << ", and " << fragment_file_path << " loaded successfully" <<std::endl;
+		logger << resultMsg;
+	}
 
 
 	glDeleteShader(VertexShaderID);

@@ -20,6 +20,10 @@ Logger::Logger()
 {
 	this->mode = INFO;
 }
+void Logger::error(std::string error)
+{
+	Log::error(error);
+}
 
 Logger::Logger(DebugKey key)
 {
@@ -95,7 +99,8 @@ std::map<DebugKey, std::string> Log::getDebugKeyToString() {
 		{ DebugKey::GL_ERRORS, "GL_ERRORS" },
 		{ DebugKey::SHADERS, "SHADERS" },
 		{ DebugKey::MODEL_LOADING, "MODEL_LOADING" },
-		{ DebugKey::TEXTURES, "TEXTURES" }
+		{ DebugKey::TEXTURES, "TEXTURES" },
+		{ DebugKey::CAMERA, "CAMERA" }
 	};
 	return result;
 }
@@ -114,7 +119,8 @@ std::map<std::string, DebugKey> Log::getStringToDebugKey() {
 		{ "GL_ERRORS", DebugKey::GL_ERRORS },
 		{ "SHADERS", DebugKey::SHADERS},
 		{ "MODEL_LOADING", DebugKey::MODEL_LOADING},
-		{ "TEXTURES", DebugKey::TEXTURES}
+		{ "TEXTURES", DebugKey::TEXTURES},
+		{ "CAMERA", DebugKey::CAMERA }
 	};
 	return result;
 }
