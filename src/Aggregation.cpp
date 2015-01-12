@@ -4,7 +4,8 @@
 #include "Aggregation.h"
 #include <set>
 
-AggregationParam::AggregationParam(std::string value, AggregationParamType type)
+
+void AggregationParam::init(std::string value, AggregationParamType type)
 {
 	this->_type = type;
 	std::stringstream ss;
@@ -14,6 +15,30 @@ AggregationParam::AggregationParam(std::string value, AggregationParamType type)
 	ss << "]";
 	this->_stringValue = ss.str();
 }
+
+AggregationParam::AggregationParam(std::string value, AggregationParamType type)
+{
+	init(value, type);
+}
+
+AggregationParam::AggregationParam(double value)
+{
+	std::stringstream ss;
+	ss << value;
+	init(ss.str(), AggregationParamType::DOUBLE);
+}
+AggregationParam::AggregationParam(int value)
+{
+	std::stringstream ss;
+	ss << value;
+	init(ss.str(), AggregationParamType::INTEGER);
+}
+
+AggregationParam::AggregationParam(std::string value)
+{
+	init(value, AggregationParamType::COUNT);
+}
+
 char AggregationParam::typeAsChar()
 {
 	switch (this->_type){
@@ -37,10 +62,11 @@ std::string AggregationParam::getStringValue()
 }
 
 std::ostream& operator<<(std::ostream &strm, AggregationParam &a) {
-	return strm << a.getStringValue();
+	strm << a.getStringValue();
+	return strm;
 }
 
-std::string AGGREGATE_DOUBLE_AVERAGE(std::vector<std::string> &data)
+std::string Aggregate::DOUBLE_AVERAGE(std::vector<std::string> &data)
 {
 	double sum = 0.0;
 	int count = 0;
@@ -56,7 +82,7 @@ std::string AGGREGATE_DOUBLE_AVERAGE(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_DOUBLE_MAX(std::vector<std::string> &data)
+std::string Aggregate::DOUBLE_MAX(std::vector<std::string> &data)
 {
 	double max = -200000;
 	for (std::string paramValue : data)
@@ -71,7 +97,7 @@ std::string AGGREGATE_DOUBLE_MAX(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_DOUBLE_MIN(std::vector<std::string> &data)
+std::string Aggregate::DOUBLE_MIN(std::vector<std::string> &data)
 {
 	double min = 2000000;
 	for (std::string paramValue : data)
@@ -86,7 +112,7 @@ std::string AGGREGATE_DOUBLE_MIN(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_DOUBLE_SUM(std::vector<std::string> &data)
+std::string Aggregate::DOUBLE_SUM(std::vector<std::string> &data)
 {
 	double sum = 0;
 	for (std::string paramValue : data)
@@ -99,7 +125,7 @@ std::string AGGREGATE_DOUBLE_SUM(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_INTEGER_AVERAGE(std::vector<std::string> &data)
+std::string Aggregate::INTEGER_AVERAGE(std::vector<std::string> &data)
 {
 	int sum = 0;
 	int count = 0;
@@ -115,7 +141,7 @@ std::string AGGREGATE_INTEGER_AVERAGE(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_INTEGER_MAX(std::vector<std::string> &data)
+std::string Aggregate::INTEGER_MAX(std::vector<std::string> &data)
 {
 	int max = -200000;
 	for (std::string paramValue : data)
@@ -130,7 +156,7 @@ std::string AGGREGATE_INTEGER_MAX(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_INTEGER_MIN(std::vector<std::string> &data)
+std::string Aggregate::INTEGER_MIN(std::vector<std::string> &data)
 {
 	int min = 2000000;
 	for (std::string paramValue : data)
@@ -145,7 +171,7 @@ std::string AGGREGATE_INTEGER_MIN(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_INTEGER_SUM(std::vector<std::string> &data)
+std::string Aggregate::INTEGER_SUM(std::vector<std::string> &data)
 {
 	int sum = 0;
 	for (std::string paramValue : data)
@@ -158,7 +184,7 @@ std::string AGGREGATE_INTEGER_SUM(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_COUNT(std::vector<std::string> &data)
+std::string Aggregate::COUNT(std::vector<std::string> &data)
 {
 	if (data[0].at(0)=='X')
 	{
@@ -174,7 +200,7 @@ std::string AGGREGATE_COUNT(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_COUNT_DISTINCT(std::vector<std::string> &data)
+std::string Aggregate::COUNT_DISTINCT(std::vector<std::string> &data)
 {
 	if (data[0].at(0) == 'X')
 	{
@@ -190,7 +216,7 @@ std::string AGGREGATE_COUNT_DISTINCT(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_SELECT_DISTINCT(std::vector<std::string> &data)
+std::string Aggregate::SELECT_DISTINCT(std::vector<std::string> &data)
 {
 	if (data[0].at(0) == 'X')
 	{
@@ -215,7 +241,7 @@ std::string AGGREGATE_SELECT_DISTINCT(std::vector<std::string> &data)
 	return ss.str();
 }
 
-std::string AGGREGATE_FILTER(bool(*filter)(std::string), std::vector<std::string> &data)
+std::string Aggregate::FILTER(bool(*filter)(std::string), std::vector<std::string> &data)
 {
 	if (data[0].at(0) == 'X')
 	{
@@ -242,14 +268,15 @@ std::string AGGREGATE_FILTER(bool(*filter)(std::string), std::vector<std::string
 }
 
 
-std::string aggregate(std::string msg, std::vector<std::vector<std::string>> &params, int paramNumber, std::string(*f)(std::vector<std::string>&))
+std::string Aggregate::aggregate(std::string msg, std::vector<std::vector<std::string>> &params, int paramNumber, std::string(*f)(std::vector<std::string>&))
 {
 	std::string temp = msg;
 	std::string result = msg;
 	std::regex param("^(.*)\\[([DICX])(.*)\\](.*)");
 	//this formatter extracts param value from above regex
 	std::string extract("$3");
-	//this formatter uses above param regex to cut out the param and leave rest of text for futher processing
+	//this formatter uses above param regex to clear the param from msg
+	//(for futher processing)
 	std::string cutOut("$1$4");
 	std::string typeLetter("$2");
 
@@ -279,16 +306,16 @@ std::string aggregate(std::string msg, std::vector<std::vector<std::string>> &pa
 }
 
 
-std::string AGGREGATE_AVERAGE(std::vector<std::string> &data)
+std::string Aggregate::AVERAGE(std::vector<std::string> &data)
 {
 	char typeLetter = data[0].at(0);
 	switch (typeLetter)
 	{
 	case 'D':
-		return AGGREGATE_DOUBLE_AVERAGE(data);
+		return Aggregate::DOUBLE_AVERAGE(data);
 		break;
 	case 'I':
-		return AGGREGATE_INTEGER_AVERAGE(data);
+		return Aggregate::INTEGER_AVERAGE(data);
 		break;
 	default: 
 		std::stringstream ss;
@@ -297,16 +324,16 @@ std::string AGGREGATE_AVERAGE(std::vector<std::string> &data)
 	}
 }
 
-std::string AGGREGATE_MAX(std::vector<std::string> &data)
+std::string Aggregate::MAX(std::vector<std::string> &data)
 {
 	char typeLetter = data[0].at(0);
 	switch (typeLetter)
 	{
 	case 'D':
-		return AGGREGATE_DOUBLE_MAX(data);
+		return Aggregate::DOUBLE_MAX(data);
 		break;
 	case 'I':
-		return AGGREGATE_INTEGER_MAX(data);
+		return Aggregate::INTEGER_MAX(data);
 		break;
 	default:
 		std::stringstream ss;
@@ -315,16 +342,16 @@ std::string AGGREGATE_MAX(std::vector<std::string> &data)
 	}
 }
 
-std::string AGGREGATE_MIN(std::vector<std::string> &data)
+std::string Aggregate::MIN(std::vector<std::string> &data)
 {
 	char typeLetter = data[0].at(0);
 	switch (typeLetter)
 	{
 	case 'D':
-		return AGGREGATE_DOUBLE_MIN(data);
+		return Aggregate::DOUBLE_MIN(data);
 		break;
 	case 'I':
-		return AGGREGATE_INTEGER_MIN(data);
+		return Aggregate::INTEGER_MIN(data);
 		break;
 	default:
 		std::stringstream ss;
@@ -334,16 +361,16 @@ std::string AGGREGATE_MIN(std::vector<std::string> &data)
 }
 
 
-std::string AGGREGATE_SUM(std::vector<std::string> &data)
+std::string Aggregate::SUM(std::vector<std::string> &data)
 {
 	char typeLetter = data[0].at(0);
 	switch (typeLetter)
 	{
 	case 'D':
-		return AGGREGATE_DOUBLE_SUM(data);
+		return Aggregate::DOUBLE_SUM(data);
 		break;
 	case 'I':
-		return AGGREGATE_INTEGER_SUM(data);
+		return Aggregate::INTEGER_SUM(data);
 		break;
 	default:
 		std::stringstream ss;
@@ -352,7 +379,7 @@ std::string AGGREGATE_SUM(std::vector<std::string> &data)
 	}
 }
 
-void populateParams(std::string message, std::vector<std::vector<std::string>> &params)
+void Aggregate::populateParams(std::string message, std::vector<std::vector<std::string>> &params)
 {
 	//param is everyting surrounded with "[" and "]"
 	std::regex param("^(.*)\\[(.*)\\](.*)");

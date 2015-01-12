@@ -4,7 +4,7 @@
 #include <sstream>
 #include <regex>
 #include <random>
-#include "Tut01Renderer.h"
+#include "SimpleRenderer.h"
 #define STEP 1/60
 
 float GameLoop::frameTime;
@@ -61,14 +61,10 @@ void GameLoop::run()
 
 		if (_accumulator >= STEP)
 		{
-			std::stringstream ss;
-			std::stringstream paramstream;
-			paramstream << _accumulator - STEP;
-			AggregationParam param = AggregationParam(paramstream.str(), AggregationParamType::DOUBLE);
-			ss << "Accumulator overflow: Min: " << param << " Max: " << param << " Avg: " << param;
-			Log::periodicAggregate(ss.str(), { AGGREGATE_MIN, AGGREGATE_MAX, AGGREGATE_AVERAGE }, accumulatorLogKey, DebugKey::ACCUMULATOR);
-
-
+			//Logger logger({ Aggregate::MIN, Aggregate::MAX, Aggregate::AVERAGE }, accumulatorLogKey, DebugKey::ACCUMULATOR);
+			//LOG("Accumulator overflow: Min: " << AggregationParam(_accumulator - STEP)
+			//	<< " Max: " << AggregationParam(_accumulator - STEP)
+			//	<< " Avg: " << AggregationParam(_accumulator - STEP));
 			_renderer.update();
 			_renderer.render();
 			_accumulator = 0;

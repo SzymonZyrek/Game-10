@@ -11,6 +11,7 @@
 #include "CPPEventManager.h"
 #include <iostream>
 #include "GameLoop.h"
+#include "CPPLogger.h"
 
 void Playground::p_main()
 {

@@ -22,9 +22,8 @@ protected:
                float a=0,
                bool depth=true);
     void flush();
-	GLFWwindow *window; //window this renderer is 
+	GLFWwindow *window;
 private:
 	unsigned int glErrorlogPeriodicKey;
-	//rendering to
 
 };

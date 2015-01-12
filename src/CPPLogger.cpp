@@ -16,6 +16,71 @@ std::set<DebugKey> Log::_activeDebugKeys;
 Log* Log::_instance = new Log;
 int count = 0;
 
+Logger::Logger()
+{
+	this->mode = INFO;
+}
+
+Logger::Logger(DebugKey key)
+{
+	this->mode = DEBUG;
+	this->debugKey = key;
+}
+Logger::Logger(unsigned int periodicKey, DebugKey key)
+{
+	this->mode = DEBUG_PERIODIC;
+	this->periodicKey = periodicKey;
+	this->debugKey = key; 
+}
+Logger::Logger(std::vector<std::string(*)(std::vector<std::string>&)> functions, unsigned int periodicKey, DebugKey key)
+{
+	this->mode = DEBUG_AGGREGATION;
+	this->functions = functions;
+	this->periodicKey = periodicKey;
+	this->debugKey = key;
+}
+Logger::Logger(unsigned int periodicKey)
+{
+	this->mode = INFO_PERIODIC;
+}
+Logger::Logger(std::vector<std::string(*)(std::vector<std::string>&)> functions, unsigned int periodicKey)
+{
+	this->mode = AGGREGATION;
+	this->functions = functions;
+	this->periodicKey = periodicKey;
+}
+
+std::ostream& operator<<(Logger &a, std::ostream &ss)
+{
+	std::stringstream stringstream;
+	stringstream << ss.rdbuf();
+
+
+	switch (a.mode)
+	{
+	case INFO:
+		Log::info(stringstream.str());
+		break;
+	case DEBUG:
+		Log::debug(stringstream.str(), a.debugKey);
+		break;
+	case INFO_PERIODIC:
+		Log::periodic(stringstream.str(), a.periodicKey);
+		break;
+	case DEBUG_PERIODIC:
+		Log::debugPeriodic(stringstream.str(), a.periodicKey, a.debugKey);
+		break;
+	case AGGREGATION:
+		Log::periodicAggregate(stringstream.str(), a.functions, a.periodicKey);
+		break;
+	case DEBUG_AGGREGATION:
+		Log::periodicAggregate(stringstream.str(), a.functions, a.periodicKey, a.debugKey);
+		break;
+	}
+
+	return ss;
+}
+
 std::map<DebugKey, std::string> Log::getDebugKeyToString() {
 	std::map<DebugKey, std::string> result =
 	{
@@ -27,7 +92,10 @@ std::map<DebugKey, std::string> Log::getDebugKeyToString() {
 		{ DebugKey::COPY_CONSTRUCTORS, "COPY_CONSTRUCTORS" },
 		{ DebugKey::RENDERING, "RENDERING" },
 		{ DebugKey::ACCUMULATOR, "ACCUMULATOR" },
-		{ DebugKey::GL_ERRORS, "GL_ERRORS" }
+		{ DebugKey::GL_ERRORS, "GL_ERRORS" },
+		{ DebugKey::SHADERS, "SHADERS" },
+		{ DebugKey::MODEL_LOADING, "MODEL_LOADING" },
+		{ DebugKey::TEXTURES, "TEXTURES" }
 	};
 	return result;
 }
@@ -43,7 +111,10 @@ std::map<std::string, DebugKey> Log::getStringToDebugKey() {
 		{ "COPY_CONSTRUCTORS", DebugKey::COPY_CONSTRUCTORS },
 		{ "RENDERING", DebugKey::RENDERING },
 		{ "ACCUMULATOR", DebugKey::ACCUMULATOR },
-		{ "GL_ERRORS", DebugKey::GL_ERRORS }
+		{ "GL_ERRORS", DebugKey::GL_ERRORS },
+		{ "SHADERS", DebugKey::SHADERS},
+		{ "MODEL_LOADING", DebugKey::MODEL_LOADING},
+		{ "TEXTURES", DebugKey::TEXTURES}
 	};
 	return result;
 }
@@ -229,14 +300,14 @@ void  Log::periodicAggregate(std::string msg, std::vector<std::string(*)(std::ve
 		double last = _instance->_lastLogByKey[key];
 		double period = _instance->_periodsByKey[key];
 
-		populateParams(msg, _instance->_aggregationParamsByKey[key]);
+		Aggregate::populateParams(msg, _instance->_aggregationParamsByKey[key]);
 
 		if (now - last > period){
 			int paramNumber = 0;
 			std::string temp = msg;
 			for (int i = functions.size() - 1; i >= 0; i--)
 			{
-				temp = aggregate(temp, _instance->_aggregationParamsByKey[key], paramNumber++, functions[i]);
+				temp = Aggregate::aggregate(temp, _instance->_aggregationParamsByKey[key], paramNumber++, functions[i]);
 			}
 			std::stringstream message;
 			message << "DEBUG:";
@@ -265,14 +336,14 @@ void Log::periodicAggregate(std::string msg, std::vector<std::string(*)(std::vec
 	double last = _instance->_lastLogByKey[key];
 	double period = _instance->_periodsByKey[key];
 	
-	populateParams(msg, _instance->_aggregationParamsByKey[key]);
+	Aggregate::populateParams(msg, _instance->_aggregationParamsByKey[key]);
 	
 	if (now - last > period){
 		int paramNumber = 0;
 		std::string temp = msg;
 		for (int i = functions.size() - 1; i >= 0; i--)
 		{
-			temp = aggregate(temp, _instance->_aggregationParamsByKey[key], paramNumber++, functions[i]);
+			temp = Aggregate::aggregate(temp, _instance->_aggregationParamsByKey[key], paramNumber++, functions[i]);
 		}
 		std::stringstream message;
 		message << "INFO:" << temp;

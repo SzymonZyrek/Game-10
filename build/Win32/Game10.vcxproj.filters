@@ -20,9 +20,6 @@
     <Filter Include="Source\Tests\TestModules">
       <UniqueIdentifier>{458ae77a-3d1c-4f1e-a12f-02f2b6b76456}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Renderer">
-      <UniqueIdentifier>{e06e9bb3-a866-4ce6-9fa1-b0b4d6493e3a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\GameObject">
       <UniqueIdentifier>{c44bcf73-7e5b-40f2-9095-c111615d6ff7}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,12 @@
     </Filter>
     <Filter Include="Source\Game">
       <UniqueIdentifier>{40d37676-c70b-478a-bb19-72ff229c5004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{f34fb0a6-5922-463a-bc90-c2c06a03b008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Rendering">
+      <UniqueIdentifier>{e06e9bb3-a866-4ce6-9fa1-b0b4d6493e3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,10 +83,7 @@
       <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\BaseRenderer.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Tut01Renderer.cpp">
-      <Filter>Source\Renderer</Filter>
+      <Filter>Source\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Scene.cpp">
       <Filter>Source\World</Filter>
@@ -127,6 +127,21 @@
     <ClCompile Include="..\..\src\Aggregation.cpp">
       <Filter>Source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ShadersLoader.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SimpleRenderer.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Renderable.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ModelLoader.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TextureLoader.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\CPPEventType.h">
@@ -169,10 +184,7 @@
       <Filter>Source\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\BaseRenderer.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Tut01Renderer.h">
-      <Filter>Source\Renderer</Filter>
+      <Filter>Source\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Scene.h">
       <Filter>Source\World</Filter>
@@ -221,6 +233,24 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Aggregation.h">
       <Filter>Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ShadersLoader.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\SimpleRenderer.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Renderable.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ModelLoader.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TextureLoader.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\STBImage.h">
+      <Filter>Source\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

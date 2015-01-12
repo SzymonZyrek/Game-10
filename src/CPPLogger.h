@@ -5,11 +5,37 @@
 #include <set>
 #include <regex>
 #include <sstream>
+#include <ostream>
+#include <fstream>
 #include "Aggregation.h"
 
+#define LOG Logger::_sdg78su(""); logger<<(Logger::_sdg78su
+
 enum DebugKey {
-	EVENTS, OBJECT_CREATION, OBJECT_DESTRUCTION, COPY_CONSTRUCTORS, CONFIGURATION, LOGGING, RENDERING, ACCUMULATOR, GL_ERRORS
+	EVENTS, OBJECT_CREATION, OBJECT_DESTRUCTION, COPY_CONSTRUCTORS, CONFIGURATION, LOGGING, RENDERING, ACCUMULATOR, GL_ERRORS, SHADERS, MODEL_LOADING, TEXTURES
 };
+enum LoggingMode {
+	INFO, ERROR, DEBUG, AGGREGATION, INFO_PERIODIC, DEBUG_PERIODIC, DEBUG_AGGREGATION
+};
+
+class Logger {
+public:
+	static std::stringstream _sdg78su;
+	Logger();
+	Logger(DebugKey);
+	Logger(unsigned int periodicKey, DebugKey);
+	Logger(unsigned int periodicKey);
+	Logger(std::vector<std::string(*)(std::vector<std::string>&)> functions, unsigned int periodicKey);
+	Logger(std::vector<std::string(*)(std::vector<std::string>&)> functions, unsigned int periodicKey, DebugKey);
+	
+	LoggingMode mode;
+	DebugKey debugKey;
+	unsigned int periodicKey;
+	std::vector<std::string(*)(std::vector<std::string>&)> functions;
+};
+
+std::ostream& operator<<(Logger &a, std::ostream &ss);
+void operator<<(std::string sa, std::string ss);
 
 class Log
 {
@@ -50,16 +76,4 @@ private:
 	static std::map<std::string, DebugKey> getStringToDebugKey();
 	const std::map<DebugKey, std::string> _debugKeyToString = getDebugKeyToString();
 	const std::map<std::string, DebugKey> _stringToDebugKey = getStringToDebugKey();
-
-	template<typename T>
-	bool DaFunc(std::string Arg1, T&& Arg2){
-		if (Arg1 > 0){
-			return Arg2(Arg1);
-		}
-
-		return false; // <== DO NOT FORGET A return STATEMENT IN A VALUE-RETURNING
-		//     FUNCTION, OR YOU WILL GET UNDEFINED BEHAVIOR IF FLOWING
-		//     OFF THE END OF THE FUNCTION WITHOUT RETURNING ANYTHING
-	}
-
 };

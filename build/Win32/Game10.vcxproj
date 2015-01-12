@@ -83,10 +83,13 @@
     <ClCompile Include="..\..\src\GameObject.cpp" />
     <ClCompile Include="..\..\src\GameObjectIds.cpp" />
     <ClCompile Include="..\..\src\InputComponent.cpp" />
+    <ClCompile Include="..\..\src\ModelLoader.cpp" />
     <ClCompile Include="..\..\src\PhysicalComponent.cpp" />
     <ClCompile Include="..\..\src\Playground.cpp" />
+    <ClCompile Include="..\..\src\Renderable.cpp" />
     <ClCompile Include="..\..\src\RenderableComponent.cpp" />
     <ClCompile Include="..\..\src\Scene.cpp" />
+    <ClCompile Include="..\..\src\ShadersLoader.cpp" />
     <ClCompile Include="..\..\src\TestConfig.cpp" />
     <ClCompile Include="..\..\src\TestEvents.cpp" />
     <ClCompile Include="..\..\src\TestGameObjects.cpp" />
@@ -95,7 +98,8 @@
     <ClCompile Include="..\..\src\TestTests.cpp" />
     <ClCompile Include="..\..\src\TestUtils.cpp" />
     <ClCompile Include="..\..\src\TestWorlds.cpp" />
-    <ClCompile Include="..\..\src\Tut01Renderer.cpp" />
+    <ClCompile Include="..\..\src\SimpleRenderer.cpp" />
+    <ClCompile Include="..\..\src\TextureLoader.cpp" />
     <ClCompile Include="..\..\src\Win32EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -116,10 +120,14 @@
     <ClInclude Include="..\..\src\GameObjectIds.h" />
     <ClInclude Include="..\..\src\Errors.h" />
     <ClInclude Include="..\..\src\InputComponent.h" />
+    <ClInclude Include="..\..\src\ModelLoader.h" />
     <ClInclude Include="..\..\src\PhysicalComponent.h" />
     <ClInclude Include="..\..\src\Playground.h" />
+    <ClInclude Include="..\..\src\Renderable.h" />
     <ClInclude Include="..\..\src\RenderableComponent.h" />
     <ClInclude Include="..\..\src\Scene.h" />
+    <ClInclude Include="..\..\src\ShadersLoader.h" />
+    <ClInclude Include="..\..\src\STBImage.h" />
     <ClInclude Include="..\..\src\TestConfig.h" />
     <ClInclude Include="..\..\src\TestEvents.h" />
     <ClInclude Include="..\..\src\TestGameObjects.h" />
@@ -128,7 +136,8 @@
     <ClInclude Include="..\..\src\TestTests.h" />
     <ClInclude Include="..\..\src\TestUtils.h" />
     <ClInclude Include="..\..\src\TestWorlds.h" />
-    <ClInclude Include="..\..\src\Tut01Renderer.h" />
+    <ClInclude Include="..\..\src\SimpleRenderer.h" />
+    <ClInclude Include="..\..\src\TextureLoader.h" />
     <ClInclude Include="..\..\src\Win32EntryPoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
