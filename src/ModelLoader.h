@@ -3,6 +3,14 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "CPPLogger.h"
+#include <memory>
+
+struct FileData {
+	std::vector<std::string> vertexdata;
+	std::vector<std::string> texeldata;
+	std::vector<std::string> normaldata;
+	std::vector<std::string> facedata;
+};
 
 class ModelLoader {
 public:
@@ -32,8 +40,9 @@ private:
 	// Vertices, uvs and normals, indexed
 	// with use of above indices
 	//------------------------------------------
-
+	void parse(std::shared_ptr<FileData> data);
 	bool initialized = false; // this flag indicates wheter this ModelLoader instance successfully lodaded a model
 
 	void printRenderData();
+	void saveAsBinary(std::string fileName);
 };

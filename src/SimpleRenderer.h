@@ -23,9 +23,12 @@ private:
 	ModelLoader model;
 
 	GLuint programID;			//shader id
-	GLuint matrixID;			//MVP matrix id
+	GLuint mpvMatrixID;			//MVP matrix id
+	GLuint modelMatrixID;
+	GLuint viewMatrixID;
 	GLuint textureDataID;
 	GLuint vertexArrayID;		//vertex array id
+	GLuint lightID;
 
 	glm::mat4 viewMatrix;		//view matrix
 	glm::mat4 projectionMatrix; //projection matrix
@@ -33,6 +36,7 @@ private:
 	GLuint textureBuffer;		//texture buffer id
 	GLuint vertexBuffer;		//vertex buffer id
 	GLuint uvBuffer;			//normals buffer id
+	GLuint normalbuffer;
 
 	/*std::vector<glm::vec3> vertices = model.indexedVertices;
 	std::vector<glm::vec2> uvs = model.indexedUv;*/

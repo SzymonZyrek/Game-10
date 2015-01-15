@@ -10,7 +10,8 @@ out vec3 color;
 uniform sampler2D myTextureSampler;
 
 void main(){
-
+	vec3 shade = vec3(0.23,0.23,0.23);
 	// Output color = color of the texture at the specified UV
 	color = texture2D( myTextureSampler, UV ).rgb;
+	color -= shade;
 }

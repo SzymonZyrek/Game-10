@@ -49,10 +49,13 @@ void SimpleRenderer::init()
 	glBindVertexArray(vertexArrayID);
 
 	// Shader data placeholders
-	matrixID = glGetUniformLocation(programID, "MVP");
+	mpvMatrixID = glGetUniformLocation(programID, "MVP");
+	modelMatrixID = glGetUniformLocation(programID, "M");
+	viewMatrixID = glGetUniformLocation(programID, "V");
 	textureBuffer = glGetUniformLocation(programID, "myTextureSampler");
 
 	std::vector<glm::vec3> vertices = model.indexedVertices;
+	std::vector<glm::vec3> normals = model.indexedNormals;
 	std::vector<glm::vec2> uvs = model.indexedUv;
 
 	glGenBuffers(1, &vertexBuffer);
@@ -62,9 +65,17 @@ void SimpleRenderer::init()
 	glGenBuffers(1, &uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+
 	this->camera = std::make_shared<Camera>(window);
 	renderablePosition = glm::vec3(0, 0, 0);
 	renderableRotation = glm::vec3(0, 0, 0);
+
+	lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+	glUseProgram(programID);
 }
 
 void SimpleRenderer::update()
@@ -99,22 +110,25 @@ void  SimpleRenderer::drawModel() {
 	glfwMakeContextCurrent(window);
 	renderableRotation.y -= 0.1;
 	glm::vec3 renderableScale(1, 1, 1);
+	glUniform3f(lightID, camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
 	
-	glUseProgram(programID);
 	glActiveTexture(GL_TEXTURE0);
 
-	glm::mat4 ModelMatrix = glm::mat4(1.0);
+	glm::mat4 modelMatrix = glm::mat4(1.0);
 	// Translate
-	ModelMatrix = glm::translate(ModelMatrix, renderablePosition);
+	modelMatrix = glm::translate(modelMatrix, renderablePosition);
 	// Rotate
-	ModelMatrix = glm::rotate(ModelMatrix, renderableRotation.x, glm::vec3(1, 0, 0));
-	ModelMatrix = glm::rotate(ModelMatrix, renderableRotation.y, glm::vec3(0, 1, 0));
-	ModelMatrix = glm::rotate(ModelMatrix, renderableRotation.z, glm::vec3(0, 0, 1));
+	modelMatrix = glm::rotate(modelMatrix, renderableRotation.x, glm::vec3(1, 0, 0));
+	modelMatrix = glm::rotate(modelMatrix, renderableRotation.y, glm::vec3(0, 1, 0));
+	modelMatrix = glm::rotate(modelMatrix, renderableRotation.z, glm::vec3(0, 0, 1));
 	//Scale
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(renderableScale.x, renderableScale.y, renderableScale.z));
-	glm::mat4 MVP = projectionMatrix * viewMatrix * ModelMatrix;
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(renderableScale.x, renderableScale.y, renderableScale.z));
+	glm::mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
 	this->camera->applyCameraToMatrices(GameLoop::deltaTime, &viewMatrix, &projectionMatrix);
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(mpvMatrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
+
 	glBindTexture(GL_TEXTURE_2D, textureDataID);
 
 	glUniform1i(textureBuffer, 0);
