@@ -18,7 +18,7 @@ public:
 private:
 	void draw();
 
-	Renderable renderable;
+	//Renderable renderable;
 	RenderableComponent renderableComponent;
 
 	// uniform ids
@@ -26,19 +26,14 @@ private:
 	GLuint mpvMatrixID;
 	GLuint modelMatrixID;
 	GLuint viewMatrixID;
-	//GLuint textureDataID;
 	GLuint vertexArrayID;
 	GLuint lightID;
-	// buffer ids
-	GLuint textureBufferID;
-	GLuint vertexBufferID;
-	GLuint uvBufferID;
-	GLuint normalbufferID;
-	
+	GLuint textureDataID;
+
 	std::shared_ptr<Camera> camera;
 
-	glm::vec3 renderablePosition;
-	glm::vec3 renderableRotation;
+	//glm::vec3 renderablePosition;
+	//glm::vec3 renderableRotation;
 
 	float testValue = 0;
 	GLuint testValueId;

@@ -1,5 +1,8 @@
 #include "RenderDataLoader.h"
 
+RenderDataLoader::RenderDataLoader(){
+
+}
 
 void RenderDataLoader::loadIndexedData(Renderable &renderable){
 
@@ -14,4 +17,6 @@ void RenderDataLoader::loadIndexedData(Renderable &renderable){
 	glGenBuffers(1, &renderable.normalbufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, renderable.normalbufferID);
 	glBufferData(GL_ARRAY_BUFFER, renderable.indexedNormals.size() * sizeof(glm::vec3), &renderable.indexedNormals[0], GL_STATIC_DRAW);
+
+	renderable.modelInitialized = true;
 }

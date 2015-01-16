@@ -1,4 +1,5 @@
 #include "Renderable.h"
-Renderable::Renderable(){
-
+Renderable::Renderable(std::string modelName, std::string textureName){
+	this->modelName = modelName;
+	this->textureName = textureName;
 }

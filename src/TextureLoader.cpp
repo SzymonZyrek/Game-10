@@ -57,5 +57,6 @@ void TextureLoader::loadTexture(Renderable &renderable){
 	if (pathToTextureID[_texturePath] == NULL){
 		pathToTextureID[_texturePath] = reallyLoadTexture(_texturePath.c_str());
 	}
-	renderable.textureDataID = pathToTextureID[_texturePath];
+	renderable.textureBufferID = pathToTextureID[_texturePath];
+	renderable.textureLoaded = true;
 }

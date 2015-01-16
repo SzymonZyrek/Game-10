@@ -11,25 +11,32 @@
 #include "CPPLogger.h"
 #include <sstream>
 #include "ModelLoader.h"
+#include "TextureLoader.h"
+#include "RenderDataLoader.h"
+
 RenderableComponent::RenderableComponent(){
 	this->_isNullComponent = true;
 }
 RenderableComponent::RenderableComponent(std::shared_ptr <Renderable> renderable)
 {
-	if (!renderable->modelInitialized){
-		ModelLoader loader("globe.obj");
-		loader.loadObjFile(*renderable);
-		if (!renderable->modelInitialized) throw "Shit, can't load this :(";
-	}
 	if (!renderable->modelLoaded){
-		
+		ModelLoader loader(renderable->modelName);
+		loader.loadObjFile(*renderable);
+		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
 	}
+	if (!renderable->modelInitialized){
+		TextureLoader textureLoader(renderable->textureName);
+		textureLoader.loadTexture(*renderable);
+		RenderDataLoader renderDataLoader;
+		renderDataLoader.loadIndexedData(*renderable);
+	}
+	this->renderable = renderable;
 	this->normalbufferID = renderable->normalbufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
+	this->textureBufferID = renderable->textureBufferID;
 	this->uvBufferID = renderable->normalbufferID;
-	this->textureDataID = renderable->textureDataID;
-	this->vertexBufferID = renderable->vertexBufferID;
-	this->renderable = renderable;
+	this->vertexCount = renderable->vertexCount;
+	this->_isNullComponent = false;
 	Log::debug("RenderableComponent default contructor\n", DebugKey::OBJECT_CREATION);
 }
 
@@ -39,18 +46,22 @@ RenderableComponent::operator bool() const
 }
 
 void RenderableComponent::setRenderable(std::shared_ptr <Renderable> renderable){
-	if (!renderable->modelInitialized){
-		ModelLoader loader("globe.obj");
-		loader.loadObjFile(*renderable);
-	}
 	if (!renderable->modelLoaded){
-
+		ModelLoader loader(renderable->modelName);
+		loader.loadObjFile(*renderable);
+		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
+	}
+	if (!renderable->modelInitialized){
+		TextureLoader textureLoader(renderable->textureName);
+		textureLoader.loadTexture(*renderable);
+		RenderDataLoader renderDataLoader;
+		renderDataLoader.loadIndexedData(*renderable);
 	}
 	this->normalbufferID = renderable->normalbufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
-	this->uvBufferID = renderable->normalbufferID;
-	this->textureDataID = renderable->textureDataID;
-	this->vertexBufferID = renderable->vertexBufferID;
+	this->uvBufferID = renderable->uvBufferID;
+	this->vertexCount = renderable->vertexCount;
+	this->textureBufferID = renderable->textureBufferID;
 	this->_isNullComponent = false;
 }
 
@@ -71,18 +82,23 @@ void RenderableComponent::initWith(RenderableComponent &component)
 	this->scale = component.scale;
 
 	this->renderable = component.renderable;
-	if (!renderable->modelInitialized){
-		ModelLoader loader("globe.obj");
-		loader.loadObjFile(*renderable);
-	}
 	if (!renderable->modelLoaded){
-
+		ModelLoader loader(renderable->modelName);
+		loader.loadObjFile(*renderable);
+		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
 	}
-	this->normalbufferID = component.normalbufferID;
-	this->vertexBufferID = component.vertexBufferID;
-	this->uvBufferID = component.normalbufferID;
-	this->textureBufferID = component.textureBufferID;
-	this->textureDataID = component.textureDataID;
+	if (!renderable->modelInitialized){
+		TextureLoader textureLoader(renderable->textureName);
+		textureLoader.loadTexture(*renderable);
+		RenderDataLoader renderDataLoader;
+		renderDataLoader.loadIndexedData(*renderable);
+	}
+	this->normalbufferID = renderable->normalbufferID;
+	this->uvBufferID = renderable->uvBufferID;
+	this->vertexBufferID = renderable->vertexBufferID;
+	this->textureBufferID = renderable->textureBufferID;
+	this->vertexCount = renderable->vertexCount;
+	this->_isNullComponent = false;
 }
 
 void RenderableComponent::update(double dT)
