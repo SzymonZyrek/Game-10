@@ -9,13 +9,11 @@
 Camera::Camera(GLFWwindow* window){
 	this->window = window;
 	// Initial position : on +Z
-	position = glm::vec3(0, 0, 5);
+	position = glm::vec3(0, 0, 0);
 	// Initial horizontal angle : toward -Z
 	horizontalAngle = 3.14f;
 	// Initial vertical angle : none
 	verticalAngle = 0.0f;
-	// Initial Field of View
-	initialFoV = 45.0f;
 	speed = 8.0f; // 3 units / second
 	mouseSpeed = 0.005f;
 	camLogPeriodicKey = Log::getInstance()->getLogPeriodicKey(3.0);
@@ -90,16 +88,11 @@ void Camera::updateLookAtPoint(float deltaTime, float xpos, float ypos){
 void Camera::applyCameraToMatrices(float deltaTime, glm::mat4 *ViewMatrix, glm::mat4 *ProjectionMatrix){
 	glm::mat4 viewMatrix = *ViewMatrix;
 	glm::mat4 projectionMatrix = *ProjectionMatrix;
-
-	// get mouse position
-	//double xpos, ypos;
-	//glfwGetCursorPos(window, &xpos, &ypos);
-	// and reset it for next frame
-	//glfwSetCursorPos(window, 1024 / 2, 768 / 2);
+	// update gaze direction
 	updateLookAtPoint(deltaTime, 1024/2, 768/2);
-	float FoV = initialFoV;
+	
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 600 units
-	projectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 600.0f);
+	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 600.0f);
 	// Camera matrix
 	viewMatrix = glm::lookAt(
 		position,           // Camera is here

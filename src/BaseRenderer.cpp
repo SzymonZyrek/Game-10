@@ -5,10 +5,13 @@
 #include <sstream>
 #include "CPPLogger.h"
 
+void errorCallback(int error, const char* description)
+{
+	std::cout << "GLError: " << description << std::endl;
+}
 
 BaseRenderer::BaseRenderer()
 {
-	glErrorlogPeriodicKey = Log::getInstance()->getLogPeriodicKey(2);
 	if (!glfwInit())
 	{
 		Logger::error("Failed to initialize GLFW\n");
@@ -28,6 +31,7 @@ BaseRenderer::BaseRenderer()
 	if (glewInit() != GLEW_OK) {
 		Logger::error("Failed to initialize GLEW\n");
 	}
+	glfwSetErrorCallback(errorCallback);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
 

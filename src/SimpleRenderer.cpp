@@ -52,22 +52,22 @@ void SimpleRenderer::init()
 	mpvMatrixID = glGetUniformLocation(programID, "MVP");
 	modelMatrixID = glGetUniformLocation(programID, "M");
 	viewMatrixID = glGetUniformLocation(programID, "V");
-	textureBuffer = glGetUniformLocation(programID, "myTextureSampler");
+	textureBufferID = glGetUniformLocation(programID, "myTextureSampler");
 
 	std::vector<glm::vec3> vertices = model.indexedVertices;
 	std::vector<glm::vec3> normals = model.indexedNormals;
 	std::vector<glm::vec2> uvs = model.indexedUv;
 
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, (vertices.size() * sizeof(glm::vec3)), &vertices[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &uvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	glGenBuffers(1, &uvBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glGenBuffers(1, &normalbufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbufferID);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
 
 	this->camera = std::make_shared<Camera>(window);
@@ -75,6 +75,7 @@ void SimpleRenderer::init()
 	renderableRotation = glm::vec3(0, 0, 0);
 
 	lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+	testValueId = glGetUniformLocation(programID, "TestValue");
 	glUseProgram(programID);
 }
 
@@ -97,44 +98,54 @@ void SimpleRenderer::update()
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){ camera->position += ((glm::normalize(camera->right)*(float)0.04)); }
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){ camera->position += ((glm::normalize(camera->up)*(float)0.04)); }
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){ camera->position -= ((glm::normalize(camera->up)*(float)0.04)); }
+	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS){ if (testValue<1)testValue += 0.001; std::cout << "val" << testValue << std::endl; }
+	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS){ if (testValue>-1)testValue -= 0.001; std::cout << "val" << testValue << std::endl; }
 }
 
 void SimpleRenderer::render()
 {
     clear();
-	drawModel();
+	draw();
     flush();
 }
 
-void  SimpleRenderer::drawModel() {
+void  SimpleRenderer::draw() {
 	glfwMakeContextCurrent(window);
-	renderableRotation.y -= 0.1;
+	//renderableRotation.y -= 0.1;
 	glm::vec3 renderableScale(1, 1, 1);
-	glUniform3f(lightID, camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
-	
-	glActiveTexture(GL_TEXTURE0);
 
+// Calculate matrices:
+	glm::mat4 viewMatrix;
+	glm::mat4 projectionMatrix;
 	glm::mat4 modelMatrix = glm::mat4(1.0);
+	// Apply camera (its position and direction influences V&P matrices)
+	this->camera->applyCameraToMatrices(GameLoop::deltaTime, &viewMatrix, &projectionMatrix);
 	// Translate
 	modelMatrix = glm::translate(modelMatrix, renderablePosition);
 	// Rotate
 	modelMatrix = glm::rotate(modelMatrix, renderableRotation.x, glm::vec3(1, 0, 0));
 	modelMatrix = glm::rotate(modelMatrix, renderableRotation.y, glm::vec3(0, 1, 0));
 	modelMatrix = glm::rotate(modelMatrix, renderableRotation.z, glm::vec3(0, 0, 1));
-	//Scale
+	// Scale
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(renderableScale.x, renderableScale.y, renderableScale.z));
+	// Calculate MdelViewProjaction matrix
 	glm::mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
-	this->camera->applyCameraToMatrices(GameLoop::deltaTime, &viewMatrix, &projectionMatrix);
+
+// Send uniforms:
+	glUniform1f(testValueId, testValue);
+	glUniform1i(textureBufferID, 0);
+	glUniform3f(lightID, camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
+	// 
 	glUniformMatrix4fv(mpvMatrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
 
+
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureDataID);
 
-	glUniform1i(textureBuffer, 0);
-
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glVertexAttribPointer(
 		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -145,10 +156,21 @@ void  SimpleRenderer::drawModel() {
 		);
 
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
 	glVertexAttribPointer(
 		1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 		2,                                // size : U+V => 2
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+		);
+
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbufferID);
+	glVertexAttribPointer(
+		2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+		3,                                // size : U+V => 2
 		GL_FLOAT,                         // type
 		GL_FALSE,                         // normalized?
 		0,                                // stride

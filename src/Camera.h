@@ -48,7 +48,6 @@ public:
 	float horizontalAngle;
 	float verticalAngle;
 
-	float initialFoV;
 	float speed;
 	float mouseSpeed;
 private:
