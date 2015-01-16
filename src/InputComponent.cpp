@@ -24,7 +24,8 @@ InputComponent::InputComponent(InputComponent& other)
 
 void InputComponent::initWith(InputComponent &component)
 {
-    
+	this->_daddyId = component.getDaddyId();
+	this->_active = component._active;
 }
 
 void InputComponent::update(double dT)

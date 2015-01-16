@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include "CPPLogger.h"
 #include <memory>
+#include "Renderable.h"
 
 struct FileData {
 	std::vector<std::string> vertexdata;
@@ -14,14 +15,12 @@ struct FileData {
 
 class ModelLoader {
 public:
-	void loadObjFile(std::string fileName);
+	ModelLoader(std::string fileName);
 	~ModelLoader();
-	ModelLoader();
-	std::vector<glm::vec3> indexedVertices;
-	std::vector<glm::vec2> indexedUv;
-	std::vector<glm::vec3> indexedNormals;
+	void loadObjFile(Renderable &renderable);
 	int getVertexCount();
 private:
+	std::string _fileName;
 	static Logger logger;
 	//------------------------------------------
 	// Vertices, uvs and normals, as read from 
@@ -43,6 +42,6 @@ private:
 	void parse(std::shared_ptr<FileData> data);
 	bool initialized = false; // this flag indicates wheter this ModelLoader instance successfully lodaded a model
 
-	void printRenderData();
-	void saveAsBinary(std::string fileName);
+	void printRenderData(Renderable &renderable);
+	void saveAsBinary(std::string fileName, Renderable &renderable);
 };

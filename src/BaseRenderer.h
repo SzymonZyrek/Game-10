@@ -14,9 +14,9 @@ public:
     virtual void init() = 0;
     virtual void render() = 0;
     virtual void update() = 0;
+	BaseRenderer();
 protected:
 	GLFWwindow *window;
-	BaseRenderer();
     void clear(float r=0,
                float g=0,
                float b=0,

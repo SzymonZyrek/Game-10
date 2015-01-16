@@ -35,6 +35,7 @@ void AIComponent::setAttitude(Attitude att)
 void AIComponent::initWith(AIComponent &component)
 {
 	this->_attitude = component.getAttitude();
+	this->_active = component._active;
 }
 
 void AIComponent::update(double dT)

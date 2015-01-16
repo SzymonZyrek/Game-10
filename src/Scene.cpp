@@ -19,35 +19,23 @@ void Scene::update(double dT)
 {
     for (int i = 0; i < _aisCount; i++)
     {
-        AIComponent &tais = _ais[i];
-        if (_gameObjects[tais.getDaddyId()].isActive()){
-            _ais[i].update(dT);
-        }
+        _ais[i].update(dT);
     }
     for (int i = 0; i < _inputsCount; i++)
     {
-        InputComponent &ti = _inputs[i];
-        if (_gameObjects[ti.getDaddyId()].isActive()){
-			_inputs[i].update(dT);
-        }
+		_inputs[i].update(dT);
     }
     for (int i = 0; i < _bodiesCount; i++)
     {
-        PhysicalComponent &body = _bodies[i];
-		if (_gameObjects[body.getDaddyId()].isActive()){
-            _bodies[i].update(dT);
-        }
+        _bodies[i].update(dT);
     }
     for (int i = 0; i < _renderablesCount; i++)
     {
-        RenderableComponent &renderable = _renderables[i];
-        if (_gameObjects[renderable.getDaddyId()].isActive()){
-            _renderables[i].update(dT);
-        }
+        _renderables[i].update(dT);
     }
 }
 
-void Scene::registerGameObject(GameObject* object)
+unsigned int Scene::registerGameObject(GameObject* object)
 {
     if (_gameObjectsCount >= MAX_GAME_OBJECTS){
         throw ErrorCodes::GAMEOBJECTS_OVERFLOW;
@@ -102,9 +90,54 @@ void Scene::registerGameObject(GameObject* object)
     }
     _gameObjects[_gameObjectsCount].setActive(true);
     _gameObjectsCount++;
-    
+	return _gameObjectsCount - 1;
 }
 void Scene::destroyGameObjectWithId(unsigned long theId)
 {
-    
+	destroyAIWithId(_gameObjects[theId].getAIComponent());
+	destroyBodyWithId(_gameObjects[theId].getPhysicalComponent());
+	destroyRenderableWithId(_gameObjects[theId].getRenderableComponent());
+	destroyInputWithId(_gameObjects[theId].getInputComponent());
+
+	if (theId != (_gameObjectsCount - 1)){
+		_gameObjects[theId].initWith(_gameObjects[_gameObjectsCount - 1]);
+	}
+	_gameObjects[_gameObjectsCount - 1].setActive(false);
+	_renderablesCount--;
+}
+void Scene::destroyRenderableWithId(unsigned long theId)
+{
+	if (theId != (_renderablesCount - 1)){
+		_renderables[theId].initWith(_renderables[_renderablesCount - 1]);
+		_gameObjects[_renderables[theId].getDaddyId()].setRenderableComponent(theId);
+	}
+	_renderables[_renderablesCount - 1].setActive(false);
+	_renderablesCount--;
+}
+void Scene::destroyAIWithId(unsigned long theId)
+{
+	if (theId != (_aisCount - 1)){
+		_ais[theId].initWith(_ais[_aisCount - 1]);
+		_gameObjects[_ais[theId].getDaddyId()].setAIComponent(theId);
+	}
+	_renderables[_renderablesCount - 1].setActive(false);
+	_aisCount--;
+}
+void Scene::destroyInputWithId(unsigned long theId)
+{
+	if (theId != (_inputsCount - 1)){
+		_inputs[theId].initWith(_inputs[_inputsCount - 1]);
+		_gameObjects[_inputs[theId].getDaddyId()].setInputComponent(theId);
+	}
+	_renderables[_renderablesCount - 1].setActive(false);
+	_inputsCount--;
+}
+void Scene::destroyBodyWithId(unsigned long theId)
+{
+	if (theId != (_bodiesCount - 1)){
+		_bodies[theId].initWith(_bodies[_bodiesCount - 1]);
+		_gameObjects[_bodies[theId].getDaddyId()].setPhysicalComponent(theId);
+	}
+	_renderables[_renderablesCount - 1].setActive(false);
+	_bodiesCount--;
 }

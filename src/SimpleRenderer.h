@@ -4,6 +4,7 @@
 #include "ModelLoader.h"
 #include <memory>
 #include "Camera.h"
+#include "RenderableComponent.h"
 
 class SimpleRenderer : public BaseRenderer
 {
@@ -17,14 +18,15 @@ public:
 private:
 	void draw();
 
-	ModelLoader model;
+	Renderable renderable;
+	RenderableComponent renderableComponent;
 
 	// uniform ids
 	GLuint programID;
 	GLuint mpvMatrixID;
 	GLuint modelMatrixID;
 	GLuint viewMatrixID;
-	GLuint textureDataID;
+	//GLuint textureDataID;
 	GLuint vertexArrayID;
 	GLuint lightID;
 	// buffer ids
@@ -37,6 +39,7 @@ private:
 
 	glm::vec3 renderablePosition;
 	glm::vec3 renderableRotation;
+
 	float testValue = 0;
 	GLuint testValueId;
 };

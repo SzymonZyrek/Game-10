@@ -89,6 +89,7 @@
     <ClCompile Include="..\..\src\Playground.cpp" />
     <ClCompile Include="..\..\src\Renderable.cpp" />
     <ClCompile Include="..\..\src\RenderableComponent.cpp" />
+    <ClCompile Include="..\..\src\RenderDataLoader.cpp" />
     <ClCompile Include="..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\src\ShadersLoader.cpp" />
     <ClCompile Include="..\..\src\TestConfig.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="..\..\src\Playground.h" />
     <ClInclude Include="..\..\src\Renderable.h" />
     <ClInclude Include="..\..\src\RenderableComponent.h" />
+    <ClInclude Include="..\..\src\RenderDataLoader.h" />
     <ClInclude Include="..\..\src\Scene.h" />
     <ClInclude Include="..\..\src\ShadersLoader.h" />
     <ClInclude Include="..\..\src\STBImage.h" />

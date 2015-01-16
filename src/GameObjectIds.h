@@ -16,12 +16,17 @@
 class GameObjectIds : public CPPIdentifiable {
 public:
     GameObjectIds();
-    void setRenderableComponent(int component);
-    void setPhysicalComponent(int component);
-    void setInputComponent(int component);
-    void setAIComponent(int component);
-    void addSpecialComponent(int component);
-    
+	void setRenderableComponent(unsigned int component);
+	void setPhysicalComponent(unsigned int component);
+	void setInputComponent(unsigned int component);
+	void setAIComponent(unsigned int component);
+	void addSpecialComponent(unsigned int component);
+
+	unsigned int getRenderableComponent();
+	unsigned int getPhysicalComponent();
+	unsigned int getInputComponent();
+	unsigned int getAIComponent();
+
     void setActive(bool value);
     
     bool hasRenderableComponent();
@@ -29,7 +34,7 @@ public:
     bool hasInputComponent();
     bool hasAIComponent();
     bool hasSpecialComponents();
-    
+	void initWith(GameObjectIds &other);
     bool isActive();
 private:
     bool _active;

@@ -17,6 +17,8 @@
 #include "ModelLoader.h"
 #include "GameLoop.h"
 #include "Config.h"
+#include "RenderableComponent.h"
+
 #define SHIFT_MOVE 0.f
 
 unsigned int fpsLogPeriodicKey = Log::getInstance()->getLogPeriodicKey(1.0);
@@ -35,10 +37,13 @@ void SimpleRenderer::init()
 	std::string vertexShaderFileName = Config::getMainConfig().getProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
 	std::string fragmentShaderFileName = Config::getMainConfig().getProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
 
+	ModelLoader model(mdoelFileName);
+	model.loadObjFile(renderable);
+
 	glfwMakeContextCurrent(window);
-	model.loadObjFile(mdoelFileName);
-	TextureLoader texture;
-	textureDataID = texture.loadTexture(textureFileName.c_str());
+
+	TextureLoader texture(textureFileName);
+	texture.loadTexture(renderable);
 
 	programID = ShadersLoader::loadShaders(
 		vertexShaderFileName.c_str(),
@@ -54,21 +59,17 @@ void SimpleRenderer::init()
 	viewMatrixID = glGetUniformLocation(programID, "V");
 	textureBufferID = glGetUniformLocation(programID, "myTextureSampler");
 
-	std::vector<glm::vec3> vertices = model.indexedVertices;
-	std::vector<glm::vec3> normals = model.indexedNormals;
-	std::vector<glm::vec2> uvs = model.indexedUv;
-
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, (vertices.size() * sizeof(glm::vec3)), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (renderable.indexedVertices.size() * sizeof(glm::vec3)), &renderable.indexedVertices[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &uvBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, renderable.indexedUv.size() * sizeof(glm::vec2), &renderable.indexedUv[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &normalbufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbufferID);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, renderable.indexedNormals.size() * sizeof(glm::vec3), &renderable.indexedNormals[0], GL_STATIC_DRAW);
 
 	this->camera = std::make_shared<Camera>(window);
 	renderablePosition = glm::vec3(0, 0, 0);
@@ -133,7 +134,7 @@ void  SimpleRenderer::draw() {
 
 // Send uniforms:
 	glUniform1f(testValueId, testValue);
-	glUniform1i(textureBufferID, 0);
+	//glUniform1i(textureBufferID, 0);
 	glUniform3f(lightID, camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
 	// 
 	glUniformMatrix4fv(mpvMatrixID, 1, GL_FALSE, &MVP[0][0]);
@@ -142,7 +143,7 @@ void  SimpleRenderer::draw() {
 
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureDataID);
+	glBindTexture(GL_TEXTURE_2D, renderable.textureDataID);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -176,8 +177,7 @@ void  SimpleRenderer::draw() {
 		0,                                // stride
 		(void*)0                          // array buffer offset
 		);
-	GLuint indices = model.getVertexCount();
-	glDrawArrays(GL_TRIANGLES, 0, indices);
+	glDrawArrays(GL_TRIANGLES, 0, renderable.vertexCount);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }

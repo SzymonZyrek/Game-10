@@ -2,9 +2,13 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <string>
+#include "Renderable.h"
 class TextureLoader {
 public:
-	GLuint loadTexture(const char * imagepath);
+	TextureLoader(std::string textureName);
+	void loadTexture(Renderable &renderable);
 private:
 	GLuint reallyLoadTexture(const char * imagepath);
+	std::string _texturePath;
 };

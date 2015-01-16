@@ -14,13 +14,11 @@
 #include "TestGameObjects.h"
 #include "TestWorlds.h"
 #include "TestConfig.h"
-#include "Playground.h"
 #include "CPPLogger.h"
 
 TestResult Testing::performTests(bool stopOnFailure)
 {
 	try {
-			Playground::p_main();
 			TestResult result;
 			TestTests tt;
 			TestUtils tu;

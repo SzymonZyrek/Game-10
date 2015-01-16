@@ -17,6 +17,7 @@ public:
     void setDaddyId(int daddy);
     int getDaddyId();
 	bool isActive();
+	void setActive(bool active);
     virtual void update(double dT) = 0;
 protected:
     int _daddyId = -1;

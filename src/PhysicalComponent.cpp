@@ -25,7 +25,8 @@ PhysicalComponent::PhysicalComponent(PhysicalComponent& other)
 
 void PhysicalComponent::initWith(PhysicalComponent &component)
 {
-    
+	this->_daddyId = component.getDaddyId();
+	this->_active = component._active;
 }
 
 void PhysicalComponent::update(double dT)

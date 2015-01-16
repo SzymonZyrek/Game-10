@@ -24,19 +24,23 @@ class Scene {
 public:
     Scene();
     void update(double dT);
-    void registerGameObject(GameObject* object);
+	unsigned int registerGameObject(GameObject* object);
     void destroyGameObjectWithId(unsigned long theId);
 private:
     GameObjectIds _gameObjects[MAX_GAME_OBJECTS];
-    int _gameObjectsCount = 0;
+    unsigned int _gameObjectsCount = 0;
     RenderableComponent _renderables[MAX_GAME_OBJECTS];
-    int _renderablesCount = 0;
-    PhysicalComponent _bodies[MAX_GAME_OBJECTS];
-    int _bodiesCount = 0;
+	unsigned int _renderablesCount = 0;
+	void destroyRenderableWithId(unsigned long theId);
+	PhysicalComponent _bodies[MAX_GAME_OBJECTS];
+	unsigned int _bodiesCount = 0;
+	void destroyBodyWithId(unsigned long theId);
     InputComponent _inputs[MAX_GAME_OBJECTS];
-    int _inputsCount = 0;
+	unsigned int _inputsCount = 0;
+	void destroyInputWithId(unsigned long theId);
     AIComponent _ais[MAX_GAME_OBJECTS];
-    int _aisCount = 0;
+	unsigned int _aisCount = 0;
+	void destroyAIWithId(unsigned long theId);
     std::vector<Component*> customComponents;
 };
 

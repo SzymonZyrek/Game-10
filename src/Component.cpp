@@ -25,3 +25,7 @@ bool Component::isActive()
 {
 	return _active;
 }
+
+void Component::setActive(bool active){
+	this->_active = active;
+}

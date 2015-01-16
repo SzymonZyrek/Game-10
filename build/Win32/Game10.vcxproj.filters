@@ -150,6 +150,9 @@
     <ClCompile Include="..\..\src\Camera.cpp">
       <Filter>Source\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\RenderDataLoader.cpp">
+      <Filter>Source\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\CPPEventType.h">
@@ -261,6 +264,9 @@
       <Filter>Source\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Camera.h">
+      <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderDataLoader.h">
       <Filter>Source\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

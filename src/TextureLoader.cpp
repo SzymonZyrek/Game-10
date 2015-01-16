@@ -17,6 +17,10 @@ static std::map<std::string, GLuint> pathToTextureID;
 
 Logger logger(DebugKey::TEXTURES);
 
+TextureLoader::TextureLoader(std::string textureName){
+	this->_texturePath = textureName;
+}
+
 GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 	int x, y, n;
 	std::stringstream ss;
@@ -49,9 +53,9 @@ GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 	logger << ss;
 	return textureID;
 }
-GLuint TextureLoader::loadTexture(const char * imagepath){
-	if (pathToTextureID[imagepath] == NULL){
-		pathToTextureID[imagepath] = reallyLoadTexture(imagepath);
+void TextureLoader::loadTexture(Renderable &renderable){
+	if (pathToTextureID[_texturePath] == NULL){
+		pathToTextureID[_texturePath] = reallyLoadTexture(_texturePath.c_str());
 	}
-	return pathToTextureID[imagepath];
+	renderable.textureDataID = pathToTextureID[_texturePath];
 }
