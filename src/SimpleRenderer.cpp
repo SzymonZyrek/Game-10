@@ -37,21 +37,9 @@ void SimpleRenderer::init()
 	std::string textureFileName = Config::getMainConfig().getProperty(DEFAULT_TEXTURE_FILE_NAME);
 	std::string vertexShaderFileName = Config::getMainConfig().getProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
 	std::string fragmentShaderFileName = Config::getMainConfig().getProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
-	
 
-	//Renderable renderable;
-	//ModelLoader model(mdoelFileName);
-	//model.loadObjFile(renderable);
 
-	//glfwMakeContextCurrent(window);
-
-	//TextureLoader texture(textureFileName);
-	//texture.loadTexture(renderable);
-
-	//RenderDataLoader renderData;
-	//renderData.loadIndexedData(renderable);
-
-	renderableComponent.setRenderable(std::make_shared<Renderable>(mdoelFileName, textureFileName));
+	renderableComponent[0].setRenderable(std::make_shared<Renderable>(mdoelFileName, textureFileName));
 
 	programID = ShadersLoader::loadShaders(
 		vertexShaderFileName.c_str(),
@@ -97,17 +85,16 @@ void SimpleRenderer::update()
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS){ if (testValue>-1)testValue -= 0.001; std::cout << "val" << testValue << std::endl; }
 }
 
-void SimpleRenderer::render()
+void SimpleRenderer::render(Scene &scene)
 {
     clear();
-	draw();
+	draw(scene);
     flush();
 }
 
-void  SimpleRenderer::draw() {
+void  SimpleRenderer::draw(Scene &scene) {
 	glfwMakeContextCurrent(window);
-	//renderableRotation.y -= 0.1;
-
+	
 // Calculate matrices:
 	glm::mat4 viewMatrix;
 	glm::mat4 projectionMatrix;
@@ -115,31 +102,30 @@ void  SimpleRenderer::draw() {
 	// Apply camera (its position and direction influences V&P matrices)
 	this->camera->applyCameraToMatrices(GameLoop::deltaTime, &viewMatrix, &projectionMatrix);
 	// Translate
-	modelMatrix = glm::translate(modelMatrix, renderableComponent.position);
+	modelMatrix = glm::translate(modelMatrix, renderableComponent[0].position);
 	// Rotate
-	modelMatrix = glm::rotate(modelMatrix, renderableComponent.rotation.x, glm::vec3(1, 0, 0));
-	modelMatrix = glm::rotate(modelMatrix, renderableComponent.rotation.y, glm::vec3(0, 1, 0));
-	modelMatrix = glm::rotate(modelMatrix, renderableComponent.rotation.z, glm::vec3(0, 0, 1));
+	modelMatrix = glm::rotate(modelMatrix, renderableComponent[0].rotation.x, glm::vec3(1, 0, 0));
+	modelMatrix = glm::rotate(modelMatrix, renderableComponent[0].rotation.y, glm::vec3(0, 1, 0));
+	modelMatrix = glm::rotate(modelMatrix, renderableComponent[0].rotation.z, glm::vec3(0, 0, 1));
 	// Scale
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(renderableComponent.scale.x, renderableComponent.scale.y, renderableComponent.scale.z));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(renderableComponent[0].scale.x, renderableComponent[0].scale.y, renderableComponent[0].scale.z));
 	// Calculate MdelViewProjaction matrix
 	glm::mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
 
 // Send uniforms:
 	glUniform1f(testValueId, testValue);
 	//glUniform1i(textureBufferID, 0);
-	glUniform3f(lightID, camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
-	// 
+	glUniform3f(lightID, camera->getPosition().x, camera->getPosition().y, camera->getPosition().z); 
 	glUniformMatrix4fv(mpvMatrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
 
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, renderableComponent.textureBufferID);
+	glBindTexture(GL_TEXTURE_2D, renderableComponent[0].textureBufferID);
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent.vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent[0].vertexBufferID);
 	glVertexAttribPointer(
 		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -150,7 +136,7 @@ void  SimpleRenderer::draw() {
 		);
 
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent.uvBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent[0].uvBufferID);
 	glVertexAttribPointer(
 		1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 		2,                                // size : U+V => 2
@@ -161,7 +147,7 @@ void  SimpleRenderer::draw() {
 		);
 
 	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent.normalbufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent[0].normalbufferID);
 	glVertexAttribPointer(
 		2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 		3,                                // size : U+V => 2
@@ -170,7 +156,7 @@ void  SimpleRenderer::draw() {
 		0,                                // stride
 		(void*)0                          // array buffer offset
 		);
-	glDrawArrays(GL_TRIANGLES, 0, renderableComponent.vertexCount);
+	glDrawArrays(GL_TRIANGLES, 0, renderableComponent[0].vertexCount);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }

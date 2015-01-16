@@ -19,9 +19,11 @@ public:
 	bool isActive();
 	void setActive(bool active);
     virtual void update(double dT) = 0;
+	operator bool() const;
 protected:
     int _daddyId = -1;
 	bool _active = false;
+	bool _isNullComponent;
 protected:
 	unsigned int _logPeriodicKey;
 };

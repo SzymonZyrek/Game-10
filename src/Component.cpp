@@ -12,6 +12,7 @@
 Component::Component()
 {
 	this->_logPeriodicKey = Log::getInstance()->getLogPeriodicKey(2.0);
+	this->_isNullComponent = true;
 }
 void Component::setDaddyId(int daddy){
 	this->_daddyId = daddy;
@@ -28,4 +29,9 @@ bool Component::isActive()
 
 void Component::setActive(bool active){
 	this->_active = active;
+}
+
+Component::operator bool() const
+{
+	return !this->_isNullComponent;
 }

@@ -14,9 +14,32 @@
 #include "TextureLoader.h"
 #include "RenderDataLoader.h"
 
-RenderableComponent::RenderableComponent(){
-	this->_isNullComponent = true;
+RenderableComponent::RenderableComponent() : Component() {
+
 }
+
+RenderableComponent::RenderableComponent(std::string modelName, std::string textureName){
+	this->renderable = std::make_shared<Renderable>(modelName, textureName);
+	if (!renderable->modelLoaded){
+		ModelLoader loader(renderable->modelName);
+		loader.loadObjFile(*renderable);
+		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
+		}
+	if (!renderable->modelInitialized){
+		TextureLoader textureLoader(renderable->textureName);
+		textureLoader.loadTexture(*renderable);
+		RenderDataLoader renderDataLoader;
+		renderDataLoader.loadIndexedData(*renderable);
+	}
+	this->renderable = renderable;
+	this->normalbufferID = renderable->normalbufferID;
+	this->vertexBufferID = renderable->vertexBufferID;
+	this->textureBufferID = renderable->textureBufferID;
+	this->uvBufferID = renderable->normalbufferID;
+	this->vertexCount = renderable->vertexCount;
+	this->_isNullComponent = false;
+}
+
 RenderableComponent::RenderableComponent(std::shared_ptr <Renderable> renderable)
 {
 	if (!renderable->modelLoaded){
@@ -40,10 +63,6 @@ RenderableComponent::RenderableComponent(std::shared_ptr <Renderable> renderable
 	Log::debug("RenderableComponent default contructor\n", DebugKey::OBJECT_CREATION);
 }
 
-RenderableComponent::operator bool() const
-{
-	return !this->_isNullComponent;
-}
 
 void RenderableComponent::setRenderable(std::shared_ptr <Renderable> renderable){
 	if (!renderable->modelLoaded){
@@ -80,6 +99,10 @@ void RenderableComponent::initWith(RenderableComponent &component)
 	this->position = component.position;
 	this->rotation = component.rotation;
 	this->scale = component.scale;
+	
+	if (_isNullComponent){
+		return;
+	}
 
 	this->renderable = component.renderable;
 	if (!renderable->modelLoaded){
@@ -103,6 +126,9 @@ void RenderableComponent::initWith(RenderableComponent &component)
 
 void RenderableComponent::update(double dT)
 {
+	if (_isNullComponent){
+		return;
+	}
 	this->render();
 }
 void RenderableComponent::render()

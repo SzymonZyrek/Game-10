@@ -5,6 +5,7 @@
 #include <regex>
 #include <random>
 #include "SimpleRenderer.h"
+#include "Scene.h"
 #define STEP 1/60
 
 float GameLoop::frameTime;
@@ -66,7 +67,7 @@ void GameLoop::run()
 			//	<< " Max: " << AggregationParam(_accumulator - STEP)
 			//	<< " Avg: " << AggregationParam(_accumulator - STEP));
 			_renderer.update();
-			_renderer.render();
+			_renderer.render(_scene);
 			_accumulator = 0;
 		}
 

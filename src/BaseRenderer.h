@@ -5,6 +5,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "CPPLogger.h"
+#include "Scene.h"
 #define assert(__EXPR__,__ERR__) if (!__EXPR__){result += TestResult(__ERR__); if (stopOnFailure) return result;}
 #define doGL(__CONTENT__) __CONTENT__; checkGLError();
 
@@ -12,7 +13,7 @@ class BaseRenderer
 {
 public:
     virtual void init() = 0;
-    virtual void render() = 0;
+    virtual void render(Scene &scene) = 0;
     virtual void update() = 0;
 	BaseRenderer();
 protected:

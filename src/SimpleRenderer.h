@@ -5,21 +5,23 @@
 #include <memory>
 #include "Camera.h"
 #include "RenderableComponent.h"
+#include "Scene.h"
 
 class SimpleRenderer : public BaseRenderer
 {
 public:
     virtual void init();
-    virtual void render();
+    virtual void render(Scene &scene);
 	//TODO: move update away from here,
 	//its here just as a dev toy
     virtual void update();
     void resetShift();
 private:
-	void draw();
+	void draw(Scene &scene);
 
 	//Renderable renderable;
-	RenderableComponent renderableComponent;
+	RenderableComponent renderableComponent[10];
+	Scene scene;
 
 	// uniform ids
 	GLuint programID;
@@ -31,9 +33,6 @@ private:
 	GLuint textureDataID;
 
 	std::shared_ptr<Camera> camera;
-
-	//glm::vec3 renderablePosition;
-	//glm::vec3 renderableRotation;
 
 	float testValue = 0;
 	GLuint testValueId;

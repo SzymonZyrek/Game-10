@@ -34,6 +34,7 @@ public:
 
 	operator bool() const;
 	RenderableComponent();
+	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName);
 	RenderableComponent(std::shared_ptr <Renderable> renderable);
 	RenderableComponent(RenderableComponent& other);
 	void setRenderable(std::shared_ptr <Renderable> renderable);
@@ -41,7 +42,6 @@ public:
     void initWith(RenderableComponent &component);
 private:
 	void render();
-	bool _isNullComponent = false;
 };
 
 #endif /* defined(__OpenGLTutorial__RenderableComponent__) */

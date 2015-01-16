@@ -1,0 +1,13 @@
+*.obj
+*.tlog
+*.pdb
+*.log
+*.psess
+*.vspx
+*.suo
+*.user
+/build/Win32/Debug/Game10.exe
+/build/Win32/Debug/Game10.ilk
+/build/Win32/Debug/vc120.idb
+/build/Win32/Game10.opensdf
+/build/Win32/Game10.sdf
