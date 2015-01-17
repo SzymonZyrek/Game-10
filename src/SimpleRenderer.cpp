@@ -94,7 +94,7 @@ void SimpleRenderer::render(Scene &scene)
 		gameObject->setPhysicalComponent(std::make_shared<PhysicalComponent>());
 		scene.registerGameObject(gameObject);
 		GameObject* gameObject2 = new GameObject;
-		gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("church.obj", textureFileName)));
+		gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("church.obj", "brick.jpg")));
 		scene.registerGameObject(gameObject2);
 		test = false;
 	}

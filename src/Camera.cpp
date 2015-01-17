@@ -4,7 +4,8 @@
 #include <glm/ext.hpp>
 #include <sstream>
 #include "CPPLogger.h"
-
+#define RESOLUTION_X 1024
+#define RESOLUTION_Y 768
 
 Camera::Camera(GLFWwindow* window){
 	this->window = window;
@@ -67,8 +68,8 @@ void Camera::moveDownwards(float step) {
 
 //------------------------------- ILookAround INTERFACE PART -------------------------------
 void Camera::updateLookAtPoint(float deltaTime, float xpos, float ypos){
-	horizontalAngle += mouseSpeed * float(1024 / 2 - xpos);
-	verticalAngle += mouseSpeed * float(768 / 2 - ypos);
+	horizontalAngle += mouseSpeed * float(RESOLUTION_X / 2 - xpos);
+	verticalAngle += mouseSpeed * float(RESOLUTION_Y / 2 - ypos);
 
 	// direction : Spherical coordinates to Cartesian coordinates conversion
 	direction = glm::vec3(
