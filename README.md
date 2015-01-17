@@ -17,4 +17,4 @@ _CRT_SECURE_NO_WARNINGS
 DEFAULT_MODEL=globe.obj
 DEFAULT_TEXTURE=grass.jpg
 
-Sry for messy formatting and not much info, no time now.
+Sry for messy formatting and not much info, no time now. Again, just contact me.
