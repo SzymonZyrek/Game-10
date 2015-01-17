@@ -15,7 +15,12 @@ class GameObjectIds;
 
 class InputComponent : public Component{
 public:
-    virtual void update(double dT);
+	virtual void update(double dT,
+		unsigned int gameObjectId,
+		std::vector<AIUpdateCommand> &aiCommands,
+		std::vector<InputUpdateCommand> &inputCommands,
+		std::vector<PhysicsUpdateCommand> &physicCommands,
+		std::vector<RenderableUpdateCommand> &renderableCommands);
 	InputComponent();
 	InputComponent(InputComponent& other);
 	void initWith(InputComponent &component);

@@ -70,9 +70,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\Aggregation.cpp" />
     <ClCompile Include="..\..\src\AIComponent.cpp" />
+    <ClCompile Include="..\..\src\AIUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\BaseRenderer.cpp" />
     <ClCompile Include="..\..\src\Camera.cpp" />
     <ClCompile Include="..\..\src\Component.cpp" />
+    <ClCompile Include="..\..\src\ComponentUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\Config.cpp" />
     <ClCompile Include="..\..\src\CPPEvent.cpp" />
     <ClCompile Include="..\..\src\CPPEventHandler.cpp" />
@@ -84,11 +86,14 @@
     <ClCompile Include="..\..\src\GameObject.cpp" />
     <ClCompile Include="..\..\src\GameObjectIds.cpp" />
     <ClCompile Include="..\..\src\InputComponent.cpp" />
+    <ClCompile Include="..\..\src\InputUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\ModelLoader.cpp" />
     <ClCompile Include="..\..\src\PhysicalComponent.cpp" />
+    <ClCompile Include="..\..\src\PhysicsUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\Playground.cpp" />
     <ClCompile Include="..\..\src\Renderable.cpp" />
     <ClCompile Include="..\..\src\RenderableComponent.cpp" />
+    <ClCompile Include="..\..\src\RenderableUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\RenderDataLoader.cpp" />
     <ClCompile Include="..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\src\ShadersLoader.cpp" />
@@ -107,9 +112,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\Aggregation.h" />
     <ClInclude Include="..\..\src\AIComponent.h" />
+    <ClInclude Include="..\..\src\AIUpdateCommand.h" />
     <ClInclude Include="..\..\src\BaseRenderer.h" />
     <ClInclude Include="..\..\src\Camera.h" />
     <ClInclude Include="..\..\src\Component.h" />
+    <ClInclude Include="..\..\src\ComponentUpdateCommand.h" />
     <ClInclude Include="..\..\src\Config.h" />
     <ClInclude Include="..\..\src\CPPEvent.h" />
     <ClInclude Include="..\..\src\CPPEventHandler.h" />
@@ -123,11 +130,14 @@
     <ClInclude Include="..\..\src\GameObjectIds.h" />
     <ClInclude Include="..\..\src\Errors.h" />
     <ClInclude Include="..\..\src\InputComponent.h" />
+    <ClInclude Include="..\..\src\InputUpdateCommand.h" />
     <ClInclude Include="..\..\src\ModelLoader.h" />
     <ClInclude Include="..\..\src\PhysicalComponent.h" />
+    <ClInclude Include="..\..\src\PhysicsUpdateCommand.h" />
     <ClInclude Include="..\..\src\Playground.h" />
     <ClInclude Include="..\..\src\Renderable.h" />
     <ClInclude Include="..\..\src\RenderableComponent.h" />
+    <ClInclude Include="..\..\src\RenderableUpdateCommand.h" />
     <ClInclude Include="..\..\src\RenderDataLoader.h" />
     <ClInclude Include="..\..\src\Scene.h" />
     <ClInclude Include="..\..\src\ShadersLoader.h" />

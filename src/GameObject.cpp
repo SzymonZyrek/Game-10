@@ -12,6 +12,7 @@
 #include "InputComponent.h"
 #include "PhysicalComponent.h"
 #include "CPPLogger.h"
+#include <memory>
 
 GameObject::GameObject()
 {
@@ -21,43 +22,43 @@ GameObject::GameObject()
 GameObject::GameObject(GameObject &other)
 {
 	//reset id, will be re-assigned on registration
-	this->id = nullptr;
+	this->gameObjectId= 0;
 	if (other.hasAIComponent())
-		this->_ai = new AIComponent(*other.getAIComponent());
+		this->_ai = std::make_shared<AIComponent>(*other.getAIComponent());
 	if (other.hasInputComponent())
-		this->_input = new InputComponent(*other.getInputComponent());
+		this->_input = std::make_shared<InputComponent>(*other.getInputComponent());
 	if (other.hasPhysicalComponent())
-		this->_body = new PhysicalComponent(*other.getPhysicalComponent());
+		this->_body = std::make_shared<PhysicalComponent>(*other.getPhysicalComponent());
 	if (other.hasRenderableComponent())
-		this->_renderable = new RenderableComponent(*other.getRenderableComponent());
+		this->_renderable = std::make_shared<RenderableComponent>(*other.getRenderableComponent());
 	Log::debug("GameObject constrcuted with ref copy construcor\n", DebugKey::OBJECT_CREATION);
 }
-void GameObject::setRenderableComponent(RenderableComponent* component)
+void GameObject::setRenderableComponent(std::shared_ptr<RenderableComponent> component)
 {
     this->_renderable = component;
 }
-void GameObject::setPhysicalComponent(PhysicalComponent* component)
+void GameObject::setPhysicalComponent(std::shared_ptr<PhysicalComponent> component)
 {
     this->_body = component;
 }
-void GameObject::setInputComponent(InputComponent* component)
+void GameObject::setInputComponent(std::shared_ptr<InputComponent> component)
 {
     this->_input = component;
 }
-void GameObject::setAIComponent(AIComponent* component)
+void GameObject::setAIComponent(std::shared_ptr<AIComponent> component)
 {
     this->_ai = component;
 }
-void GameObject::addSpecialComponent(Component* component)
+void GameObject::addSpecialComponent(std::shared_ptr<Component> component)
 {
     this->_specialComponents.push_back(component);
 }
 
-RenderableComponent* GameObject::getRenderableComponent(){return _renderable;}
-PhysicalComponent* GameObject::getPhysicalComponent(){return _body;}
-InputComponent* GameObject::getInputComponent(){return _input;}
-AIComponent* GameObject::getAIComponent(){return _ai;}
-std::vector<Component*> GameObject::getSpecialComponents(){return _specialComponents;}
+std::shared_ptr<RenderableComponent> GameObject::getRenderableComponent(){ return _renderable; }
+std::shared_ptr<PhysicalComponent> GameObject::getPhysicalComponent(){ return _body; }
+std::shared_ptr<InputComponent> GameObject::getInputComponent(){ return _input; }
+std::shared_ptr<AIComponent> GameObject::getAIComponent(){ return _ai; }
+std::vector<std::shared_ptr<Component>> GameObject::getSpecialComponents(){ return _specialComponents; }
 
 bool GameObject::hasRenderableComponent()
 {

@@ -29,9 +29,17 @@ void PhysicalComponent::initWith(PhysicalComponent &component)
 	this->_active = component._active;
 }
 
-void PhysicalComponent::update(double dT)
+void PhysicalComponent::update(double dT,
+	unsigned int gameObjectId,
+	std::vector<AIUpdateCommand> &aiCommands,
+	std::vector<InputUpdateCommand> &inputCommands,
+	std::vector<PhysicsUpdateCommand> &physicCommands,
+	std::vector<RenderableUpdateCommand> &renderableCommands)
 {
 	std::stringstream ss;
 	ss << "updating physics of " << this->_daddyId << std::endl;
 	Log::periodic(ss.str(), this->_logPeriodicKey);
+
+	RenderableUpdateCommand command(gameObjectId, RenderableCommandEnum::TEST_ROTATE);
+	renderableCommands.push_back(command);
 }

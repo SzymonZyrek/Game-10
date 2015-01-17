@@ -26,20 +26,19 @@ unsigned int fpsLogPeriodicKey = Log::getInstance()->getLogPeriodicKey(1.0);
 unsigned int glLogPeriodicKey = Log::getInstance()->getLogPeriodicKey(3.0);
 static void error_callback(int error, const char* description)
 {
-	Logger logger({ Aggregate::COUNT_DISTINCT }, glLogPeriodicKey, DebugKey::GL_ERRORS);
+	Logger logger({ Aggregate::SELECT_DISTINCT }, glLogPeriodicKey, DebugKey::GL_ERRORS);
 	std::stringstream ss;
 	ss << description;
 	logger << ss;
 }
 void SimpleRenderer::init()
 {	
-	std::string mdoelFileName = Config::getMainConfig().getProperty(DEFAULT_MODEL_FILE_NAME);
-	std::string textureFileName = Config::getMainConfig().getProperty(DEFAULT_TEXTURE_FILE_NAME);
+	
 	std::string vertexShaderFileName = Config::getMainConfig().getProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
 	std::string fragmentShaderFileName = Config::getMainConfig().getProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
 
 
-	renderableComponent[0].setRenderable(std::make_shared<Renderable>(mdoelFileName, textureFileName));
+	//renderableComponent[0].setRenderable(std::make_shared<Renderable>(mdoelFileName, textureFileName));
 
 	programID = ShadersLoader::loadShaders(
 		vertexShaderFileName.c_str(),
@@ -87,12 +86,35 @@ void SimpleRenderer::update()
 
 void SimpleRenderer::render(Scene &scene)
 {
+	if (test){
+		std::string mdoelFileName = Config::getMainConfig().getProperty(DEFAULT_MODEL_FILE_NAME);
+		std::string textureFileName = Config::getMainConfig().getProperty(DEFAULT_TEXTURE_FILE_NAME);
+		GameObject* gameObject = new GameObject;
+		gameObject->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>(mdoelFileName, textureFileName)));
+		gameObject->setPhysicalComponent(std::make_shared<PhysicalComponent>());
+		scene.registerGameObject(gameObject);
+		GameObject* gameObject2 = new GameObject;
+		gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("church.obj", textureFileName)));
+		scene.registerGameObject(gameObject2);
+		test = false;
+	}
     clear();
-	draw(scene);
+	for (RenderableComponent &theRenderable : scene._renderables){
+		if (theRenderable){
+			draw(theRenderable);
+			Logger logger({ Aggregate::SELECT_DISTINCT }, glLogPeriodicKey, DebugKey::GL_ERRORS);
+			std::stringstream ss;
+			ss << "Rendering";
+			logger << ss;
+		}
+		else{
+			break;
+		}
+	}
     flush();
 }
 
-void  SimpleRenderer::draw(Scene &scene) {
+void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	glfwMakeContextCurrent(window);
 	
 // Calculate matrices:
@@ -102,13 +124,13 @@ void  SimpleRenderer::draw(Scene &scene) {
 	// Apply camera (its position and direction influences V&P matrices)
 	this->camera->applyCameraToMatrices(GameLoop::deltaTime, &viewMatrix, &projectionMatrix);
 	// Translate
-	modelMatrix = glm::translate(modelMatrix, renderableComponent[0].position);
+	modelMatrix = glm::translate(modelMatrix, theRenderable.position);
 	// Rotate
-	modelMatrix = glm::rotate(modelMatrix, renderableComponent[0].rotation.x, glm::vec3(1, 0, 0));
-	modelMatrix = glm::rotate(modelMatrix, renderableComponent[0].rotation.y, glm::vec3(0, 1, 0));
-	modelMatrix = glm::rotate(modelMatrix, renderableComponent[0].rotation.z, glm::vec3(0, 0, 1));
+	modelMatrix = glm::rotate(modelMatrix, theRenderable.rotation.x, glm::vec3(1, 0, 0));
+	modelMatrix = glm::rotate(modelMatrix, theRenderable.rotation.y, glm::vec3(0, 1, 0));
+	modelMatrix = glm::rotate(modelMatrix, theRenderable.rotation.z, glm::vec3(0, 0, 1));
 	// Scale
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(renderableComponent[0].scale.x, renderableComponent[0].scale.y, renderableComponent[0].scale.z));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(theRenderable.scale.x, theRenderable.scale.y, theRenderable.scale.z));
 	// Calculate MdelViewProjaction matrix
 	glm::mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
 
@@ -122,10 +144,10 @@ void  SimpleRenderer::draw(Scene &scene) {
 
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, renderableComponent[0].textureBufferID);
+	glBindTexture(GL_TEXTURE_2D, theRenderable.textureBufferID);
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent[0].vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.vertexBufferID);
 	glVertexAttribPointer(
 		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -136,7 +158,7 @@ void  SimpleRenderer::draw(Scene &scene) {
 		);
 
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent[0].uvBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.uvBufferID);
 	glVertexAttribPointer(
 		1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 		2,                                // size : U+V => 2
@@ -147,7 +169,7 @@ void  SimpleRenderer::draw(Scene &scene) {
 		);
 
 	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, renderableComponent[0].normalbufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.normalbufferID);
 	glVertexAttribPointer(
 		2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 		3,                                // size : U+V => 2
@@ -156,7 +178,7 @@ void  SimpleRenderer::draw(Scene &scene) {
 		0,                                // stride
 		(void*)0                          // array buffer offset
 		);
-	glDrawArrays(GL_TRIANGLES, 0, renderableComponent[0].vertexCount);
+	glDrawArrays(GL_TRIANGLES, 0, theRenderable.vertexCount);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }

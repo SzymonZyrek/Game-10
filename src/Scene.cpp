@@ -19,32 +19,41 @@ void Scene::update(double dT)
 {
     for (int i = 0; i < _aisCount; i++)
     {
-        _ais[i].update(dT);
+		unsigned int id = _gameObjects[_ais[i].getDaddyId()].gameObjectId;
+		_ais[i].update(dT, id, aiUpdateCommands[id], inputUpdateCommands[id], physicsUpdateCommands[id], renderableUpdateCommands[id]);
     }
     for (int i = 0; i < _inputsCount; i++)
     {
-		_inputs[i].update(dT);
+		unsigned int id = _gameObjects[_inputs[i].getDaddyId()].gameObjectId;
+		_inputs[i].update(dT, id, aiUpdateCommands[id], inputUpdateCommands[id], physicsUpdateCommands[id], renderableUpdateCommands[id]);
     }
     for (int i = 0; i < _bodiesCount; i++)
     {
-        _bodies[i].update(dT);
+		unsigned int id = _gameObjects[_bodies[i].getDaddyId()].gameObjectId;
+		_bodies[i].update(dT, id, aiUpdateCommands[id], inputUpdateCommands[id], physicsUpdateCommands[id], renderableUpdateCommands[id]);
     }
     for (int i = 0; i < _renderablesCount; i++)
     {
-        _renderables[i].update(dT);
+		unsigned int id = _gameObjects[_renderables[i].getDaddyId()].gameObjectId;
+		_renderables[i].update(dT, id, aiUpdateCommands[id], inputUpdateCommands[id], physicsUpdateCommands[id], renderableUpdateCommands[id]);
     }
+	aiUpdateCommands.clear();
+	physicsUpdateCommands.clear();
+	inputUpdateCommands.clear();
+	renderableUpdateCommands.clear();
 }
+
 
 unsigned int Scene::registerGameObject(GameObject* object)
 {
     if (_gameObjectsCount >= MAX_GAME_OBJECTS){
         throw ErrorCodes::GAMEOBJECTS_OVERFLOW;
     }
-	if (object->id != nullptr) {
+	if (object->gameObjectId!=0) {
 		throw ErrorCodes::REGISTERING_REGISTERED_OBJECT;
 	}
 	else{
-		object->id = &_gameObjects[_gameObjectsCount];
+		object->gameObjectId = _gameObjects[_gameObjectsCount].gameObjectId;
 	}
     // register all components
     int daddyId = _gameObjectsCount;
@@ -90,7 +99,7 @@ unsigned int Scene::registerGameObject(GameObject* object)
     }
     _gameObjects[_gameObjectsCount].setActive(true);
     _gameObjectsCount++;
-	return _gameObjectsCount - 1;
+	return object->gameObjectId;
 }
 void Scene::destroyGameObjectWithId(unsigned long theId)
 {

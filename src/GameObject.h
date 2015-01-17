@@ -10,7 +10,7 @@
 #define __OpenGLTutorial__GameObject__
 
 #include<vector>
-
+#include<memory>
 
 class Component;
 class RenderableComponent;
@@ -21,21 +21,20 @@ class GameObjectIds;
 
 class GameObject {
 public:
+	unsigned int gameObjectId = 0;
     GameObject();
 	GameObject(GameObject &other);
-	void setRenderableComponent(RenderableComponent* component);
-    void setPhysicalComponent(PhysicalComponent* component);
-    void setInputComponent(InputComponent* component);
-    void setAIComponent(AIComponent* component);
-    void addSpecialComponent(Component* component);
+	void setRenderableComponent(std::shared_ptr<RenderableComponent> component);
+	void setPhysicalComponent(std::shared_ptr<PhysicalComponent> component);
+	void setInputComponent(std::shared_ptr<InputComponent> component);
+	void setAIComponent(std::shared_ptr<AIComponent> component);
+	void addSpecialComponent(std::shared_ptr<Component> component);
 
-	GameObjectIds* id;
-
-    RenderableComponent* getRenderableComponent();
-    PhysicalComponent* getPhysicalComponent();
-    InputComponent* getInputComponent();
-    AIComponent* getAIComponent();
-    std::vector<Component*> getSpecialComponents();
+	std::shared_ptr<RenderableComponent> getRenderableComponent();
+	std::shared_ptr<PhysicalComponent> getPhysicalComponent();
+	std::shared_ptr<InputComponent> getInputComponent();
+	std::shared_ptr<AIComponent> getAIComponent();
+	std::vector<std::shared_ptr<Component>> getSpecialComponents();
     
     void setActive(bool value);
     
@@ -49,11 +48,11 @@ public:
 private:
     bool _active;
 
-    RenderableComponent* _renderable;
-    PhysicalComponent* _body;
-    AIComponent* _ai;
-    InputComponent* _input;
-    std::vector<Component*> _specialComponents;
+	std::shared_ptr<RenderableComponent> _renderable;
+	std::shared_ptr<PhysicalComponent> _body;
+	std::shared_ptr<AIComponent> _ai;
+	std::shared_ptr< InputComponent> _input;
+	std::vector<std::shared_ptr<Component>> _specialComponents;
 };
 
 #endif /* defined(__OpenGLTutorial__GameObject__) */

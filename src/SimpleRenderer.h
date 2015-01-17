@@ -17,12 +17,10 @@ public:
     virtual void update();
     void resetShift();
 private:
-	void draw(Scene &scene);
+	void draw(RenderableComponent &renderable);
 
-	//Renderable renderable;
-	RenderableComponent renderableComponent[10];
 	Scene scene;
-
+	bool test = true;
 	// uniform ids
 	GLuint programID;
 	GLuint mpvMatrixID;

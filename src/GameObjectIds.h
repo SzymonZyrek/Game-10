@@ -12,9 +12,12 @@
 #include<vector>
 #include "CPPIdentifiable.h"
 
+static unsigned int __lastGameObjectId = 0;
+
 // As GameObject, but different approach- component array indexes instead of pointers
 class GameObjectIds : public CPPIdentifiable {
 public:
+	unsigned int gameObjectId = ++__lastGameObjectId;
     GameObjectIds();
 	void setRenderableComponent(unsigned int component);
 	void setPhysicalComponent(unsigned int component);

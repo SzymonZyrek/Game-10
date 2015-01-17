@@ -68,6 +68,7 @@ void GameLoop::run()
 			//	<< " Avg: " << AggregationParam(_accumulator - STEP));
 			_renderer.update();
 			_renderer.render(_scene);
+			_scene.update(deltaTime);
 			_accumulator = 0;
 		}
 

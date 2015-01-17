@@ -10,18 +10,31 @@
 #define __OpenGLTutorial__Component__
 
 #include <iostream>
+#include "RenderableUpdateCommand.h"
+#include "AIUpdateCommand.h"
+#include "PhysicsUpdateCommand.h"
+#include "InputUpdateCommand.h"
+#include <vector>
 
 class Component {
 public:
     Component();
-    void setDaddyId(int daddy);
-    int getDaddyId();
+	void setDaddyId(unsigned int daddy);
+	unsigned int getDaddyId();
 	bool isActive();
 	void setActive(bool active);
-    virtual void update(double dT) = 0;
+	virtual void update(double dT,
+		unsigned int gameObjectId,
+		std::vector<AIUpdateCommand> &aiCommands,
+		std::vector<InputUpdateCommand> &inputCommands,
+		std::vector<PhysicsUpdateCommand> &physicCommands,
+		std::vector<RenderableUpdateCommand> &renderableCommands) = 0;
 	operator bool() const;
 protected:
     int _daddyId = -1;
+	// TODO(optimalisation): implement gameObjectId in component so that daddyId can be removed
+	// and full data locality can be achieved
+	//unsigned int gameObjectId;
 	bool _active = false;
 	bool _isNullComponent;
 protected:

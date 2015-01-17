@@ -28,7 +28,12 @@ void InputComponent::initWith(InputComponent &component)
 	this->_active = component._active;
 }
 
-void InputComponent::update(double dT)
+void InputComponent::update(double dT,
+	unsigned int gameObjectId,
+	std::vector<AIUpdateCommand> &aiCommands,
+	std::vector<InputUpdateCommand> &inputCommands,
+	std::vector<PhysicsUpdateCommand> &physicCommands,
+	std::vector<RenderableUpdateCommand> &renderableCommands)
 {
 	std::stringstream ss;
 	ss << "updating input of " << this->_daddyId << std::endl;

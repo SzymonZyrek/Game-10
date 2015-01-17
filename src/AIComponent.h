@@ -20,7 +20,12 @@ public:
 	AIComponent();
 	AIComponent(AIComponent& other);
 	AIComponent(Attitude att);
-    virtual void update(double dT);
+	virtual void update(double dT,
+		unsigned int gameObjectId,
+		std::vector<AIUpdateCommand> &aiCommands,
+		std::vector<InputUpdateCommand> &inputCommands,
+		std::vector<PhysicsUpdateCommand> &physicCommands,
+		std::vector<RenderableUpdateCommand> &renderableCommands);
     void initWith(AIComponent &component);
 	Attitude getAttitude();
 	void setAttitude(Attitude att);

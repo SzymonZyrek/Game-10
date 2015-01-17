@@ -124,8 +124,18 @@ void RenderableComponent::initWith(RenderableComponent &component)
 	this->_isNullComponent = false;
 }
 
-void RenderableComponent::update(double dT)
+void RenderableComponent::update(double dT,
+	unsigned int gameObjectId,
+	std::vector<AIUpdateCommand> &aiCommands,
+	std::vector<InputUpdateCommand> &inputCommands,
+	std::vector<PhysicsUpdateCommand> &physicCommands,
+	std::vector<RenderableUpdateCommand> &renderableCommands)
 {
+	for (RenderableUpdateCommand& cmd : renderableCommands) {
+		if (cmd.getType()==RenderableCommandEnum::TEST_ROTATE) {
+			this->rotation.y += 0.01;
+		}
+	}
 	if (_isNullComponent){
 		return;
 	}

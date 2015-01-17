@@ -46,6 +46,12 @@
       <UniqueIdentifier>{2e5a2b4f-c7be-42e3-9823-54b6c20c0a24}</UniqueIdentifier>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Source\GameObject\Components">
+      <UniqueIdentifier>{00f8b6c2-f90c-456c-a8ba-d4ae26d6d1b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Commands">
+      <UniqueIdentifier>{afaf262c-f774-477f-b8c3-3e4af08718a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\CPPEventType.cpp">
@@ -66,26 +72,11 @@
     <ClCompile Include="..\..\src\GameObject.cpp">
       <Filter>Source\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\InputComponent.cpp">
-      <Filter>Source\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\PhysicalComponent.cpp">
-      <Filter>Source\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Component.cpp">
-      <Filter>Source\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\RenderableComponent.cpp">
-      <Filter>Source\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\TestResult.cpp">
       <Filter>Source\Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Testing.cpp">
       <Filter>Source\Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AIComponent.cpp">
-      <Filter>Source\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\BaseRenderer.cpp">
       <Filter>Source\Rendering</Filter>
@@ -153,6 +144,36 @@
     <ClCompile Include="..\..\src\RenderDataLoader.cpp">
       <Filter>Source\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\AIComponent.cpp">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Component.cpp">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\InputComponent.cpp">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PhysicalComponent.cpp">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\RenderableComponent.cpp">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AIUpdateCommand.cpp">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ComponentUpdateCommand.cpp">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\InputUpdateCommand.cpp">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\RenderableUpdateCommand.cpp">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PhysicsUpdateCommand.cpp">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\CPPEventType.h">
@@ -173,26 +194,11 @@
     <ClInclude Include="..\..\src\GameObject.h">
       <Filter>Source\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\InputComponent.h">
-      <Filter>Source\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PhysicalComponent.h">
-      <Filter>Source\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Component.h">
-      <Filter>Source\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\RenderableComponent.h">
-      <Filter>Source\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\TestResult.h">
       <Filter>Source\Tests</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Testing.h">
       <Filter>Source\Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\AIComponent.h">
-      <Filter>Source\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\BaseRenderer.h">
       <Filter>Source\Rendering</Filter>
@@ -268,6 +274,36 @@
     </ClInclude>
     <ClInclude Include="..\..\src\RenderDataLoader.h">
       <Filter>Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\AIComponent.h">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Component.h">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\InputComponent.h">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderableComponent.h">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PhysicalComponent.h">
+      <Filter>Source\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\AIUpdateCommand.h">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ComponentUpdateCommand.h">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\InputUpdateCommand.h">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderableUpdateCommand.h">
+      <Filter>Source\GameObject\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PhysicsUpdateCommand.h">
+      <Filter>Source\GameObject\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
