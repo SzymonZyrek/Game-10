@@ -4,11 +4,12 @@
 #include <glm/ext.hpp>
 #include <sstream>
 #include "CPPLogger.h"
-#define RESOLUTION_X 1024
-#define RESOLUTION_Y 768
 
 Camera::Camera(GLFWwindow* window){
 	this->window = window;
+	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	resolutionX = mode->width;
+	resolutionY = mode->height;
 	// Initial position : on +Z
 	position = glm::vec3(0, 0, 0);
 	// Initial horizontal angle : toward -Z
@@ -21,7 +22,6 @@ Camera::Camera(GLFWwindow* window){
 	dalogger = Logger(camLogPeriodicKey, DebugKey::CAMERA);
 }
 Camera::~Camera(){}
-//------------------------------- MOVABLE INTERFACE PART -------------------------------
 
 glm::vec3 Camera::getPosition(){
 	return this->position;
@@ -63,13 +63,10 @@ void Camera::moveDownwards(float step) {
 	this->setPosition(this->getPosition() - (up * (float)step * (float)speed));
 }
 
-//------------------------------- Movable INTERFACE PART -------------------------------
 
-
-//------------------------------- ILookAround INTERFACE PART -------------------------------
 void Camera::updateLookAtPoint(float deltaTime, float xpos, float ypos){
-	horizontalAngle += mouseSpeed * float(RESOLUTION_X / 2 - xpos);
-	verticalAngle += mouseSpeed * float(RESOLUTION_Y / 2 - ypos);
+	horizontalAngle += mouseSpeed * float(resolutionX / 2 - xpos);
+	verticalAngle += mouseSpeed * float(resolutionY / 2 - ypos);
 
 	// direction : Spherical coordinates to Cartesian coordinates conversion
 	direction = glm::vec3(
@@ -84,13 +81,12 @@ void Camera::updateLookAtPoint(float deltaTime, float xpos, float ypos){
 		);
 	up = glm::cross(right, direction);
 }
-//------------------------------- ILookAround INTERFACE PART -------------------------------
 
 void Camera::applyCameraToMatrices(float deltaTime, glm::mat4 *ViewMatrix, glm::mat4 *ProjectionMatrix){
 	glm::mat4 viewMatrix = *ViewMatrix;
 	glm::mat4 projectionMatrix = *ProjectionMatrix;
 	// update gaze direction
-	updateLookAtPoint(deltaTime, 1024/2, 768/2);
+	updateLookAtPoint(deltaTime, resolutionX / 2, resolutionY / 2);
 	
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 600 units
 	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 600.0f);

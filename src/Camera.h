@@ -53,4 +53,5 @@ public:
 private:
 	unsigned int camLogPeriodicKey;
 	Logger dalogger;
+	unsigned int resolutionX, resolutionY;
 };

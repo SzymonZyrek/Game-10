@@ -71,7 +71,7 @@ void SimpleRenderer::update()
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 	// and reset it for next frame
-	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
+	glfwSetCursorPos(window, resolutionX / 2, resolutionY / 2);
 	camera->updateLookAtPoint(GameLoop::deltaTime, (float)xpos, (float)ypos);
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){ camera->position += ((glm::normalize(camera->getDirection())*(float)0.04)); }

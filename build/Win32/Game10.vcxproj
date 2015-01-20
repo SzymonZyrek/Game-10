@@ -87,6 +87,7 @@
     <ClCompile Include="..\..\src\CPPLogger.cpp" />
     <ClCompile Include="..\..\src\GameLoop.cpp" />
     <ClCompile Include="..\..\src\GameObject.cpp" />
+    <ClCompile Include="..\..\src\GameObjectCommand.cpp" />
     <ClCompile Include="..\..\src\GameObjectIds.cpp" />
     <ClCompile Include="..\..\src\InputComponent.cpp" />
     <ClCompile Include="..\..\src\InputUpdateCommand.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\..\src\CPPQueue.h" />
     <ClInclude Include="..\..\src\GameLoop.h" />
     <ClInclude Include="..\..\src\GameObject.h" />
+    <ClInclude Include="..\..\src\GameObjectCommand.h" />
     <ClInclude Include="..\..\src\GameObjectIds.h" />
     <ClInclude Include="..\..\src\Errors.h" />
     <ClInclude Include="..\..\src\InputComponent.h" />

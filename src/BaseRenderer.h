@@ -24,4 +24,6 @@ protected:
                float a=0,
                bool depth=true);
     void flush();
+	unsigned int resolutionX;
+	unsigned int resolutionY;
 };
