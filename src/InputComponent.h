@@ -10,17 +10,13 @@
 #define __OpenGLTutorial__InputComponent__
 
 #include "Component.h"
+#include "PhysicsUpdateCommand.h"
 
 class GameObjectIds;
 
 class InputComponent : public Component{
 public:
-	virtual void update(double dT,
-		unsigned int gameObjectId,
-		std::vector<AIUpdateCommand> &aiCommands,
-		std::vector<InputUpdateCommand> &inputCommands,
-		std::vector<PhysicsUpdateCommand> &physicCommands,
-		std::vector<RenderableUpdateCommand> &renderableCommands);
+	virtual std::vector<PhysicsUpdateCommand> update(double dT);
 	InputComponent();
 	InputComponent(InputComponent& other);
 	void initWith(InputComponent &component);

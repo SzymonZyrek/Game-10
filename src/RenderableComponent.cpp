@@ -92,7 +92,7 @@ RenderableComponent::RenderableComponent(RenderableComponent& other)
 
 void RenderableComponent::initWith(RenderableComponent &component)
 {
-	this->_daddyId = component.getDaddyId();
+	this->gameObjectId = component.gameObjectId;
 	this->_active = component._active;
 	this->_isNullComponent = component._isNullComponent;
 
@@ -124,14 +124,9 @@ void RenderableComponent::initWith(RenderableComponent &component)
 	this->_isNullComponent = false;
 }
 
-void RenderableComponent::update(double dT,
-	unsigned int gameObjectId,
-	std::vector<AIUpdateCommand> &aiCommands,
-	std::vector<InputUpdateCommand> &inputCommands,
-	std::vector<PhysicsUpdateCommand> &physicCommands,
-	std::vector<RenderableUpdateCommand> &renderableCommands)
+void RenderableComponent::update(double dT, std::vector<RenderableUpdateCommand> &commands)
 {
-	for (RenderableUpdateCommand& cmd : renderableCommands) {
+	for (RenderableUpdateCommand& cmd : commands) {
 		if (cmd.getType()==RenderableCommandEnum::TEST_ROTATE) {
 			this->rotation.y += 0.01;
 		}
@@ -141,9 +136,12 @@ void RenderableComponent::update(double dT,
 	}
 	this->render();
 }
+
+
+
 void RenderableComponent::render()
 {
 	std::stringstream ss;
-	ss << "rendering" << this->_daddyId << std::endl;
+	ss << "rendering" << this->gameObjectId << std::endl;
 	Log::periodic(ss.str(), this->_logPeriodicKey);
 }

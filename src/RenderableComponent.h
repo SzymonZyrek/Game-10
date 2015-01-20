@@ -13,6 +13,7 @@
 #include <glm/glm.hpp>
 #include "Renderable.h"
 #include <memory>
+#include "RenderableUpdateCommand.h"
 
 class GameObjectIds;
 
@@ -37,12 +38,7 @@ public:
 	RenderableComponent(std::shared_ptr <Renderable> renderable);
 	RenderableComponent(RenderableComponent& other);
 	void setRenderable(std::shared_ptr <Renderable> renderable);
-	virtual void update(double dT,
-		unsigned int gameObjectId,
-		std::vector<AIUpdateCommand> &aiCommands,
-		std::vector<InputUpdateCommand> &inputCommands,
-		std::vector<PhysicsUpdateCommand> &physicCommands,
-		std::vector<RenderableUpdateCommand> &renderableCommands);
+	virtual void update(double dT, std::vector<RenderableUpdateCommand> &commands);
     void initWith(RenderableComponent &component);
 private:
 	void render();

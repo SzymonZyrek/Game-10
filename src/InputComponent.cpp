@@ -7,6 +7,7 @@
 //
 
 #include "InputComponent.h"
+#include "InputUpdateCommand.h"
 #include "GameObjectIds.h"
 #include <sstream>
 #include "CPPLogger.h"
@@ -18,24 +19,20 @@ InputComponent::InputComponent()
 
 InputComponent::InputComponent(InputComponent& other)
 {
-	this->_daddyId = other.getDaddyId();
+	this->gameObjectId = other.gameObjectId;
 	Log::debug("InputComponent copy contructor\n", DebugKey::OBJECT_CREATION);
 }
 
 void InputComponent::initWith(InputComponent &component)
 {
-	this->_daddyId = component.getDaddyId();
+	this->gameObjectId = component.gameObjectId;
 	this->_active = component._active;
 }
 
-void InputComponent::update(double dT,
-	unsigned int gameObjectId,
-	std::vector<AIUpdateCommand> &aiCommands,
-	std::vector<InputUpdateCommand> &inputCommands,
-	std::vector<PhysicsUpdateCommand> &physicCommands,
-	std::vector<RenderableUpdateCommand> &renderableCommands)
+std::vector<PhysicsUpdateCommand> InputComponent::update(double dT)
 {
 	std::stringstream ss;
-	ss << "updating input of " << this->_daddyId << std::endl;
+	ss << "updating input of " << this->gameObjectId << std::endl;
 	Log::periodic(ss.str(), this->_logPeriodicKey);
+	return std::vector<PhysicsUpdateCommand>();
 }

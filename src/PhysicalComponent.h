@@ -17,12 +17,7 @@ class PhysicalComponent : public Component {
 public:
 	PhysicalComponent();
 	PhysicalComponent(PhysicalComponent& other);
-	virtual void update(double dT,
-		unsigned int gameObjectId,
-		std::vector<AIUpdateCommand> &aiCommands,
-		std::vector<InputUpdateCommand> &inputCommands,
-		std::vector<PhysicsUpdateCommand> &physicCommands,
-		std::vector<RenderableUpdateCommand> &renderableCommands);
+	virtual std::vector<RenderableUpdateCommand> update(double dT);
     void initWith(PhysicalComponent &component);
 };
 

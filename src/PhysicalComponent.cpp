@@ -10,6 +10,7 @@
 #include "GameObjectIds.h"
 #include <sstream>
 #include "CPPLogger.h"
+#include "PhysicsUpdateCommand.h"
 
 PhysicalComponent::PhysicalComponent()
 {
@@ -18,28 +19,25 @@ PhysicalComponent::PhysicalComponent()
 
 PhysicalComponent::PhysicalComponent(PhysicalComponent& other)
 {
-	this->_daddyId = other.getDaddyId();
+	this->gameObjectId = other.gameObjectId;
 	Log::debug("PhysicalComponent copy contructor\n", DebugKey::OBJECT_CREATION);
 }
 
 
 void PhysicalComponent::initWith(PhysicalComponent &component)
 {
-	this->_daddyId = component.getDaddyId();
+	this->gameObjectId = component.gameObjectId;
 	this->_active = component._active;
 }
 
-void PhysicalComponent::update(double dT,
-	unsigned int gameObjectId,
-	std::vector<AIUpdateCommand> &aiCommands,
-	std::vector<InputUpdateCommand> &inputCommands,
-	std::vector<PhysicsUpdateCommand> &physicCommands,
-	std::vector<RenderableUpdateCommand> &renderableCommands)
-{
-	std::stringstream ss;
-	ss << "updating physics of " << this->_daddyId << std::endl;
-	Log::periodic(ss.str(), this->_logPeriodicKey);
 
+std::vector<RenderableUpdateCommand> PhysicalComponent::update(double dT)
+{
+	std::vector<RenderableUpdateCommand> result;
 	RenderableUpdateCommand command(gameObjectId, RenderableCommandEnum::TEST_ROTATE);
-	renderableCommands.push_back(command);
+	result.push_back(command);
+	std::stringstream ss;
+	ss << "updating input of " << this->gameObjectId << std::endl;
+	Log::periodic(ss.str(), this->_logPeriodicKey);
+	return result;
 }
