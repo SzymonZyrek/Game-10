@@ -15,16 +15,25 @@ public:
 	bool modelLoaded = false;
 	bool textureLoaded = false;
 	// Second step- data loaded from files
+	std::vector<glm::vec3> meshVertices;
+	std::vector<glm::vec3> meshNormals;
+	std::vector<glm::vec2> meshUvs;
+
+	// Third step- index data back...
+	std::vector<unsigned int> indices;
 	std::vector<glm::vec3> indexedVertices;
 	std::vector<glm::vec3> indexedNormals;
-	std::vector<glm::vec2> indexedUv;
+	std::vector<glm::vec2> indexedUvs;
+
 	unsigned int vertexCount;
+	unsigned int indexCount;
 
 	bool modelInitialized = false;
 	// Third step- data initialized into opengl
 	GLuint textureBufferID;
+	GLuint indexBufferID;
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
-
+	void index();
 };

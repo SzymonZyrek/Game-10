@@ -28,8 +28,10 @@ public:
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
+	GLuint indexBufferId;
 
 	unsigned int vertexCount;
+	unsigned int indexCount;
 
 	std::shared_ptr <Renderable> renderable;
 

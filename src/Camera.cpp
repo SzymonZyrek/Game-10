@@ -89,7 +89,7 @@ void Camera::applyCameraToMatrices(float deltaTime, glm::mat4 *ViewMatrix, glm::
 	updateLookAtPoint(deltaTime, resolutionX / 2, resolutionY / 2);
 	
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 600 units
-	projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 600.0f);
+	projectionMatrix = glm::perspective(45.0f, (float) resolutionX / resolutionY, 0.1f, 600.0f);
 	// Camera matrix
 	viewMatrix = glm::lookAt(
 		position,           // Camera is here

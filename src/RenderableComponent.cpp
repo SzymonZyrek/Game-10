@@ -35,8 +35,10 @@ RenderableComponent::RenderableComponent(std::string modelName, std::string text
 	this->normalbufferID = renderable->normalbufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
 	this->textureBufferID = renderable->textureBufferID;
-	this->uvBufferID = renderable->normalbufferID;
+	this->uvBufferID = renderable->uvBufferID;
 	this->vertexCount = renderable->vertexCount;
+	this->indexBufferId = renderable->indexBufferID;
+	this->indexCount = renderable->indexCount;
 	this->_isNullComponent = false;
 }
 
@@ -57,7 +59,9 @@ RenderableComponent::RenderableComponent(std::shared_ptr <Renderable> renderable
 	this->normalbufferID = renderable->normalbufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
 	this->textureBufferID = renderable->textureBufferID;
-	this->uvBufferID = renderable->normalbufferID;
+	this->uvBufferID = renderable->uvBufferID;
+	this->indexBufferId = renderable->indexBufferID;
+	this->indexCount = renderable->indexCount;
 	this->vertexCount = renderable->vertexCount;
 	this->_isNullComponent = false;
 	Log::debug("RenderableComponent default contructor\n", DebugKey::OBJECT_CREATION);
@@ -80,6 +84,8 @@ void RenderableComponent::setRenderable(std::shared_ptr <Renderable> renderable)
 	this->vertexBufferID = renderable->vertexBufferID;
 	this->uvBufferID = renderable->uvBufferID;
 	this->vertexCount = renderable->vertexCount;
+	this->indexBufferId = renderable->indexBufferID;
+	this->indexCount = renderable->indexCount;
 	this->textureBufferID = renderable->textureBufferID;
 	this->_isNullComponent = false;
 }
@@ -119,6 +125,8 @@ void RenderableComponent::initWith(RenderableComponent &component)
 	this->normalbufferID = renderable->normalbufferID;
 	this->uvBufferID = renderable->uvBufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
+	this->indexBufferId = renderable->indexBufferID;
+	this->indexCount = renderable->indexCount;
 	this->textureBufferID = renderable->textureBufferID;
 	this->vertexCount = renderable->vertexCount;
 	this->_isNullComponent = false;

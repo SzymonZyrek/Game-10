@@ -184,7 +184,7 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable)
 	std::stringstream filePath;
 	filePath << "../resources/meshes/" << fileName << ".obj";
 	std::ofstream myFile(filePath.str(), std::ios::out | std::ios::binary);
-	for (glm::vec3 vertex : renderable.indexedVertices){
+	for (glm::vec3 vertex : renderable.meshVertices){
 		std::stringstream ss;
 		ss << vertex.x << VERTEX_DELIM << vertex.y << VERTEX_DELIM << vertex.z << std::endl;
 		myFile.write(ss.str().c_str(),ss.str().size());
@@ -214,9 +214,9 @@ void ModelLoader::loadObjFile(Renderable &renderable)
 		initialized = true;
 	}
 	for (unsigned int i = 0; i < vertexIndices.size(); i++){
-		renderable.indexedVertices.push_back(vertices[vertexIndices[i] - 1]);
-		renderable.indexedNormals.push_back(normals[normalIndices[i] - 1]);
-		renderable.indexedUv.push_back(uv[uvIndices[i] - 1]);
+		renderable.meshVertices.push_back(vertices[vertexIndices[i] - 1]);
+		renderable.meshNormals.push_back(normals[normalIndices[i] - 1]);
+		renderable.meshUvs.push_back(uv[uvIndices[i] - 1]);
 	}
 	renderable.vertexCount = vertexIndices.size();
 	renderable.modelLoaded = true;
@@ -261,20 +261,20 @@ void ModelLoader::printRenderData(Renderable &renderable) {
 		ss << index << ", ";
 	}
 	ss << "------------------------------------" << std::endl << "Indexed vertices: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < renderable.indexedVertices.size(); i++){
-		glm::vec3 vertex = renderable.indexedVertices[i];
+	for (unsigned int i = 0; i < renderable.meshVertices.size(); i++){
+		glm::vec3 vertex = renderable.meshVertices[i];
 		ss << "[" << vertex.x << "," << vertex.y << "," << vertex.z << "], " << std::endl;
 	}
 	ss << std::endl;
 	ss << "------------------------------------" << std::endl << "Indexed normals: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < renderable.indexedNormals.size(); i++){
-		glm::vec3 normal = renderable.indexedNormals[i];
+	for (unsigned int i = 0; i < renderable.meshNormals.size(); i++){
+		glm::vec3 normal = renderable.meshNormals[i];
 		ss << "[" << normal.x << "," << normal.y << "," << normal.z << "], " << std::endl;
 	}
 	ss << std::endl;
 	ss << "------------------------------------" << std::endl << " Indexed UVs: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i <renderable.indexedUv.size(); i++){
-		glm::vec2 texel = renderable.indexedUv[i];
+	for (unsigned int i = 0; i <renderable.meshUvs.size(); i++){
+		glm::vec2 texel = renderable.meshUvs[i];
 		ss << "[" << texel.x << "," << texel.y << "], " << std::endl;
 	}
 	ss << std::endl;
