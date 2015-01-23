@@ -42,6 +42,6 @@ private:
 	void parse(std::shared_ptr<FileData> data);
 	bool initialized = false; // this flag indicates wheter this ModelLoader instance successfully lodaded a model
 
-	void printRenderData(Renderable &renderable);
 	void saveAsBinary(std::string fileName, Renderable &renderable);
+	void ModelLoader::loadBinary(std::string fileName, Renderable &renderable);
 };

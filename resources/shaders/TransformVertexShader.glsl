@@ -1,5 +1,5 @@
 #version 330 core
-
+#extension ARB_explicit_uniform_location : require
 out vec2 UV;
 out vec3 Position_worldspace;
 out vec3 Normal_cameraspace;

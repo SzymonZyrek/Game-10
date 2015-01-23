@@ -180,27 +180,27 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 		(void*)0                          // offset*
 		);
 	// bind index data to vertexattribarray3
-	glEnableVertexAttribArray(3);
+	//glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theRenderable.indexBufferId);
-	glVertexAttribPointer(
-		2,                                // vertexattribarray number
-		3,                                // size of 'row' of data
-		GL_FLOAT,                         // data type
-		GL_FALSE,                         // normalized?
-		0,                                // stride
-		(void*)0                          // offset*
-		);
+	//glVertexAttribPointer(
+	//	3,                                // vertexattribarray number
+	//	3,                                // size of 'row' of data
+	//	GL_UNSIGNED_INT,                         // data type
+	//	GL_FALSE,                         // normalized?
+	//	0,                                // stride
+	//	(void*)0                          // offset*
+	//	);
 	// draw the above
-	glDrawArrays(GL_TRIANGLES, 0, theRenderable.vertexCount);
-//	glDrawElements(
-//		GL_TRIANGLES, 
-//		theRenderable.indexCount,
-//		GL_UNSIGNED_INT, 
-//		(void*)0
-//		);
+//	glDrawArrays(GL_TRIANGLES, 0, theRenderable.vertexCount);
+	glDrawElements(
+		GL_TRIANGLES, 
+		theRenderable.indexCount,
+		GL_UNSIGNED_INT, 
+		(void*)0
+		);
 	// clean up
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
+	//glDisableVertexAttribArray(3);
 }

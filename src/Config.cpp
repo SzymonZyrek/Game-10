@@ -19,7 +19,8 @@ const static std::map<std::string, std::string> __defaults = {
 		{ DEFAULT_FRAGMENT_SHADER_FILE_NAME, "TextureFragmentShader.glsl"},
 		{ DEFAULT_VERTEX_SHADER_FILE_NAME, "TransformVertexShader.glsl" },
 		{ DEFAULT_MODEL_FILE_NAME, "monkey.obj"},
-		{ DEFAULT_TEXTURE_FILE_NAME, "grass.jpg"}
+		{ DEFAULT_TEXTURE_FILE_NAME, "grass.jpg"},
+		{ FULLSCREEN , "NO"}
 };
 
 Config Config::_mainConfig;

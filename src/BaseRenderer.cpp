@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <sstream>
 #include "CPPLogger.h"
+#include "Config.h"
 
 void errorCallback(int error, const char* description)
 {
@@ -24,8 +25,12 @@ BaseRenderer::BaseRenderer()
 	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	resolutionX = mode->width;
 	resolutionY = mode->height;
-
-	this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", glfwGetPrimaryMonitor(), NULL);
+	if (Config::getStringProperty(FULLSCREEN)=="YES")
+	{
+		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", glfwGetPrimaryMonitor(), NULL);
+	} else {
+		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", NULL, NULL);
+	}
 	if (window == NULL){
 		Logger::error("Failed to open GLFW window, OpenGL version not supported\n");
 		glfwTerminate();

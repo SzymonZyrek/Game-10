@@ -11,7 +11,7 @@
 #include <iostream>
 
 enum Mode {
-	VERTEX_MODE, TEXEL_MODE, NORMAL_MODE, FACE_MODE, NONE
+	VERTEX_MODE, TEXEL_MODE, NORMAL_MODE, FACE_MODE, NONE, COMMENT
 };
 
 Logger modellogger(DebugKey::MODEL_LOADING);
@@ -81,22 +81,33 @@ std::shared_ptr<FileData> readFileIntoMemory(std::string path){
 					break;
 				default: break;
 				}
+				// advance to new line and check line prefix:
+				// v is vertex
+				// vn is normal
+				// vt is textl
+				// f is face
+				// # is comment
 				mempointer++;
 				if (*mempointer == 'v'&&*(mempointer + 1) == 't'){
 					mode = TEXEL_MODE;
+					// two-chars prefix, advance pointer
 					mempointer++;
 				}
 				else if (*mempointer == 'v'&&*(mempointer + 1) == 'n'){
 					mode = NORMAL_MODE;
+					// two-chars prefix, advance pointer
 					mempointer++;
 				}else if (*mempointer == 'v'){
 					mode = VERTEX_MODE;
 				}else if (*mempointer == 'f'){
 					mode = FACE_MODE;
 				}
-				linedata.clear();                         // Clear "temporary string"
+				else if (*mempointer == '#'){
+					mode = COMMENT;
+				}
+				linedata.clear(); // cleanup 			
 			}
-			mempointer++;                      // advance pointer
+			mempointer++;         // as always, advance pointer ^^
 		}
 	}
 	free(buffer);
@@ -172,12 +183,6 @@ void ModelLoader::parse(std::shared_ptr<FileData> data){
 	}
 }
 
-std::string cleanLine(std::string line)
-{
-	std::tr1::regex rx("/");
-	std::string replacement = " ";
-	return std::regex_replace(line, rx, replacement);
-}
 #define VERTEX_DELIM ','
 void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable)
 {
@@ -188,6 +193,19 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable)
 		std::stringstream ss;
 		ss << vertex.x << VERTEX_DELIM << vertex.y << VERTEX_DELIM << vertex.z << std::endl;
 		myFile.write(ss.str().c_str(),ss.str().size());
+	}
+	myFile.close();
+}
+
+void ModelLoader::loadBinary(std::string fileName, Renderable &renderable)
+{
+	std::stringstream filePath;
+	filePath << "../resources/meshes/" << fileName << ".obj";
+	std::ofstream myFile(filePath.str(), std::ios::out | std::ios::binary);
+	for (glm::vec3 vertex : renderable.meshVertices){
+		std::stringstream ss;
+		ss << vertex.x << VERTEX_DELIM << vertex.y << VERTEX_DELIM << vertex.z << std::endl;
+		myFile.write(ss.str().c_str(), ss.str().size());
 	}
 	myFile.close();
 }
@@ -221,63 +239,4 @@ void ModelLoader::loadObjFile(Renderable &renderable)
 	renderable.vertexCount = vertexIndices.size();
 	renderable.modelLoaded = true;
 	return;
-}
-
-void ModelLoader::printRenderData(Renderable &renderable) {
-	std::stringstream ss("File loaded:\n");
-	ss << "------------------------------------" << std::endl << "Vertices: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < vertices.size(); i++){
-		glm::vec3 vertex = vertices[i];
-		ss << "[" << vertex.x << "," << vertex.y << "," << vertex.z << "], " << std::endl;
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << "Normals: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < normals.size(); i++){
-		glm::vec3 normal = normals[i];
-		ss << "[" << normal.x << "," << normal.y << "," << normal.z << "], " << std::endl;
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << "UVs: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < uv.size(); i++){
-		glm::vec2 texel = uv[i];
-		ss << "[" << texel.x << "," << texel.y << "], " << std::endl;
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << "vertexIndices: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < vertexIndices.size(); i++){
-		unsigned int index = vertexIndices[i];
-		ss << index << ", ";
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << "uvIndices: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < uvIndices.size(); i++){
-		unsigned int index = uvIndices[i];
-		ss << index << ", ";
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << "normalIndices: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < normalIndices.size(); i++){
-		unsigned int index = normalIndices[i];
-		ss << index << ", ";
-	}
-	ss << "------------------------------------" << std::endl << "Indexed vertices: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < renderable.meshVertices.size(); i++){
-		glm::vec3 vertex = renderable.meshVertices[i];
-		ss << "[" << vertex.x << "," << vertex.y << "," << vertex.z << "], " << std::endl;
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << "Indexed normals: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i < renderable.meshNormals.size(); i++){
-		glm::vec3 normal = renderable.meshNormals[i];
-		ss << "[" << normal.x << "," << normal.y << "," << normal.z << "], " << std::endl;
-	}
-	ss << std::endl;
-	ss << "------------------------------------" << std::endl << " Indexed UVs: " << std::endl << "------------------------------------" << std::endl;
-	for (unsigned int i = 0; i <renderable.meshUvs.size(); i++){
-		glm::vec2 texel = renderable.meshUvs[i];
-		ss << "[" << texel.x << "," << texel.y << "], " << std::endl;
-	}
-	ss << std::endl;
-
-	modellogger << ss;
 }

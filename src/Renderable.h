@@ -8,18 +8,20 @@ class Renderable {
 public:
 	Renderable(std::string modelName, std::string textureName);
 
-	// First step data- filenames
+	bool modelLoaded = false;
+	bool indexed = false;
+	bool textureLoaded = false;
+
+	// First (step) data- filenames,
+	// these must be provided when instancing a Renderable
 	std::string textureName;
 	std::string modelName;
-
-	bool modelLoaded = false;
-	bool textureLoaded = false;
 	// Second step- data loaded from files
 	std::vector<glm::vec3> meshVertices;
 	std::vector<glm::vec3> meshNormals;
 	std::vector<glm::vec2> meshUvs;
 
-	// Third step- index data back...
+	// Third step- index data back..
 	std::vector<unsigned int> indices;
 	std::vector<glm::vec3> indexedVertices;
 	std::vector<glm::vec3> indexedNormals;
