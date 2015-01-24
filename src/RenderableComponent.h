@@ -6,9 +6,7 @@
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__RenderableComponent__
-#define __OpenGLTutorial__RenderableComponent__
-
+#pragma once
 #include "Component.h"
 #include <glm/glm.hpp>
 #include "Renderable.h"
@@ -19,22 +17,21 @@ class GameObjectIds;
 
 class RenderableComponent : public Component{
 public:
-	
+	// transformation data
 	glm::vec3 position = glm::vec3(0.0,0.0,0.0);
 	glm::vec3 rotation = glm::vec3(0.0, 0.0, 0.0);;
 	glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0);;
-
+	// buffer ids
 	GLuint textureBufferID;
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
 	GLuint indexBufferId;
+	// shader id
 	GLuint programID;
-
+	// how much stuff we've got
 	unsigned int vertexCount;
 	unsigned int indexCount;
-
-	std::shared_ptr <Renderable> renderable;
 
 	RenderableComponent();
 	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName);
@@ -44,7 +41,10 @@ public:
 	virtual void update(double dT, std::vector<RenderableUpdateCommand> &commands);
     void initWith(RenderableComponent &component);
 private:
-	void render();
+	// pointer to my daddy, who has the actual data, so that
+	// i can call him when the shit gets real
+	// dont call daddy too often- he will beat up the cache bad
+	std::shared_ptr <Renderable> renderable;
+	void refreshFromRenderable();
+	void initRenderable();
 };
-
-#endif /* defined(__OpenGLTutorial__RenderableComponent__) */

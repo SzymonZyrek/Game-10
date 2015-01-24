@@ -81,9 +81,22 @@ namespace std {
 
 }
 
-Renderable::Renderable(std::string modelName, std::string textureName){
+Renderable::Renderable(std::string modelName,
+	std::string textureName,
+	std::string vertexShaderName,
+	std::string fragmentShaderName) {
+
 	this->modelName = modelName;
 	this->textureName = textureName;
+	this->vertexShaderName = vertexShaderName;
+	this->fragmentShaderName = fragmentShaderName;
+}
+Renderable::Renderable(std::string modelName,
+	std::string textureName) {
+	modelName = modelName;
+	textureName = textureName;
+	vertexShaderName = Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
+	fragmentShaderName = Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
 }
 void Renderable::index(){
 	std::map<triplet, unsigned int> inserted;
