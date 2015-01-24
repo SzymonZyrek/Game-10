@@ -123,3 +123,20 @@ void Renderable::index(){
 	}
 	this->indexed = true;
 }
+
+std::ostream& operator<<(std::ostream &strm, Renderable &a) {
+	return strm
+		<< "Renderable:[" << std::endl
+		<< "\tmodelName: " << a.modelName <<std::endl
+		<< "\ttextureName: " << a.textureName << std::endl
+		<< "\tvertexShaderName: " << a.vertexShaderName << std::endl
+		<< "\tfragmentShaderName: " << a.fragmentShaderName << std::endl
+		<< "\tmodelLoaded: " << (a.modelLoaded ? "true" : "false") << std::endl
+		<< "\ttextureLoaded: " << (a.textureLoaded ? "true" : "false") << std::endl
+		<< "\tshadersLoaded: " << (a.shadersLoaded ? "true" : "false") << std::endl
+		<< "\tmodelInitialized: " << (a.modelInitialized ? "true" : "false") << std::endl
+		<< "\tindexed: " << (a.indexed ? "true" : "false") << std::endl
+		<< "\tvertices: " << a.vertexCount << std::endl
+		<< "\tindices: " << a.indexCount << std::endl
+		<< "]" << std::endl;
+}

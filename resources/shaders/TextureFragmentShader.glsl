@@ -13,7 +13,7 @@ uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 
-varying float testFloat;
+in float testFloat;
 
 vec3 debugFloat(float value, float max){
 	if (value!=0.0f){

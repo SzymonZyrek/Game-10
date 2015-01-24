@@ -51,3 +51,4 @@ public:
 	GLuint programID;
 	void index();
 };
+std::ostream& operator<<(std::ostream &strm, Renderable &a);

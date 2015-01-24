@@ -17,6 +17,11 @@
 #include "Config.h"
 
 RenderableComponent::RenderableComponent() :Component() {}
+
+std::shared_ptr<Renderable> RenderableComponent::getRenderable() {
+	return this->renderable;
+}
+
 void RenderableComponent::refreshFromRenderable(){
 	this->renderable = renderable;
 	this->indexBufferId = renderable->indexBufferID;
@@ -27,11 +32,41 @@ void RenderableComponent::refreshFromRenderable(){
 	this->programID = renderable->programID;
 	this->vertexCount = renderable->vertexCount;
 	this->indexCount = renderable->indexCount;
+	this->indexed = renderable->indexed;
 }
 void RenderableComponent::initRenderable(){
 	if (!renderable->modelLoaded){
-		ModelLoader loader(renderable->modelName);
-		loader.loadObjFile(*renderable);
+		// try to load binary file first
+		// (much fastaah)
+		ModelLoader loader;
+		try {
+			loader.loadBinary(renderable->modelName, *renderable);
+		}
+		catch (std::string err){
+			std::stringstream warn;
+			warn << "Could not load .bin file for " << renderable->modelName << ", reason: " << err << ", reading .obj file instead";
+			Log::warning(warn.str());
+			try {
+				loader.loadObjFile(renderable->modelName, *renderable);
+				if (renderable->indexed){
+					renderable->index();
+					this->indexed = true;
+					ModelLoader loader;
+					loader.saveAsBinary(renderable->modelName, *renderable);
+				}
+			}
+			catch (std::string err2){
+				std::stringstream error;
+				error << "Could not load .obj file for " << renderable->modelName << ", reason: " << err2 << ", reading default file instead";
+				Log::error(error.str());
+				try {
+					loader.loadObjFile(Config::getStringProperty(DEFAULT_MODEL_FILE_NAME), *renderable);
+				}
+				catch (std::string err3){
+					Logger::error("FATAL: could not load default model file! Check your configuration.");
+				}
+			}
+		}
 		if (!renderable->modelLoaded) {
 			std::stringstream ss;
 			ss << "Cant load model" << renderable->modelName;
@@ -63,12 +98,23 @@ void RenderableComponent::initRenderable(){
 	}
 	if (!renderable->modelInitialized){
 		RenderDataLoader renderDataLoader;
-		renderDataLoader.loadIndexedData(*renderable);
+		if (renderable->indexed){
+			
+
+			renderDataLoader.loadIndexedData(*renderable);
+		}
+		else{
+			renderDataLoader.loadPlainData(*renderable);
+		}
 	}
 }
 
-RenderableComponent::RenderableComponent(std::string modelName, std::string textureName) : Component(){
+RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed) : Component(){
+	indexed = indexed;
 	this->renderable = std::make_shared<Renderable>(modelName, textureName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
+	if (indexed){
+		renderable->indexed = true;
+	}
 	initRenderable();
 	refreshFromRenderable();
 	this->_isNullComponent = false;
@@ -129,4 +175,22 @@ void RenderableComponent::update(double dT, std::vector<RenderableUpdateCommand>
 			this->rotation.y += 0.01;
 		}
 	}
+}
+
+std::ostream& operator<<(std::ostream &strm, RenderableComponent &a) {
+	return strm
+		<< "RenderableComponent:[" << std::endl
+		<< "\tgameObjectId: " << a.getGameObjectId() << std::endl
+		<< "\tmodelName: " << a.getRenderable()->modelName << std::endl
+		<< "\ttextureName: " << a.getRenderable()->textureName << std::endl
+		<< "\tvertexShaderName: " << a.getRenderable()->vertexShaderName << std::endl
+		<< "\tfragmentShaderName: " << a.getRenderable()->fragmentShaderName << std::endl
+		<< "\tmodelLoaded: " << (a.getRenderable()->modelLoaded ? "true" : "false") << std::endl
+		<< "\ttextureLoaded: " << (a.getRenderable()->textureLoaded ? "true" : "false") << std::endl
+		<< "\tshadersLoaded: " << (a.getRenderable()->shadersLoaded ? "true" : "false") << std::endl
+		<< "\tmodelInitialized: " << (a.getRenderable()->modelInitialized ? "true" : "false") << std::endl
+		<< "\tindexed: " << (a.indexed ? "true" : "false") << std::endl
+		<< "\tvertices: " << a.vertexCount << std::endl
+		<< "\tindices: " << a.indexCount << std::endl
+		<< "]" << std::endl;
 }

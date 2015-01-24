@@ -30,16 +30,20 @@ public:
 	// shader id
 	GLuint programID;
 	// how much stuff we've got
-	unsigned int vertexCount;
-	unsigned int indexCount;
+	unsigned int vertexCount = 0;
+	unsigned int indexCount = 0;
+
+	bool indexed = false;
 
 	RenderableComponent();
-	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName);
+	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed);
 	RenderableComponent(std::shared_ptr <Renderable> renderable);
 	RenderableComponent(RenderableComponent& other);
 	void setRenderable(std::shared_ptr <Renderable> renderable);
+	std::shared_ptr<Renderable> RenderableComponent::getRenderable();
 	virtual void update(double dT, std::vector<RenderableUpdateCommand> &commands);
     void initWith(RenderableComponent &component);
+
 private:
 	// pointer to my daddy, who has the actual data, so that
 	// i can call him when the shit gets real
@@ -48,3 +52,5 @@ private:
 	void refreshFromRenderable();
 	void initRenderable();
 };
+
+std::ostream& operator<<(std::ostream &strm, RenderableComponent &a);

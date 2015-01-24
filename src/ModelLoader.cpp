@@ -14,27 +14,123 @@ enum Mode {
 	VERTEX_MODE, TEXEL_MODE, NORMAL_MODE, FACE_MODE, NONE, COMMENT
 };
 
-Logger modellogger(DebugKey::MODEL_LOADING);
+Logger ModelLoader::modellogger(DebugKey::MODEL_LOADING);
 
 int ModelLoader::getVertexCount()
 {
 	return vertexIndices.size();
 }
 
-ModelLoader::ModelLoader(std::string fileName) {
-	this->_fileName = fileName;
-}
+ModelLoader::ModelLoader() {}
 ModelLoader::~ModelLoader(){
 
 }
 
-std::shared_ptr<FileData> readFileIntoMemory(std::string path){
+inline bool fileExists(const std::string& name) {
+	if (FILE *file = fopen(name.c_str(), "r")) {
+		fclose(file);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
+	clock_t begin = clock();
+	std::ofstream binaryOut;
+	std::stringstream ss;
+	ss << "../resources/meshes/" << fileName << ".bin";
+	binaryOut.open(ss.str(), std::ios::binary | std::ios::out);
+	if (renderable.indexed){
+		char type = 'i';
+		binaryOut.write(&type, sizeof(char));
+		unsigned int indices = renderable.indices.size();
+		binaryOut.write(reinterpret_cast<const char *>(&indices), sizeof(indices));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indices[0]), sizeof(renderable.indices[0])*renderable.indices.size());
+		unsigned int verts = renderable.indexedVertices.size();
+		binaryOut.write(reinterpret_cast<const char *>(&verts), sizeof(verts));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedVertices[0]), sizeof(renderable.indexedVertices[0])*renderable.indexedVertices.size());
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedNormals[0]), sizeof(renderable.indexedNormals[0])*renderable.indexedNormals.size());
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedUvs[0]), sizeof(renderable.indexedUvs[0])*renderable.indexedUvs.size());
+	}else{
+		char type = 'p';
+		binaryOut.write(&type, sizeof(char));
+		unsigned int verts = renderable.meshVertices.size();
+		binaryOut.write(reinterpret_cast<const char *>(&verts), sizeof(verts));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshVertices[0]), sizeof(renderable.meshVertices[0])*renderable.meshVertices.size());
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshNormals[0]), sizeof(renderable.meshNormals[0])*renderable.meshNormals.size());
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshUvs[0]), sizeof(renderable.meshUvs[0])*renderable.meshUvs.size());
+	}
+	binaryOut.close();
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	std::stringstream log;
+	log << "Saved .bin model file: " << fileName << ", elapsed time: " << elapsed_secs << "s" << ", " << renderable << std::endl;
+	modellogger << log;
+}
+void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
+	std::ifstream binaryIn;
+	std::stringstream ss;
+	clock_t begin = clock();
+
+	ss << "../resources/meshes/" << fileName << ".bin";
+	if (!fileExists(ss.str().c_str())){
+		std::stringstream errorStream;
+		errorStream << "File not found: " << ss.str();
+		throw errorStream.str();
+	}
+	binaryIn.open(ss.str(), std::ios::binary | std::ios::out);
+	char type;
+	binaryIn.read(&type, sizeof(type));
+	if (type == 'i'){
+		binaryIn.read((char*)&renderable.indexCount, sizeof(renderable.indexCount));
+		renderable.indices.resize(renderable.indexCount);
+		binaryIn.read((char*)&renderable.indices[0], sizeof(renderable.indices[0])*renderable.indexCount);
+		binaryIn.read((char*)&renderable.vertexCount, sizeof(renderable.vertexCount));
+		renderable.indexedVertices.resize(renderable.vertexCount);
+		binaryIn.read((char*)&renderable.indexedVertices[0], sizeof(renderable.indexedVertices[0])*renderable.vertexCount);
+		renderable.indexedNormals.resize(renderable.vertexCount);
+		binaryIn.read((char*)&renderable.indexedNormals[0], sizeof(renderable.indexedNormals[0])*renderable.vertexCount);
+		renderable.indexedUvs.resize(renderable.vertexCount);
+		binaryIn.read((char*)&renderable.indexedUvs[0], sizeof(renderable.indexedUvs[0])*renderable.vertexCount);
+		renderable.indexed = true;
+	}
+	else if (type == 'p'){
+		binaryIn.read((char*)&renderable.vertexCount, sizeof(renderable.vertexCount));
+		renderable.meshVertices.resize(renderable.vertexCount);
+		binaryIn.read((char*)&renderable.meshVertices[0], sizeof(renderable.meshVertices[0])*renderable.vertexCount);
+		renderable.meshNormals.resize(renderable.vertexCount);
+		binaryIn.read((char*)&renderable.meshNormals[0], sizeof(renderable.meshNormals[0])*renderable.vertexCount);
+		renderable.meshUvs.resize(renderable.vertexCount);
+		binaryIn.read((char*)&renderable.meshUvs[0], sizeof(renderable.meshUvs[0])*renderable.vertexCount);
+		renderable.indexed = false;
+		renderable.modelName = fileName;
+	}
+	else{
+		ss = std::stringstream("");
+		ss << "Could not load " << fileName << ", unrecognised type: " << type;
+		throw ss.str();
+	}
+	renderable.modelLoaded = true;
+	binaryIn.close();
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	std::stringstream log;
+	log << "Loaded .bin model file: " << fileName << ", elapsed time: " << elapsed_secs << "s" << ", " << renderable << std::endl;
+	modellogger << log;
+}
+std::shared_ptr<FileData> readObjFileIntoMemory(std::string path){
 	char* buffer;
 	char linearray[250];
 	int lineposition = 0;
 	std::shared_ptr<FileData> data(new FileData);
 
 	FILE *inputfile;
+	if (!fileExists(path.c_str())){
+		std::stringstream errorStream;
+		errorStream << "File not found: " << path;
+		throw errorStream.str();
+	}
 	inputfile = fopen(path.c_str(), "r");
 
 	fseek(inputfile, 0, SEEK_END);          //find the filesize
@@ -183,52 +279,14 @@ void ModelLoader::parse(std::shared_ptr<FileData> data){
 	}
 }
 
-#define VERTEX_DELIM ','
-void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable)
+void ModelLoader::loadObjFile(std::string fileName, Renderable &renderable)
 {
-	std::stringstream filePath;
-	filePath << "../resources/meshes/" << fileName << ".obj";
-	std::ofstream myFile(filePath.str(), std::ios::out | std::ios::binary);
-	for (glm::vec3 vertex : renderable.meshVertices){
-		std::stringstream ss;
-		ss << vertex.x << VERTEX_DELIM << vertex.y << VERTEX_DELIM << vertex.z << std::endl;
-		myFile.write(ss.str().c_str(),ss.str().size());
-	}
-	myFile.close();
-}
-
-void ModelLoader::loadBinary(std::string fileName, Renderable &renderable)
-{
-	std::stringstream filePath;
-	filePath << "../resources/meshes/" << fileName << ".obj";
-	std::ofstream myFile(filePath.str(), std::ios::out | std::ios::binary);
-	for (glm::vec3 vertex : renderable.meshVertices){
-		std::stringstream ss;
-		ss << vertex.x << VERTEX_DELIM << vertex.y << VERTEX_DELIM << vertex.z << std::endl;
-		myFile.write(ss.str().c_str(), ss.str().size());
-	}
-	myFile.close();
-}
-
-void ModelLoader::loadObjFile(Renderable &renderable)
-{
+	clock_t begin = clock();
 	if (!initialized){
 		std::stringstream ss;
-		ss << "../resources/meshes/" << _fileName;
-
-		clock_t begin = clock();
-		std::shared_ptr<FileData> data = readFileIntoMemory(ss.str());
-		clock_t end = clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Loading to memory: " << elapsed_secs << "s";
-
-
-		begin = clock();
+		ss << "../resources/meshes/" << fileName;
+		std::shared_ptr<FileData> data = readObjFileIntoMemory(ss.str());
 		parse(data);
-		end = clock();
-		elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Parsing in memory: " << elapsed_secs << "s";
-
 		initialized = true;
 	}
 	for (unsigned int i = 0; i < vertexIndices.size(); i++){
@@ -238,5 +296,9 @@ void ModelLoader::loadObjFile(Renderable &renderable)
 	}
 	renderable.vertexCount = vertexIndices.size();
 	renderable.modelLoaded = true;
-	return;
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	std::stringstream log;
+	log << "Loaded .obj model file: " << fileName << ", elapsed time: " << elapsed_secs << "s" << ", " << renderable << std::endl;
+	modellogger << log;
 }

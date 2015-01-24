@@ -5,7 +5,6 @@ RenderDataLoader::RenderDataLoader(){
 }
 
 void RenderDataLoader::loadIndexedData(Renderable &renderable) {
-	renderable.index();
 
 	glGenBuffers(1, &renderable.indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderable.indexBufferID);
