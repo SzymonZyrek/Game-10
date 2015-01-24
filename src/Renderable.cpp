@@ -86,7 +86,6 @@ Renderable::Renderable(std::string modelName, std::string textureName){
 	this->textureName = textureName;
 }
 void Renderable::index(){
-	std::unordered_map<triplet, unsigned int> inserted2;
 	std::map<triplet, unsigned int> inserted;
 	unsigned int insertedCount = 0;
 	indexCount = 0;
@@ -95,20 +94,17 @@ void Renderable::index(){
 		key.first = meshVertices[i];
 		key.second = meshNormals[i];
 		key.third = meshUvs[i];
-
-		std::unordered_map<triplet, unsigned int>::iterator it2 = inserted2.find(key);
+		// check if we already have that vertex
 		std::map<triplet, unsigned int>::iterator it = inserted.find(key);
 		if (it == inserted.end()){
+			// if no, add it
 			indexedVertices.push_back(key.first);
 			indexedNormals.push_back(key.second);
 			indexedUvs.push_back(key.third);
 			inserted[key] = insertedCount;
 			insertedCount++;
 		}
-		else{
-			int bebe = 4;
-			bebe += 3;
-		}
+		// return index of the vertex
 		indices.push_back(inserted[key]);
 		indexCount++;
 	}

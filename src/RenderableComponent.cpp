@@ -13,6 +13,8 @@
 #include "ModelLoader.h"
 #include "TextureLoader.h"
 #include "RenderDataLoader.h"
+#include "ShadersLoader.h"
+#include "Config.h"
 
 RenderableComponent::RenderableComponent() : Component() {
 
@@ -24,69 +26,99 @@ RenderableComponent::RenderableComponent(std::string modelName, std::string text
 		ModelLoader loader(renderable->modelName);
 		loader.loadObjFile(*renderable);
 		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
-		}
-	if (!renderable->modelInitialized){
+	}
+	if (!renderable->textureLoaded){
 		TextureLoader textureLoader(renderable->textureName);
 		textureLoader.loadTexture(*renderable);
+	}
+	if (!renderable->modelInitialized){
 		RenderDataLoader renderDataLoader;
 		renderDataLoader.loadIndexedData(*renderable);
 	}
+	if (!renderable->shadersLoaded){
+		ShadersLoader shadersLoader;
+		shadersLoader.loadFragmentShader(Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
+		shadersLoader.loadVertexShader(Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME));
+		shadersLoader.loadShaderProgram(*renderable);
+	}
 	this->renderable = renderable;
-	this->normalbufferID = renderable->normalbufferID;
-	this->vertexBufferID = renderable->vertexBufferID;
-	this->textureBufferID = renderable->textureBufferID;
-	this->uvBufferID = renderable->uvBufferID;
-	this->vertexCount = renderable->vertexCount;
 	this->indexBufferId = renderable->indexBufferID;
+	this->vertexBufferID = renderable->vertexBufferID;
+	this->normalbufferID = renderable->normalbufferID;
+	this->uvBufferID = renderable->uvBufferID;
+	this->textureBufferID = renderable->textureBufferID;
+	this->programID = renderable->programID;
+	this->vertexCount = renderable->vertexCount;
 	this->indexCount = renderable->indexCount;
 	this->_isNullComponent = false;
 }
 
 RenderableComponent::RenderableComponent(std::shared_ptr <Renderable> renderable)
 {
+	this->renderable = renderable;
 	if (!renderable->modelLoaded){
 		ModelLoader loader(renderable->modelName);
 		loader.loadObjFile(*renderable);
 		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
 	}
-	if (!renderable->modelInitialized){
+	if (!renderable->textureLoaded){
 		TextureLoader textureLoader(renderable->textureName);
 		textureLoader.loadTexture(*renderable);
+	}
+	if (!renderable->modelInitialized){
 		RenderDataLoader renderDataLoader;
 		renderDataLoader.loadIndexedData(*renderable);
 	}
+	if (!renderable->shadersLoaded){
+		ShadersLoader shadersLoader;
+		shadersLoader.loadFragmentShader(Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
+		shadersLoader.loadVertexShader(Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME));
+		shadersLoader.loadShaderProgram(*renderable);
+	}
 	this->renderable = renderable;
-	this->normalbufferID = renderable->normalbufferID;
-	this->vertexBufferID = renderable->vertexBufferID;
-	this->textureBufferID = renderable->textureBufferID;
-	this->uvBufferID = renderable->uvBufferID;
 	this->indexBufferId = renderable->indexBufferID;
-	this->indexCount = renderable->indexCount;
+	this->vertexBufferID = renderable->vertexBufferID;
+	this->normalbufferID = renderable->normalbufferID;
+	this->uvBufferID = renderable->uvBufferID;
+	this->textureBufferID = renderable->textureBufferID;
+	this->programID = renderable->programID;
 	this->vertexCount = renderable->vertexCount;
+	this->indexCount = renderable->indexCount;
 	this->_isNullComponent = false;
 	Log::debug("RenderableComponent default contructor\n", DebugKey::OBJECT_CREATION);
 }
 
 
 void RenderableComponent::setRenderable(std::shared_ptr <Renderable> renderable){
+	this->renderable = renderable;
 	if (!renderable->modelLoaded){
 		ModelLoader loader(renderable->modelName);
 		loader.loadObjFile(*renderable);
 		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
 	}
-	if (!renderable->modelInitialized){
+	if (!renderable->textureLoaded){
 		TextureLoader textureLoader(renderable->textureName);
 		textureLoader.loadTexture(*renderable);
+	}
+	if (!renderable->modelInitialized){
 		RenderDataLoader renderDataLoader;
 		renderDataLoader.loadIndexedData(*renderable);
 	}
-	this->normalbufferID = renderable->normalbufferID;
-	this->vertexBufferID = renderable->vertexBufferID;
-	this->uvBufferID = renderable->uvBufferID;
-	this->vertexCount = renderable->vertexCount;
+	if (!renderable->shadersLoaded){
+		ShadersLoader shadersLoader;
+		shadersLoader.loadFragmentShader(Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
+		shadersLoader.loadVertexShader(Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME));
+		shadersLoader.loadShaderProgram(*renderable);
+	}
+	this->renderable = renderable;
 	this->indexBufferId = renderable->indexBufferID;
-	this->indexCount = renderable->indexCount;
+	this->vertexBufferID = renderable->vertexBufferID;
+	this->normalbufferID = renderable->normalbufferID;
+	this->uvBufferID = renderable->uvBufferID;
 	this->textureBufferID = renderable->textureBufferID;
+	this->programID = renderable->programID;
+	this->vertexCount = renderable->vertexCount;
+	this->indexCount = renderable->indexCount;
 	this->_isNullComponent = false;
 }
 
@@ -116,40 +148,40 @@ void RenderableComponent::initWith(RenderableComponent &component)
 		loader.loadObjFile(*renderable);
 		if (!renderable->modelLoaded) throw "Shit, can't load this :(";
 	}
-	if (!renderable->modelInitialized){
+	if (!renderable->textureLoaded){
 		TextureLoader textureLoader(renderable->textureName);
 		textureLoader.loadTexture(*renderable);
+	}
+	if (!renderable->modelInitialized){
 		RenderDataLoader renderDataLoader;
 		renderDataLoader.loadIndexedData(*renderable);
 	}
+	if (!renderable->shadersLoaded){
+		ShadersLoader shadersLoader;
+		shadersLoader.loadFragmentShader(Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
+		shadersLoader.loadVertexShader(Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME));
+		shadersLoader.loadShaderProgram(*renderable);
+	}
+	this->renderable = renderable;
+	this->indexBufferId = renderable->indexBufferID;
+	this->vertexBufferID = renderable->vertexBufferID;
 	this->normalbufferID = renderable->normalbufferID;
 	this->uvBufferID = renderable->uvBufferID;
-	this->vertexBufferID = renderable->vertexBufferID;
-	this->indexBufferId = renderable->indexBufferID;
-	this->indexCount = renderable->indexCount;
 	this->textureBufferID = renderable->textureBufferID;
+	this->programID = renderable->programID;
 	this->vertexCount = renderable->vertexCount;
+	this->indexCount = renderable->indexCount;
 	this->_isNullComponent = false;
 }
 
 void RenderableComponent::update(double dT, std::vector<RenderableUpdateCommand> &commands)
 {
+	if (_isNullComponent){
+		return;
+	}
 	for (RenderableUpdateCommand& cmd : commands) {
 		if (cmd.getType()==RenderableCommandEnum::TEST_ROTATE) {
 			this->rotation.y += 0.01;
 		}
 	}
-	if (_isNullComponent){
-		return;
-	}
-	this->render();
-}
-
-
-
-void RenderableComponent::render()
-{
-	std::stringstream ss;
-	ss << "rendering" << this->gameObjectId << std::endl;
-	Log::periodic(ss.str(), this->_logPeriodicKey);
 }

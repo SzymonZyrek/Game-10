@@ -22,13 +22,8 @@ private:
 	Scene scene;
 	bool test = true;
 	// uniform ids
-	GLuint programID;
-	GLuint mpvMatrixID;
-	GLuint modelMatrixID;
-	GLuint viewMatrixID;
 	GLuint vertexArrayID;
-	GLuint lightID;
-	GLuint textureDataID;
+
 
 	std::shared_ptr<Camera> camera;
 

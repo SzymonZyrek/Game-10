@@ -11,6 +11,7 @@ public:
 	bool modelLoaded = false;
 	bool indexed = false;
 	bool textureLoaded = false;
+	bool shadersLoaded = false;
 
 	// First (step) data- filenames,
 	// these must be provided when instancing a Renderable
@@ -37,5 +38,6 @@ public:
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
+	GLuint programID;
 	void index();
 };

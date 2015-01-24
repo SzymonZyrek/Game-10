@@ -32,19 +32,7 @@ static void error_callback(int error, const char* description)
 	logger << ss;
 }
 void SimpleRenderer::init()
-{	// Shaders initialization
-	programID = ShadersLoader::loadShaders(
-		Config::getMainConfig().getProperty(DEFAULT_VERTEX_SHADER_FILE_NAME).c_str(),
-		Config::getMainConfig().getProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME).c_str()
-		);
-	glUseProgram(programID);
-	// Shader uniforms placeholders initialization
-	mpvMatrixID = glGetUniformLocation(programID, "MVP");
-	modelMatrixID = glGetUniformLocation(programID, "M");
-	viewMatrixID = glGetUniformLocation(programID, "V");
-	textureDataID = glGetUniformLocation(programID, "myTextureSampler");
-	lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
-	testValueId = glGetUniformLocation(programID, "TestValue");
+{	
 	// VAO initialization
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
@@ -117,6 +105,14 @@ void SimpleRenderer::render(Scene &scene)
 }
 
 void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
+	// Shader and uniforms placeholders initialization
+	glUseProgram(theRenderable.programID);
+	GLuint mpvMatrixID = glGetUniformLocation(theRenderable.programID, "MVP");
+	GLuint modelMatrixID = glGetUniformLocation(theRenderable.programID, "M");
+	GLuint viewMatrixID = glGetUniformLocation(theRenderable.programID, "V");
+	GLuint textureDataID = glGetUniformLocation(theRenderable.programID, "myTextureSampler");
+	GLuint lightID = glGetUniformLocation(theRenderable.programID, "LightPosition_worldspace");
+	testValueId = glGetUniformLocation(theRenderable.programID, "TestValue");
 	glfwMakeContextCurrent(window);
 	// Calculate matrices:
 	glm::mat4 viewMatrix;
@@ -135,7 +131,6 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	// Calculate MdelViewProjaction matrix
 	glm::mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
 	// Send uniform values:
-	glUniform1f(testValueId, testValue);
 	// i dont think the below one is used anywhere...
 	// TODO: investigate this shit
 	// glUniform1i(textureBufferID, 0);

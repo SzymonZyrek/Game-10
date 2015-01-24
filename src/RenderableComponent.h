@@ -29,6 +29,7 @@ public:
 	GLuint uvBufferID;
 	GLuint normalbufferID;
 	GLuint indexBufferId;
+	GLuint programID;
 
 	unsigned int vertexCount;
 	unsigned int indexCount;
