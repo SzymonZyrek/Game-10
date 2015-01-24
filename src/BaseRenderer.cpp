@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <sstream>
 #include "CPPLogger.h"
+#include "Config.h"
 
 void errorCallback(int error, const char* description)
 {
@@ -21,7 +22,15 @@ BaseRenderer::BaseRenderer()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	this->window = glfwCreateWindow(1024, 768, "Game10", NULL, NULL);
+	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	resolutionX = mode->width;
+	resolutionY = mode->height;
+	if (Config::getStringProperty(FULLSCREEN)=="YES")
+	{
+		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", glfwGetPrimaryMonitor(), NULL);
+	} else {
+		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", NULL, NULL);
+	}
 	if (window == NULL){
 		Logger::error("Failed to open GLFW window, OpenGL version not supported\n");
 		glfwTerminate();
@@ -33,7 +42,7 @@ BaseRenderer::BaseRenderer()
 	}
 	glfwSetErrorCallback(errorCallback);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
+	glfwSetCursorPos(window, resolutionX / 2, resolutionY / 2);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);

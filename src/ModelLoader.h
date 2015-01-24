@@ -15,13 +15,15 @@ struct FileData {
 
 class ModelLoader {
 public:
-	ModelLoader(std::string fileName);
+	ModelLoader();
 	~ModelLoader();
-	void loadObjFile(Renderable &renderable);
+	void loadObjFile(std::string fileName, Renderable &renderable);
 	int getVertexCount();
+	void saveAsBinary(std::string fileName, Renderable &renderable);
+	void loadBinary(std::string fileName, Renderable &renderable);
+	bool initialized = false; // this flag indicates wheter this ModelLoader instance successfully lodaded a model
 private:
-	std::string _fileName;
-	static Logger logger;
+	static Logger ModelLoader::modellogger;
 	//------------------------------------------
 	// Vertices, uvs and normals, as read from 
 	// .obj file
@@ -40,8 +42,4 @@ private:
 	// with use of above indices
 	//------------------------------------------
 	void parse(std::shared_ptr<FileData> data);
-	bool initialized = false; // this flag indicates wheter this ModelLoader instance successfully lodaded a model
-
-	void printRenderData(Renderable &renderable);
-	void saveAsBinary(std::string fileName, Renderable &renderable);
 };

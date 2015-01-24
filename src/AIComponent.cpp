@@ -10,6 +10,7 @@
 #include "GameObjectIds.h"
 #include <sstream>
 #include "CPPLogger.h"
+#include "InputUpdateCommand.h"
 
 AIComponent::AIComponent() : _attitude(INDIFFERENT)
 {
@@ -18,7 +19,7 @@ AIComponent::AIComponent() : _attitude(INDIFFERENT)
 AIComponent::AIComponent(AIComponent& other)
 {
 	this->_attitude = other.getAttitude();
-	this->_daddyId = other.getDaddyId();
+	this->gameObjectId = other.getGameObjectId();
 	Log::debug("AIComponent copy contructor\n", DebugKey::OBJECT_CREATION);
 }
 
@@ -38,16 +39,12 @@ void AIComponent::initWith(AIComponent &component)
 	this->_active = component._active;
 }
 
-void AIComponent::update(double dT,
-	unsigned int gameObjectId,
-	std::vector<AIUpdateCommand> &aiCommands,
-	std::vector<InputUpdateCommand> &inputCommands,
-	std::vector<PhysicsUpdateCommand> &physicCommands,
-	std::vector<RenderableUpdateCommand> &renderableCommands)
+std::vector<InputUpdateCommand> AIComponent::update(double dT)
 {
 	std::stringstream ss;
-	ss << "updating AI of " << this->_daddyId << std::endl;
+	ss << "updating AI of " << this->gameObjectId << std::endl;
 	Log::periodic(ss.str(), this->_logPeriodicKey);
+	return std::vector<InputUpdateCommand>();
 }
 Attitude AIComponent::getAttitude()
 {

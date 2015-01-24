@@ -14,13 +14,13 @@ Component::Component()
 	this->_logPeriodicKey = Log::getInstance()->getLogPeriodicKey(2.0);
 	this->_isNullComponent = true;
 }
-void Component::setDaddyId(unsigned int daddy){
-	this->_daddyId = daddy;
+void Component::setGameObjectId(unsigned int gameObjectId){
+	this->gameObjectId = gameObjectId;
 	this->_active = true;
 }
-unsigned int Component::getDaddyId()
+unsigned int Component::getGameObjectId()
 {
-	return this->_daddyId;
+	return this->gameObjectId;
 }
 bool Component::isActive()
 {

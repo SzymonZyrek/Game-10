@@ -6,46 +6,51 @@
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__RenderableComponent__
-#define __OpenGLTutorial__RenderableComponent__
-
+#pragma once
 #include "Component.h"
 #include <glm/glm.hpp>
 #include "Renderable.h"
 #include <memory>
+#include "RenderableUpdateCommand.h"
 
 class GameObjectIds;
 
 class RenderableComponent : public Component{
 public:
-	
+	// transformation data
 	glm::vec3 position = glm::vec3(0.0,0.0,0.0);
 	glm::vec3 rotation = glm::vec3(0.0, 0.0, 0.0);;
 	glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0);;
-
+	// buffer ids
 	GLuint textureBufferID;
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
+	GLuint indexBufferId;
+	// shader id
+	GLuint programID;
+	// how much stuff we've got
+	unsigned int vertexCount = 0;
+	unsigned int indexCount = 0;
 
-	unsigned int vertexCount;
-
-	std::shared_ptr <Renderable> renderable;
+	bool indexed = false;
 
 	RenderableComponent();
-	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName);
+	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed);
 	RenderableComponent(std::shared_ptr <Renderable> renderable);
 	RenderableComponent(RenderableComponent& other);
 	void setRenderable(std::shared_ptr <Renderable> renderable);
-	virtual void update(double dT,
-		unsigned int gameObjectId,
-		std::vector<AIUpdateCommand> &aiCommands,
-		std::vector<InputUpdateCommand> &inputCommands,
-		std::vector<PhysicsUpdateCommand> &physicCommands,
-		std::vector<RenderableUpdateCommand> &renderableCommands);
+	std::shared_ptr<Renderable> RenderableComponent::getRenderable();
+	virtual void update(double dT, std::vector<RenderableUpdateCommand> &commands);
     void initWith(RenderableComponent &component);
+
 private:
-	void render();
+	// pointer to my daddy, who has the actual data, so that
+	// i can call him when the shit gets real
+	// dont call daddy too often- he will beat up the cache bad
+	std::shared_ptr <Renderable> renderable;
+	void refreshFromRenderable();
+	void initRenderable();
 };
 
-#endif /* defined(__OpenGLTutorial__RenderableComponent__) */
+std::ostream& operator<<(std::ostream &strm, RenderableComponent &a);

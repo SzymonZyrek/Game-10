@@ -22,6 +22,7 @@
 #include "PhysicsUpdateCommand.h"
 #include "InputUpdateCommand.h"
 #include "RenderableUpdateCommand.h"
+#include "GameObjectCommand.h"
 
 class Component;
 
@@ -46,11 +47,13 @@ public:
 	unsigned int _aisCount = 0;
 	void destroyAIWithId(unsigned long theId);
     std::vector<Component*> customComponents;
+	std::map<unsigned int, std::vector<GameObjectCommand>> gameObjectCommands;
 	std::map<unsigned int, std::vector<AIUpdateCommand>> aiUpdateCommands;
 	std::map<unsigned int, std::vector<InputUpdateCommand>> inputUpdateCommands;
 	std::map<unsigned int, std::vector<PhysicsUpdateCommand>> physicsUpdateCommands;
 	std::map<unsigned int, std::vector<RenderableUpdateCommand>> renderableUpdateCommands;
 private:
+	unsigned int lookupIndexById(unsigned int id);
 };
 
 #endif /* defined(__OpenGLTutorial__Scene__) */

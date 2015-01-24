@@ -16,10 +16,11 @@ const static std::map<std::string, std::string> __defaults = {
 		{ LOG_FILE_PATH, "E:\\temp\\game10.log"},
 		{ SHOW_DEBUG_KEY, "NO" },
 		{ FLUSH_LOGFILE, "NO"},
-		{ DEFAULT_FRAGMENT_SHADER_FILE_NAME, "TextureFragmentShader.glsl"},
-		{ DEFAULT_VERTEX_SHADER_FILE_NAME, "TransformVertexShader.glsl" },
+		{ DEFAULT_FRAGMENT_SHADER_FILE_NAME, "TextureFragmentShader"},
+		{ DEFAULT_VERTEX_SHADER_FILE_NAME, "TransformVertexShader" },
 		{ DEFAULT_MODEL_FILE_NAME, "monkey.obj"},
-		{ DEFAULT_TEXTURE_FILE_NAME, "grass.jpg"}
+		{ DEFAULT_TEXTURE_FILE_NAME, "grass.jpg"},
+		{ FULLSCREEN , "NO"}
 };
 
 Config Config::_mainConfig;

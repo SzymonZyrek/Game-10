@@ -39,6 +39,7 @@ public:
     bool hasSpecialComponents();
 	void initWith(GameObjectIds &other);
     bool isActive();
+	void clear();
 private:
     bool _active;
     

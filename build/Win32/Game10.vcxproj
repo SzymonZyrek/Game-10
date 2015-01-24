@@ -60,11 +60,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\DEV\Projects\Game10\lib\glew-1.9.0\include;C:\DEV\Projects\Game10\lib\glfw-3.0.3\include;C:\DEV\Projects\Game10\lib\glm-0.9.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\DEV\Projects\Game10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -84,6 +87,7 @@
     <ClCompile Include="..\..\src\CPPLogger.cpp" />
     <ClCompile Include="..\..\src\GameLoop.cpp" />
     <ClCompile Include="..\..\src\GameObject.cpp" />
+    <ClCompile Include="..\..\src\GameObjectCommand.cpp" />
     <ClCompile Include="..\..\src\GameObjectIds.cpp" />
     <ClCompile Include="..\..\src\InputComponent.cpp" />
     <ClCompile Include="..\..\src\InputUpdateCommand.cpp" />
@@ -127,6 +131,7 @@
     <ClInclude Include="..\..\src\CPPQueue.h" />
     <ClInclude Include="..\..\src\GameLoop.h" />
     <ClInclude Include="..\..\src\GameObject.h" />
+    <ClInclude Include="..\..\src\GameObjectCommand.h" />
     <ClInclude Include="..\..\src\GameObjectIds.h" />
     <ClInclude Include="..\..\src\Errors.h" />
     <ClInclude Include="..\..\src\InputComponent.h" />

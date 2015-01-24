@@ -1,5 +1,4 @@
 #version 330 core
-
 out vec2 UV;
 out vec3 Position_worldspace;
 out vec3 Normal_cameraspace;
@@ -17,7 +16,7 @@ uniform vec3 position;
 uniform vec3 LightPosition_worldspace;
 uniform float TestValue;
 
-varying float testFloat;
+out float testFloat;
 
 void main(){
 	vec3 transformedPosition;

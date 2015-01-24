@@ -19,6 +19,14 @@ void GameObjectIds::initWith(GameObjectIds &other){
 	this->_specialComponentIndices = other._specialComponentIndices;
 	this->_active = other._active;
 }
+void GameObjectIds::clear(){
+	this->_renderableIndex = -1;
+	this->_bodyIndex = -1;
+	this->_inputIndex = -1;
+	this->_aiIndex = -1;
+	this->_specialComponentIndices.clear();
+	this->_active = false;
+}
 void GameObjectIds::setRenderableComponent(unsigned int index){
     this->_renderableIndex = index;
 }

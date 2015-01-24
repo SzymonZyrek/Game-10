@@ -10,6 +10,8 @@
 #define __OpenGLTutorial__AIComponent__
 
 #include "Component.h"
+#include <vector>
+#include "InputUpdateCommand.h"
 
 enum Attitude { SCARED, FRIENDLY, ALLY, INDIFFERENT, ANGRY, HOSTILE };
 
@@ -20,12 +22,7 @@ public:
 	AIComponent();
 	AIComponent(AIComponent& other);
 	AIComponent(Attitude att);
-	virtual void update(double dT,
-		unsigned int gameObjectId,
-		std::vector<AIUpdateCommand> &aiCommands,
-		std::vector<InputUpdateCommand> &inputCommands,
-		std::vector<PhysicsUpdateCommand> &physicCommands,
-		std::vector<RenderableUpdateCommand> &renderableCommands);
+	virtual std::vector<InputUpdateCommand> update(double dT);
     void initWith(AIComponent &component);
 	Attitude getAttitude();
 	void setAttitude(Attitude att);
