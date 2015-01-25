@@ -23,7 +23,6 @@ std::shared_ptr<Renderable> RenderableComponent::getRenderable() {
 }
 
 void RenderableComponent::refreshFromRenderable(){
-	this->renderable = renderable;
 	this->indexBufferId = renderable->indexBufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
 	this->normalbufferID = renderable->normalbufferID;
@@ -51,9 +50,9 @@ void RenderableComponent::initRenderable(){
 				if (renderable->indexed){
 					renderable->index();
 					this->indexed = true;
-					ModelLoader loader;
-					loader.saveAsBinary(renderable->modelName, *renderable);
 				}
+				ModelLoader loader;
+				loader.saveAsBinary(renderable->modelName, *renderable);
 			}
 			catch (std::string err2){
 				std::stringstream error;
@@ -111,10 +110,7 @@ void RenderableComponent::initRenderable(){
 
 RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed) : Component(){
 	indexed = indexed;
-	this->renderable = std::make_shared<Renderable>(modelName, textureName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
-	if (indexed){
-		renderable->indexed = true;
-	}
+	this->renderable = std::make_shared<Renderable>(modelName, textureName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME), indexed);
 	initRenderable();
 	refreshFromRenderable();
 	this->_isNullComponent = false;

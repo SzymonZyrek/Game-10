@@ -8,10 +8,11 @@
 #include <regex>
 #include "GameLoop.h"
 #include <ctime>
+#include "Config.h"
 #include <iostream>
 
 enum Mode {
-	VERTEX_MODE, TEXEL_MODE, NORMAL_MODE, FACE_MODE, NONE, COMMENT
+	VERTEX_MODE, TEXEL_MODE, NORMAL_MODE, FACE_MODE, NONE, COMMENT, MATERIAL
 };
 
 Logger ModelLoader::modellogger(DebugKey::MODEL_LOADING);
@@ -119,7 +120,7 @@ void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 	log << "Loaded .bin model file: " << fileName << ", elapsed time: " << elapsed_secs << "s" << ", " << renderable << std::endl;
 	modellogger << log;
 }
-std::shared_ptr<FileData> readObjFileIntoMemory(std::string path){
+std::shared_ptr<FileData> ModelLoader::readObjFileIntoMemory(std::string path){
 	char* buffer;
 	char linearray[250];
 	int lineposition = 0;
@@ -145,15 +146,17 @@ std::shared_ptr<FileData> readObjFileIntoMemory(std::string path){
 	char* mempointer = buffer;
 	std::string linedata;
 
+	std::string activeMaterial = Config::getStringProperty(DEFAULT_TEXTURE_FILE_NAME);
+
 	while (*mempointer)          //loop thru the buffer
 	{
 		if (mempointer != 0)
 		{
-			if (*mempointer != '/'){
-				linedata.push_back(*mempointer);             //push character into string
+			if (*mempointer != '/'){				//ignore '/'
+				linedata.push_back(*mempointer);             
 			}
 			else{
-				linedata.push_back(' ');
+				linedata.push_back(' ');            //swap it with whitespace
 			}
 			if (*mempointer == 13 || *mempointer == 10)      //until we hit newline
 			{
@@ -172,7 +175,13 @@ std::shared_ptr<FileData> readObjFileIntoMemory(std::string path){
 					mode = NONE;
 					break;
 				case FACE_MODE: 
+					data->materials[data->facedata.size()] = activeMaterial;
 					data->facedata.push_back(linedata);
+					mode = NONE;
+					break;
+				case MATERIAL:
+					linedata.erase(std::remove(linedata.begin(), linedata.end(), '\n'), linedata.end());
+					activeMaterial = linedata;
 					mode = NONE;
 					break;
 				default: break;
@@ -200,6 +209,18 @@ std::shared_ptr<FileData> readObjFileIntoMemory(std::string path){
 				}
 				else if (*mempointer == '#'){
 					mode = COMMENT;
+				}
+				else if (
+					*mempointer     == 'u' &&
+					*(mempointer + 1) == 's' &&
+					*(mempointer + 2) == 'e' &&
+					*(mempointer + 3) == 'm' &&
+					*(mempointer + 4) == 't' &&
+					*(mempointer + 5) == 'l' &&
+					*(mempointer + 6) == ' '
+					){
+					mode = MATERIAL;
+					mempointer += 6;
 				}
 				linedata.clear(); // cleanup 			
 			}
@@ -247,15 +268,16 @@ void ModelLoader::parse(std::shared_ptr<FileData> data){
 	}
 	for (std::string line : data->texeldata) {
 		iss = std::istringstream(line);
-		float x, y;
-		if (!(iss >> x >> y)){
+		float u, v;
+		if (!(iss >> u >> v)){
 			std::stringstream ss;
 			ss << "Could not parse texel: " << line;
 			modellogger << ss;
 			return;
 		}
-		uv.push_back(glm::vec2(x, y));
+		uv.push_back(glm::vec2(u, 1-v));
 	}
+	unsigned int faceCounter = 0;
 	for (std::string line : data->facedata) {
 		iss = std::istringstream(line);
 		unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
@@ -263,6 +285,7 @@ void ModelLoader::parse(std::shared_ptr<FileData> data){
 			>> vertexIndex[1] >> uvIndex[1] >> normalIndex[1]
 			>> vertexIndex[2] >> uvIndex[2] >> normalIndex[2]
 			)){
+			std::string material = data->materials[faceCounter++];
 			vertexIndices.push_back(vertexIndex[0]);
 			vertexIndices.push_back(vertexIndex[1]);
 			vertexIndices.push_back(vertexIndex[2]);
@@ -284,9 +307,11 @@ void ModelLoader::loadObjFile(std::string fileName, Renderable &renderable)
 	clock_t begin = clock();
 	if (!initialized){
 		std::stringstream ss;
-		ss << "../resources/meshes/" << fileName;
+		ss << "../resources/meshes/" << fileName << ".obj";
 		std::shared_ptr<FileData> data = readObjFileIntoMemory(ss.str());
 		parse(data);
+		renderable.textureName = data->materials[0];
+		renderable.textureNames = data->materials;
 		initialized = true;
 	}
 	for (unsigned int i = 0; i < vertexIndices.size(); i++){

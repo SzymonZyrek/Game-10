@@ -84,15 +84,18 @@ namespace std {
 Renderable::Renderable(std::string modelName,
 	std::string textureName,
 	std::string vertexShaderName,
-	std::string fragmentShaderName) {
-
+	std::string fragmentShaderName,
+	bool indexed) {
+	this->indexed = indexed;
 	this->modelName = modelName;
 	this->textureName = textureName;
 	this->vertexShaderName = vertexShaderName;
 	this->fragmentShaderName = fragmentShaderName;
 }
 Renderable::Renderable(std::string modelName,
-	std::string textureName) {
+	std::string textureName,
+	bool indexed) {
+	this->indexed = indexed;
 	modelName = modelName;
 	textureName = textureName;
 	vertexShaderName = Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);

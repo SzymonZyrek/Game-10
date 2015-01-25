@@ -162,6 +162,7 @@
   <ItemGroup>
     <None Include="..\..\resources\shaders\SimplestFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\SimplestVertexShader.glsl" />
+    <None Include="..\..\resources\shaders\SkyboxFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\TextureFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\TransformVertexShader.glsl" />
   </ItemGroup>

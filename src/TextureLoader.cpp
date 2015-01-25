@@ -24,7 +24,7 @@ TextureLoader::TextureLoader(std::string textureName){
 GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 	int x, y, n;
 	std::stringstream ss;
-	ss << "../resources/textures/" << imagepath;
+	ss << "../resources/textures/" << imagepath << ".jpg";
 	unsigned char *data = stbi_load(ss.str().c_str(), &x, &y, &n, STBI_rgb);
 
 	if (data == nullptr){

@@ -56,18 +56,35 @@ void SimpleRenderer::update()
 	glfwSetCursorPos(window, resolutionX / 2, resolutionY / 2);
 	// Temporary lame input handling ;p
 	// TODO: yeah, you guessed right- get this code away from here ^^
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){ camera->position += ((glm::normalize(camera->getDirection())*(float)0.04)); }
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){ camera->position -= ((glm::normalize(camera->getDirection())*(float)0.04)); }
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){ camera->position -= ((glm::normalize(camera->right)*(float)0.04)); }
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){ camera->position += ((glm::normalize(camera->right)*(float)0.04)); }
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){ camera->position += ((glm::normalize(camera->up)*(float)0.04)); }
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){ camera->position -= ((glm::normalize(camera->up)*(float)0.04)); }
-	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS){ if (testValue<1)testValue += 0.001; std::cout << "val" << testValue << std::endl; }
-	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS){ if (testValue>-1)testValue -= 0.001; std::cout << "val" << testValue << std::endl; }
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+		camera->position += ((glm::normalize(camera->getDirection())*(float)0.04));
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+		camera->position -= ((glm::normalize(camera->getDirection())*(float)0.04));
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+		camera->position -= ((glm::normalize(camera->right)*(float)0.04));
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+		camera->position += ((glm::normalize(camera->right)*(float)0.04));
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+		camera->position += ((glm::normalize(camera->up)*(float)0.04));
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
+		camera->position -= ((glm::normalize(camera->up)*(float)0.04));
+	}
+	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS){
+		if (testValue < 1)testValue += 0.001; std::cout << "val" << testValue << std::endl;
+	}
+	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS){
+		if (testValue > -1)testValue -= 0.001; std::cout << "val" << testValue << std::endl;
+	}
 }
 
 void SimpleRenderer::render(Scene &scene)
 {
+	//TODO: remove this nasty hack!
 	// And now the ugliest hack, initializing some test game objects in.. the render method :D
 	// is he retarded? nnah, its just late
 	if (test){
@@ -78,11 +95,15 @@ void SimpleRenderer::render(Scene &scene)
 		gameObject->setPhysicalComponent(std::make_shared<PhysicalComponent>());
 		scene.registerGameObject(gameObject);
 		ModelLoader loader;
-		//GameObject* gameObject2 = new GameObject;
-		//gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("church.obj", "RoughBlockWall-ColorMap_256x256.jpg")));
-		//scene.registerGameObject(gameObject2);
+		GameObject* sky = new GameObject;
+		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "skydome_procedural_2048x2048", "TransformVertexShader", "SkyboxFragmentShader", true)));
+		scene.registerGameObject(sky);
+		GameObject* ground = new GameObject;
+		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "grass", "TransformVertexShader", "TextureFragmentShader", false)));
+		scene.registerGameObject(ground);
 		test = false;
 	}
+	//END(NASTYHACK)
 	// clear framebuffer
     clear();
 	// draw renderables
@@ -102,6 +123,12 @@ void SimpleRenderer::render(Scene &scene)
 }
 
 void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
+	//TODO: remove this nasty hack!
+	if (theRenderable.getRenderable()->modelName == "skydome"  || theRenderable.getRenderable()->modelName == "skydome_s"){
+		theRenderable.position.x = camera->getPosition().x;
+		theRenderable.position.z = camera->getPosition().z;
+	}
+	//END(NASTYHACK)
 	// Shader and uniforms placeholders initialization
 	glUseProgram(theRenderable.programID);
 	GLuint mpvMatrixID = glGetUniformLocation(theRenderable.programID, "MVP");

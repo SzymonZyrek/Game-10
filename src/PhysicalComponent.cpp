@@ -35,7 +35,7 @@ std::vector<RenderableUpdateCommand> PhysicalComponent::update(double dT)
 {
 	std::vector<RenderableUpdateCommand> result;
 	RenderableUpdateCommand command(gameObjectId, RenderableCommandEnum::TEST_ROTATE);
-	result.push_back(command);
+	//result.push_back(command);
 	std::stringstream ss;
 	ss << "updating input of " << this->gameObjectId << std::endl;
 	Log::periodic(ss.str(), this->_logPeriodicKey);

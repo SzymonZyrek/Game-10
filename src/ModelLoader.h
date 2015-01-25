@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 #include <glm/glm.hpp>
 #include "CPPLogger.h"
 #include <memory>
@@ -11,6 +12,7 @@ struct FileData {
 	std::vector<std::string> texeldata;
 	std::vector<std::string> normaldata;
 	std::vector<std::string> facedata;
+	std::map<unsigned int, std::string> materials;
 };
 
 class ModelLoader {
@@ -23,6 +25,7 @@ public:
 	void loadBinary(std::string fileName, Renderable &renderable);
 	bool initialized = false; // this flag indicates wheter this ModelLoader instance successfully lodaded a model
 private:
+	std::shared_ptr<FileData> readObjFileIntoMemory(std::string path);
 	static Logger ModelLoader::modellogger;
 	//------------------------------------------
 	// Vertices, uvs and normals, as read from 
