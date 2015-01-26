@@ -9,7 +9,7 @@ in vec3 LightDirection_cameraspace;
 // Ouput data
 out vec3 color;
 
-uniform sampler2D myTextureSampler;
+uniform sampler2DArray myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 
@@ -33,7 +33,7 @@ void main(){
 	float lightPower = 20.0f;
 	vec3 ambientOcclusion = vec3(0.01,0.01,0.01);
 
-	vec3 materialDiffuseColor = texture2D( myTextureSampler, UV ).rgb;
+	vec3 materialDiffuseColor = texture( myTextureSampler, vec3(UV, 0.0) ).rgb;
 	vec3 materialAmbientColor = ambientOcclusion * materialDiffuseColor;
 	vec3 materialSpecularColor = 3*ambientOcclusion;
 

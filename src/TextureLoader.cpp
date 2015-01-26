@@ -34,19 +34,25 @@ GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 	}
 	GLuint textureID;
 	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	if (n == 3)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	else if (n == 4)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, textureID);
+	//glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	if (n == 3){
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, x, y, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGB, x, y, 1);
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, x, y, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+	}
+	else if (n == 4){
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, x, y, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA, x, y, 1);
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, x, y, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	stbi_image_free(data);
 	ss = std::stringstream("");
 	ss << "Texture " << imagepath << ": width " << x << ",  height: " << y << ", n: " << n << ", data size: " << (x*y*n) << " loaded successfully" << std::endl;

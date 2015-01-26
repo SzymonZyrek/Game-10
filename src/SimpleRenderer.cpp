@@ -26,10 +26,7 @@ unsigned int fpsLogPeriodicKey = Log::getInstance()->getLogPeriodicKey(1.0);
 unsigned int glLogPeriodicKey = Log::getInstance()->getLogPeriodicKey(3.0);
 static void error_callback(int error, const char* description)
 {
-	Logger logger({ Aggregate::SELECT_DISTINCT }, glLogPeriodicKey, DebugKey::GL_ERRORS);
-	std::stringstream ss;
-	ss << description;
-	logger << ss;
+	std::cout << "GLERROR: "<< description;
 }
 void SimpleRenderer::init()
 {	
@@ -38,6 +35,7 @@ void SimpleRenderer::init()
 	glBindVertexArray(vertexArrayID);
 	// Camera initialization
 	this->camera = std::make_shared<Camera>(window);
+	glfwSetErrorCallback(error_callback);
 }
 
 void SimpleRenderer::update()
@@ -134,7 +132,7 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	GLuint mpvMatrixID = glGetUniformLocation(theRenderable.programID, "MVP");
 	GLuint modelMatrixID = glGetUniformLocation(theRenderable.programID, "M");
 	GLuint viewMatrixID = glGetUniformLocation(theRenderable.programID, "V");
-	GLuint textureDataID = glGetUniformLocation(theRenderable.programID, "myTextureSampler");
+	GLint textureDataID = glGetUniformLocation(theRenderable.programID, "myTextureSampler");
 	GLuint lightID = glGetUniformLocation(theRenderable.programID, "LightPosition_worldspace");
 	testValueId = glGetUniformLocation(theRenderable.programID, "TestValue");
 	glfwMakeContextCurrent(window);
@@ -162,9 +160,11 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	glUniformMatrix4fv(mpvMatrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
+	//glProgramUniform1ui(theRenderable.programID, textureDataID, 0);
 	// Bind texture to GL_TEXTURE0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, theRenderable.textureBufferID);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, theRenderable.textureBufferID);
+	glUniform1i(textureDataID, 0);
 	// Bind vertex data to vertexattribarray0
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.vertexBufferID);
