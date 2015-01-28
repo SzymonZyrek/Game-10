@@ -4,11 +4,13 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "Renderable.h"
+#include <vector>
+
 class TextureLoader {
 public:
-	TextureLoader(std::string textureName);
-	void loadTexture(Renderable &renderable);
+	TextureLoader();
+	void TextureLoader::loadTextures(Renderable &renderable);
 private:
-	GLuint reallyLoadTexture(const char * imagepath);
-	std::string _texturePath;
+	void loadTextures(Renderable &renderable, std::vector<std::string> imagePaths);
+	GLuint reallyLoadTextures(std::vector<std::string> imagePaths);
 };

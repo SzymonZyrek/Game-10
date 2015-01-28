@@ -5,6 +5,7 @@ in vec3 Position_worldspace;
 in vec3 Normal_cameraspace;
 in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
+flat in int material;
 
 // Ouput data
 out vec3 color;
@@ -33,7 +34,7 @@ void main(){
 	float lightPower = 20.0f;
 	vec3 ambientOcclusion = vec3(0.01,0.01,0.01);
 
-	vec3 materialDiffuseColor = texture( myTextureSampler, vec3(UV, 0.0) ).rgb;
+	vec3 materialDiffuseColor = texture( myTextureSampler, vec3(UV, material) ).rgb;
 	vec3 materialAmbientColor = ambientOcclusion * materialDiffuseColor;
 	vec3 materialSpecularColor = 3*ambientOcclusion;
 
@@ -69,7 +70,19 @@ void main(){
   //------------ DEBUGGING ------------//
     vec3 debugColor = vec3(0,0,0);
    //debugColor = debugFloat(testFloat, 1.0);
-    if (debugColor.x>0||debugColor.y>0||debugColor.z>0)
+   if (material==0){
+		debugColor = vec3(1.0,0.0,0.0);
+	}else if (material==1){
+		debugColor = vec3(0.0,1.0,0.0);
+	}else if (material==2){
+		debugColor = vec3(0.0,0.0,1.0);
+	}else if (material==3){
+		debugColor = vec3(1.0,1.0,0.0);
+	}
+	else{
+		debugColor = vec3(0.0,0.0,0.0);
+	}
+	if (debugColor.x>0||debugColor.y>0||debugColor.z>0)
 	color = debugColor;
   //------------ DEBUGGING ------------//
 }

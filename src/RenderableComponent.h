@@ -26,6 +26,7 @@ public:
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
+	GLuint materialBufferID;
 	GLuint indexBufferId;
 	// shader id
 	GLuint programID;

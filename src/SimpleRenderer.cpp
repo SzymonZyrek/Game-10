@@ -198,6 +198,16 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 		0,                                // stride
 		(void*)0                          // offset*
 		);
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.materialBufferID);
+	glVertexAttribPointer(
+		3,                                // vertexattribarray number
+		1,                                // size of 'row' of data
+		GL_UNSIGNED_BYTE,                         // data type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // offset*
+		);
 
 	if (!theRenderable.indexed)
 	{
@@ -215,4 +225,5 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 }

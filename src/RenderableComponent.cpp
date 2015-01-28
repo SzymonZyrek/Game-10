@@ -28,6 +28,7 @@ void RenderableComponent::refreshFromRenderable(){
 	this->normalbufferID = renderable->normalbufferID;
 	this->uvBufferID = renderable->uvBufferID;
 	this->textureBufferID = renderable->textureBufferID;
+	this->materialBufferID = renderable->materialBufferID;
 	this->programID = renderable->programID;
 	this->vertexCount = renderable->vertexCount;
 	this->indexCount = renderable->indexCount;
@@ -74,8 +75,13 @@ void RenderableComponent::initRenderable(){
 		}
 	}
 	if (!renderable->textureLoaded){
-		TextureLoader textureLoader(renderable->textureName);
-		textureLoader.loadTexture(*renderable);
+		TextureLoader textureLoader;
+		if (renderable->materialMap.size()<1){
+			// if no material names were loaded from file,
+			// use default texture
+			renderable->materialMap[Config::getStringProperty(DEFAULT_TEXTURE_FILE_NAME)] = 0;
+		}
+		textureLoader.loadTextures(*renderable);
 		if (!renderable->textureLoaded) {
 			std::stringstream ss;
 			ss << "Cant load texture" << renderable->textureName;

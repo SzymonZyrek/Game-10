@@ -4,6 +4,7 @@
 #include <map>
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include <cmath>
 #define EPSILON 0.01
 
 struct triplet {
@@ -110,6 +111,11 @@ void Renderable::index(){
 		key.first = meshVertices[i];
 		key.second = meshNormals[i];
 		key.third = meshUvs[i];
+		// we dont use material as part of the key, as it is highly unlikely that
+		// we get a vertex with same position, normal, uv but different material.
+		// and by higly i mean... well I hope you know what that means, you're 
+		// obivuosly a game programmer. Why am i writing this? Its late. I need coffe.
+	
 		// check if we already have that vertex
 		std::map<triplet, unsigned int>::iterator it = inserted.find(key);
 		if (it == inserted.end()){
@@ -117,6 +123,10 @@ void Renderable::index(){
 			indexedVertices.push_back(key.first);
 			indexedNormals.push_back(key.second);
 			indexedUvs.push_back(key.third);
+			//every three
+			//if (indexedVertices.size() % 3 == 0){
+				indexedMaterialCoords.push_back(meshMaterialCoords[i]);
+			//}
 			inserted[key] = insertedCount;
 			insertedCount++;
 		}

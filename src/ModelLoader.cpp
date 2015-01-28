@@ -175,7 +175,7 @@ std::shared_ptr<FileData> ModelLoader::readObjFileIntoMemory(std::string path){
 					mode = NONE;
 					break;
 				case FACE_MODE: 
-					data->materials[data->facedata.size()] = activeMaterial;
+					data->materials.push_back(activeMaterial);
 					data->facedata.push_back(linedata);
 					mode = NONE;
 					break;
@@ -285,7 +285,6 @@ void ModelLoader::parse(std::shared_ptr<FileData> data){
 			>> vertexIndex[1] >> uvIndex[1] >> normalIndex[1]
 			>> vertexIndex[2] >> uvIndex[2] >> normalIndex[2]
 			)){
-			std::string material = data->materials[faceCounter++];
 			vertexIndices.push_back(vertexIndex[0]);
 			vertexIndices.push_back(vertexIndex[1]);
 			vertexIndices.push_back(vertexIndex[2]);
@@ -313,11 +312,18 @@ void ModelLoader::loadObjFile(std::string fileName, Renderable &renderable)
 		renderable.textureName = data->materials[0];
 		renderable.textureNames = data->materials;
 		initialized = true;
+		GLubyte materialIndex = 0;
+		for (std::string materialName : data->materials){
+			if (renderable.materialMap.find(materialName) == renderable.materialMap.end()){
+				renderable.materialMap[materialName] = materialIndex++;
+			}
+		}
 	}
 	for (unsigned int i = 0; i < vertexIndices.size(); i++){
 		renderable.meshVertices.push_back(vertices[vertexIndices[i] - 1]);
 		renderable.meshNormals.push_back(normals[normalIndices[i] - 1]);
 		renderable.meshUvs.push_back(uv[uvIndices[i] - 1]);
+		renderable.meshMaterialCoords.push_back(renderable.materialMap[renderable.textureNames[i/3]]);
 	}
 	renderable.vertexCount = vertexIndices.size();
 	renderable.modelLoaded = true;

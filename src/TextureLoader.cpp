@@ -17,34 +17,42 @@ static std::map<std::string, GLuint> pathToTextureID;
 
 Logger logger(DebugKey::TEXTURES);
 
-TextureLoader::TextureLoader(std::string textureName){
-	this->_texturePath = textureName;
+TextureLoader::TextureLoader(){
 }
 
-GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
+GLuint TextureLoader::reallyLoadTextures(std::vector<std::string> imagePaths){
 	int x, y, n;
 	std::stringstream ss;
-	ss << "../resources/textures/" << imagepath << ".jpg";
-	unsigned char *data = stbi_load(ss.str().c_str(), &x, &y, &n, STBI_rgb);
-
-	if (data == nullptr){
+	ss << "../resources/textures/" << imagePaths[0] << ".jpg";
+	std::vector<unsigned char *> datas;
+	for (std::string imagePath:imagePaths){
 		std::stringstream ss;
-		ss << "Failed to load texture " << imagepath << std::endl;
-		logger << ss;
+		ss << "../resources/textures/" << imagePath << ".jpg";
+		unsigned char *data = stbi_load(ss.str().c_str(), &x, &y, &n, STBI_rgb);
+		if (data == nullptr){
+			std::stringstream ss;
+			ss << "Failed to load texture " << imagePaths[0] << std::endl;
+			logger << ss;
+		}
+		datas.push_back(data);
 	}
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureID);
-	//glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	//glGenerateMipmap(GL_TEXTURE_2D_ARRAY);		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, x, y, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
 	if (n == 3){
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, x, y, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGB, x, y, 1);
-		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, x, y, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, x, y, datas.size(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, x, y, datas.size());
+		for (int i = 0; i < datas.size(); i++){
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, x, y, 1, GL_RGB, GL_UNSIGNED_BYTE, datas[i]);
+		}
 	}
 	else if (n == 4){
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, x, y, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		//glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, x, y, datas.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA, x, y, 1);
-		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, x, y, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		for (int i = 0; i < datas.size(); i++){
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, x, y, 1, GL_RGBA, GL_UNSIGNED_BYTE, datas[i]);
+		}
 	}
 
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -53,16 +61,46 @@ GLuint TextureLoader::reallyLoadTexture(const char * imagepath){
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
-	stbi_image_free(data);
+	for (int i = 0; i < datas.size(); i++){
+		stbi_image_free(datas[i]);
+	}
+
 	ss = std::stringstream("");
-	ss << "Texture " << imagepath << ": width " << x << ",  height: " << y << ", n: " << n << ", data size: " << (x*y*n) << " loaded successfully" << std::endl;
+	ss << "Textures: ";
+	for (int i = 0; i++; i < datas.size()){
+		ss << imagePaths[i] << ", ";
+	}
+	ss << ": width " << x << ",  height: " << y << ", n: " << n << ", data size: " << (x*y*n) << " loaded successfully" << std::endl;
 	logger << ss;
 	return textureID;
 }
-void TextureLoader::loadTexture(Renderable &renderable){
-	if (pathToTextureID[_texturePath] == NULL){
-		pathToTextureID[_texturePath] = reallyLoadTexture(_texturePath.c_str());
+void TextureLoader::loadTextures(Renderable &renderable){
+	std::stringstream key;
+	std::vector<std::string> orderedPaths(renderable.materialMap.size());
+	for (std::map<std::string, GLubyte>::iterator iter = renderable.materialMap.begin(); iter != renderable.materialMap.end(); ++iter)
+	{
+		std::string keyPart = iter->first;
+		orderedPaths[iter->second] = keyPart;
 	}
-	renderable.textureBufferID = pathToTextureID[_texturePath];
+	for (std::string textureName : orderedPaths){
+		key << textureName;
+	}
+	if (pathToTextureID[key.str()] == NULL){
+		pathToTextureID[key.str()] = reallyLoadTextures(orderedPaths);
+	}
+	renderable.textureBufferID = pathToTextureID[key.str()];
+	renderable.textureLoaded = true;
+}
+
+void TextureLoader::loadTextures(Renderable &renderable, std::vector<std::string> imagePaths){
+	std::stringstream key;
+	std::sort(imagePaths.begin(), imagePaths.end());
+	for (std::string path:imagePaths){
+		key << path;
+	}
+	if (pathToTextureID[key.str()] == NULL){
+		pathToTextureID[key.str()] = reallyLoadTextures(imagePaths);
+	}
+	renderable.textureBufferID = pathToTextureID[key.str()];
 	renderable.textureLoaded = true;
 }
