@@ -10,6 +10,7 @@
 #include <ctime>
 #include "Config.h"
 #include <iostream>
+#include <regex>
 
 enum Mode {
 	VERTEX_MODE, TEXEL_MODE, NORMAL_MODE, FACE_MODE, NONE, COMMENT, MATERIAL
@@ -37,7 +38,7 @@ inline bool fileExists(const std::string& name) {
 	}
 }
 void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
-	/*clock_t begin = clock();
+	clock_t begin = clock();
 	std::ofstream binaryOut;
 	std::stringstream ss;
 	ss << "../resources/meshes/" << fileName << ".bin";
@@ -53,6 +54,22 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
 		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedVertices[0]), sizeof(renderable.indexedVertices[0])*renderable.indexedVertices.size());
 		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedNormals[0]), sizeof(renderable.indexedNormals[0])*renderable.indexedNormals.size());
 		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedUvs[0]), sizeof(renderable.indexedUvs[0])*renderable.indexedUvs.size());
+		unsigned int materialsCoordsCount = renderable.indexedMaterialCoords.size();
+		binaryOut.write(reinterpret_cast<const char *>(&materialsCoordsCount), sizeof(materialsCoordsCount));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedMaterialCoords[0]), sizeof(renderable.indexedMaterialCoords[0])*materialsCoordsCount);
+		std::vector<std::string> materialsFlat(renderable.materialMap.size());
+		//flatten the map as array
+		for (auto &pair : renderable.materialMap){
+			materialsFlat[pair.second] = pair.first;
+		}
+		unsigned int materialsSize = materialsFlat.size();
+		binaryOut.write(reinterpret_cast<const char *>(&materialsSize), sizeof(materialsSize));
+		for (int i = 0; i < materialsFlat.size(); i++){
+			unsigned int length = materialsFlat[i].length();
+			binaryOut.write(reinterpret_cast<const char *>(&length), sizeof(length));
+			const char *cString = materialsFlat[i].c_str();
+			binaryOut.write(const_cast<char*>(cString), length);
+		}
 	}else{
 		char type = 'p';
 		binaryOut.write(&type, sizeof(char));
@@ -61,13 +78,29 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
 		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshVertices[0]), sizeof(renderable.meshVertices[0])*renderable.meshVertices.size());
 		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshNormals[0]), sizeof(renderable.meshNormals[0])*renderable.meshNormals.size());
 		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshUvs[0]), sizeof(renderable.meshUvs[0])*renderable.meshUvs.size());
+		unsigned int materialsCoordsCount = renderable.meshMaterialCoords.size();
+		binaryOut.write(reinterpret_cast<const char *>(&materialsCoordsCount), sizeof(materialsCoordsCount));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.meshMaterialCoords[0]), sizeof(renderable.meshMaterialCoords[0])*materialsCoordsCount);
+		std::vector<std::string> materialsFlat(renderable.materialMap.size());
+		//flatten the map as array
+		for (auto &pair : renderable.materialMap){
+			materialsFlat[pair.second] = pair.first;
+		}
+		unsigned int materialsSize = materialsFlat.size();
+		binaryOut.write(reinterpret_cast<const char *>(&materialsSize), sizeof(materialsSize));
+		for (int i = 0; i < materialsFlat.size(); i++){
+			unsigned int length = materialsFlat[i].length();
+			binaryOut.write(reinterpret_cast<const char *>(&length), sizeof(length));
+			const char *cString = materialsFlat[i].c_str();
+			binaryOut.write(reinterpret_cast<const char *>(cString), sizeof(char)*length);
+		}
 	}
 	binaryOut.close();
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::stringstream log;
 	log << "Saved .bin model file: " << fileName << ", elapsed time: " << elapsed_secs << "s" << ", " << renderable << std::endl;
-	modellogger << log;*/
+	modellogger << log;
 }
 void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 	std::ifstream binaryIn;
@@ -94,6 +127,24 @@ void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 		binaryIn.read((char*)&renderable.indexedNormals[0], sizeof(renderable.indexedNormals[0])*renderable.vertexCount);
 		renderable.indexedUvs.resize(renderable.vertexCount);
 		binaryIn.read((char*)&renderable.indexedUvs[0], sizeof(renderable.indexedUvs[0])*renderable.vertexCount);
+
+		unsigned int materialCoordsCount;
+		binaryIn.read((char*)&materialCoordsCount, sizeof(materialCoordsCount));
+		renderable.indexedMaterialCoords.resize(materialCoordsCount);
+		binaryIn.read((char*)&renderable.indexedMaterialCoords[0], sizeof(renderable.indexedMaterialCoords[0])*materialCoordsCount);
+
+		unsigned int materialCount;
+		binaryIn.read((char*)&materialCount, sizeof(materialCount));
+		for (int i = 0; i < materialCount; i++) {
+			unsigned int length;
+			char material[20];
+			binaryIn.read((char*)&length, sizeof(length));
+			binaryIn.read((char*)material, sizeof(char)*length);
+			std::string materialString(material);
+			materialString = materialString.substr(0, length);
+			renderable.materialMap[materialString] = i;
+		}
+
 		renderable.indexed = true;
 	}
 	else if (type == 'p'){
@@ -104,8 +155,26 @@ void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 		binaryIn.read((char*)&renderable.meshNormals[0], sizeof(renderable.meshNormals[0])*renderable.vertexCount);
 		renderable.meshUvs.resize(renderable.vertexCount);
 		binaryIn.read((char*)&renderable.meshUvs[0], sizeof(renderable.meshUvs[0])*renderable.vertexCount);
+
+		unsigned int materialCoordsCount;
+		binaryIn.read((char*)&materialCoordsCount, sizeof(materialCoordsCount));
+		renderable.meshMaterialCoords.resize(materialCoordsCount);
+		binaryIn.read((char*)&renderable.meshMaterialCoords[0], sizeof(renderable.meshMaterialCoords[0])*materialCoordsCount);
+
+		unsigned int materialCount;
+		binaryIn.read((char*)&materialCount, sizeof(materialCount));
+		for (int i = 0; i < materialCount; i++) {
+			unsigned int length;
+			binaryIn.read((char*)&length, sizeof(length));
+			std::string material;
+			material.resize(length);
+			binaryIn.read((char*)material.c_str(), sizeof(char)*length);
+			renderable.materialMap[material] = i;
+		}
+
 		renderable.indexed = false;
 		renderable.modelName = fileName;
+
 	}
 	else{
 		ss = std::stringstream("");

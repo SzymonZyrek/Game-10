@@ -160,6 +160,7 @@
     <ClInclude Include="..\..\src\Win32EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\resources\shaders\DebugFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\SimplestFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\SimplestVertexShader.glsl" />
     <None Include="..\..\resources\shaders\SkyboxFragmentShader.glsl" />

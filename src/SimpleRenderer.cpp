@@ -94,7 +94,7 @@ void SimpleRenderer::render(Scene &scene)
 		scene.registerGameObject(gameObject);
 		ModelLoader loader;
 		GameObject* sky = new GameObject;
-		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "city", "TransformVertexShader", "SkyboxFragmentShader", false)));
+		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "skydome_nano", "TransformVertexShader", "SkyboxFragmentShader", false)));
 		scene.registerGameObject(sky);
 		GameObject* ground = new GameObject;
 		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "grass", "TransformVertexShader", "TextureFragmentShader", false)));

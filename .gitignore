@@ -12,3 +12,17 @@
 /build/Win32/Game10.opensdf
 /build/Win32/Game10.sdf
 /build/Win32/*.filters
+/resources/textures/RoughBlockWall-NormalMap.png
+/resources/textures/skybox.jpg
+/resources/textures/skybox_1024x1024.jpg
+/resources/textures/skybox_2048x2048.jpg
+/resources/textures/skydome_planetarium.jpg
+/resources/textures/skydome_polar.jpg
+/resources/textures/skydome_procedural.jpg
+/resources/textures/test.png
+/resources/textures/city_sky.jpg
+/resources/textures/RoughBlockWall-ColorMap.png
+/resources/textures/RoughBlockWall-ColorMap_256x256.jpg
+/resources/meshes/*.mtl
+/resources/meshes/*.blend1
+/resources/meshes/*.blend
