@@ -29,6 +29,7 @@ vec3 debugFloat(float value, float max){
 }
 
 void main(){
+	int bebe = material;
 	// TODO: uniform that
 	vec3 lightColor = vec3(1,1,1);
 	float lightPower = 20.0f;
@@ -70,18 +71,18 @@ void main(){
   //------------ DEBUGGING ------------//
     vec3 debugColor = vec3(0,0,0);
    //debugColor = debugFloat(testFloat, 1.0);
-   if (material==0){
-		debugColor = vec3(1.0,0.0,0.0);
-	}else if (material==1){
-		debugColor = vec3(0.0,1.0,0.0);
-	}else if (material==2){
-		debugColor = vec3(0.0,0.0,1.0);
-	}else if (material==3){
-		debugColor = vec3(1.0,1.0,0.0);
-	}
-	else{
-		debugColor = vec3(0.0,0.0,0.0);
-	}
+ //  if (bebe==0){
+//		debugColor = vec3(1.0,0.0,0.0);
+//	}else if (bebe==1){
+//		debugColor = vec3(0.0,1.0,0.0);
+//	}else if (bebe==2){
+//		debugColor = vec3(0.0,0.0,1.0);
+//	}else if (bebe==3){
+//		debugColor = vec3(1.0,1.0,0.0);
+//	}
+//	else{
+//		debugColor = vec3(0.0,0.0,0.0);
+//	}
 	if (debugColor.x>0||debugColor.y>0||debugColor.z>0)
 	color = debugColor;
   //------------ DEBUGGING ------------//

@@ -94,7 +94,7 @@ void SimpleRenderer::render(Scene &scene)
 		scene.registerGameObject(gameObject);
 		ModelLoader loader;
 		GameObject* sky = new GameObject;
-		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "skydome_procedural_2048x2048", "TransformVertexShader", "SkyboxFragmentShader", true)));
+		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "city", "TransformVertexShader", "SkyboxFragmentShader", false)));
 		scene.registerGameObject(sky);
 		GameObject* ground = new GameObject;
 		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "grass", "TransformVertexShader", "TextureFragmentShader", false)));
@@ -200,11 +200,11 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 		);
 	glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.materialBufferID);
-	glVertexAttribPointer(
+	glVertexAttribIPointer(
 		3,                                // vertexattribarray number
 		1,                                // size of 'row' of data
-		GL_UNSIGNED_BYTE,                         // data type
-		GL_FALSE,                         // normalized?
+		GL_INT,                         // data type
+		//GL_TRUE,                         // normalized?
 		0,                                // stride
 		(void*)0                          // offset*
 		);

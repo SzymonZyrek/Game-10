@@ -77,7 +77,7 @@ GLuint TextureLoader::reallyLoadTextures(std::vector<std::string> imagePaths){
 void TextureLoader::loadTextures(Renderable &renderable){
 	std::stringstream key;
 	std::vector<std::string> orderedPaths(renderable.materialMap.size());
-	for (std::map<std::string, GLubyte>::iterator iter = renderable.materialMap.begin(); iter != renderable.materialMap.end(); ++iter)
+	for (std::map<std::string, int>::iterator iter = renderable.materialMap.begin(); iter != renderable.materialMap.end(); ++iter)
 	{
 		std::string keyPart = iter->first;
 		orderedPaths[iter->second] = keyPart;

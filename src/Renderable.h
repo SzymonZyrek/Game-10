@@ -18,7 +18,7 @@ public:
 	Renderable(std::string modelName,
 	std::string textureName, bool indexed);
 	std::vector<std::string> textureNames;
-	std::map<std::string, GLubyte> materialMap;
+	std::map<std::string, int> materialMap;
 
 	// Loading stage status bools
 	bool modelLoaded = false;
@@ -37,7 +37,7 @@ public:
 	std::vector<glm::vec3> meshVertices;
 	std::vector<glm::vec3> meshNormals;
 	std::vector<glm::vec2> meshUvs;
-	std::vector<GLubyte> meshMaterialCoords;
+	std::vector<GLint> meshMaterialCoords;
 
 	// This method transforms plain data
 	// into indexed data
@@ -49,7 +49,7 @@ public:
 	std::vector<glm::vec3> indexedVertices;
 	std::vector<glm::vec3> indexedNormals;
 	std::vector<glm::vec2> indexedUvs;
-	std::vector<GLubyte> indexedMaterialCoords;
+	std::vector<GLint> indexedMaterialCoords;
 
 	// Data counters
 	unsigned int vertexCount = 0;

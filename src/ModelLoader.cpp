@@ -37,7 +37,7 @@ inline bool fileExists(const std::string& name) {
 	}
 }
 void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
-	clock_t begin = clock();
+	/*clock_t begin = clock();
 	std::ofstream binaryOut;
 	std::stringstream ss;
 	ss << "../resources/meshes/" << fileName << ".bin";
@@ -67,7 +67,7 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::stringstream log;
 	log << "Saved .bin model file: " << fileName << ", elapsed time: " << elapsed_secs << "s" << ", " << renderable << std::endl;
-	modellogger << log;
+	modellogger << log;*/
 }
 void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 	std::ifstream binaryIn;

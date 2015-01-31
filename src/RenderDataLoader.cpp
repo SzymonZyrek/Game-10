@@ -26,7 +26,7 @@ void RenderDataLoader::loadIndexedData(Renderable &renderable) {
 	if (renderable.indexedMaterialCoords.size() > 0){
 		glGenBuffers(1, &renderable.materialBufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, renderable.materialBufferID);
-		glBufferData(GL_ARRAY_BUFFER, renderable.indexedMaterialCoords.size() * sizeof(GLubyte), &renderable.indexedMaterialCoords[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, renderable.indexedMaterialCoords.size() * sizeof(GLint), &renderable.indexedMaterialCoords[0], GL_STATIC_DRAW);
 	}
 	renderable.modelInitialized = true;
 }
@@ -49,7 +49,7 @@ void RenderDataLoader::loadPlainData(Renderable &renderable){
 	if (renderable.meshMaterialCoords.size() > 0){
 		glGenBuffers(1, &renderable.materialBufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, renderable.materialBufferID);
-		glBufferData(GL_ARRAY_BUFFER, renderable.meshMaterialCoords.size() * sizeof(GLubyte), &renderable.meshMaterialCoords[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, renderable.meshMaterialCoords.size() * sizeof(int), &renderable.meshMaterialCoords[0], GL_STATIC_DRAW);
 	}
 	renderable.modelInitialized = true;
 }
