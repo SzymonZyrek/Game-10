@@ -89,15 +89,20 @@ void SimpleRenderer::render(Scene &scene)
 		std::string mdoelFileName = Config::getMainConfig().getProperty(DEFAULT_MODEL_FILE_NAME);
 		std::string textureFileName = Config::getMainConfig().getProperty(DEFAULT_TEXTURE_FILE_NAME);
 		GameObject* gameObject = new GameObject;
-		gameObject->setRenderableComponent(std::make_shared<RenderableComponent>(mdoelFileName,textureFileName, true));
+		gameObject->setRenderableComponent(std::make_shared<RenderableComponent>(mdoelFileName, false));
 		gameObject->setPhysicalComponent(std::make_shared<PhysicalComponent>());
 		scene.registerGameObject(gameObject);
+		GameObject* gameObject2 = new GameObject;
+		gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>("church", false));
+		gameObject2->getRenderableComponent()->position.z -= 20;
+		scene.registerGameObject(gameObject2);
+
 		ModelLoader loader;
 		GameObject* sky = new GameObject;
-		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "skydome_nano", "TransformVertexShader", "SkyboxFragmentShader", false)));
+		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "TransformVertexShader", "SkyboxFragmentShader", false)));
 		scene.registerGameObject(sky);
 		GameObject* ground = new GameObject;
-		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "grass", "TransformVertexShader", "TextureFragmentShader", false)));
+		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "TransformVertexShader", "TextureFragmentShader", false)));
 		scene.registerGameObject(ground);
 		test = false;
 	}
@@ -132,7 +137,9 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	GLuint mpvMatrixID = glGetUniformLocation(theRenderable.programID, "MVP");
 	GLuint modelMatrixID = glGetUniformLocation(theRenderable.programID, "M");
 	GLuint viewMatrixID = glGetUniformLocation(theRenderable.programID, "V");
-	GLint textureDataID = glGetUniformLocation(theRenderable.programID, "myTextureSampler");
+	GLint myTextureSampler = glGetUniformLocation(theRenderable.programID, "myTextureSampler");
+	GLint normalMap = glGetUniformLocation(theRenderable.programID, "normalMap");
+	GLuint MV3x3ID = glGetUniformLocation(theRenderable.programID, "MV3x3");
 	GLuint lightID = glGetUniformLocation(theRenderable.programID, "LightPosition_worldspace");
 	testValueId = glGetUniformLocation(theRenderable.programID, "TestValue");
 	glfwMakeContextCurrent(window);
@@ -150,6 +157,8 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	modelMatrix = glm::rotate(modelMatrix, theRenderable.rotation.z, glm::vec3(0, 0, 1));
 	// Scale
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(theRenderable.scale.x, theRenderable.scale.y, theRenderable.scale.z));
+	glm::mat4 MV = viewMatrix * modelMatrix;
+	glm::mat3 MV3x3 = glm::mat3(MV);
 	// Calculate MdelViewProjaction matrix
 	glm::mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
 	// Send uniform values:
@@ -160,11 +169,18 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	glUniformMatrix4fv(mpvMatrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
+	glUniformMatrix3fv(MV3x3ID, 1, GL_FALSE, &MV3x3[0][0]);
 	//glProgramUniform1ui(theRenderable.programID, textureDataID, 0);
 	// Bind texture to GL_TEXTURE0
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, theRenderable.textureBufferID);
-	glUniform1i(textureDataID, 0);
+	glUniform1i(myTextureSampler, 0);
+	
+	//TODO: uncomment 
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, theRenderable.normalMapID);
+	glUniform1i(normalMap, 1);
+
 	// Bind vertex data to vertexattribarray0
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.vertexBufferID);
@@ -209,6 +225,30 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 		(void*)0                          // offset*
 		);
 
+	glEnableVertexAttribArray(4);
+	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.tangentBufferID);
+	glVertexAttribPointer(
+		4,                                // vertexattribarray number
+		3,                                // size of 'row' of data
+		GL_FLOAT,                         // data type
+		GL_FALSE,
+		//GL_TRUE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // offset*
+		);
+
+	glEnableVertexAttribArray(5);
+	glBindBuffer(GL_ARRAY_BUFFER, theRenderable.bitangentBufferID);
+	glVertexAttribPointer(
+		5,                                // vertexattribarray number
+		3,                                // size of 'row' of data
+		GL_FLOAT,                         // data type
+		GL_FALSE,
+		//GL_TRUE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // offset*
+		);
+
 	if (!theRenderable.indexed)
 	{
 		glDrawArrays(GL_TRIANGLES, 0, theRenderable.vertexCount);
@@ -226,4 +266,6 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(4);
+	glDisableVertexAttribArray(5);
 }

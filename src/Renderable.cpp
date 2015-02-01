@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 #include <cmath>
+#include <sstream>
 #define EPSILON 0.01
 
 struct triplet {
@@ -83,22 +84,18 @@ namespace std {
 }
 
 Renderable::Renderable(std::string modelName,
-	std::string textureName,
 	std::string vertexShaderName,
 	std::string fragmentShaderName,
 	bool indexed) {
 	this->indexed = indexed;
 	this->modelName = modelName;
-	this->textureName = textureName;
 	this->vertexShaderName = vertexShaderName;
 	this->fragmentShaderName = fragmentShaderName;
 }
 Renderable::Renderable(std::string modelName,
-	std::string textureName,
 	bool indexed) {
 	this->indexed = indexed;
 	modelName = modelName;
-	textureName = textureName;
 	vertexShaderName = Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
 	fragmentShaderName = Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
 }
@@ -138,10 +135,14 @@ void Renderable::index(){
 }
 
 std::ostream& operator<<(std::ostream &strm, Renderable &a) {
+	std::stringstream texturenames;
+	for (auto pair : a.materialMap){
+		texturenames << pair.first << ', ';
+	}
 	return strm
 		<< "Renderable:[" << std::endl
 		<< "\tmodelName: " << a.modelName <<std::endl
-		<< "\ttextureName: " << a.textureName << std::endl
+		<< "\ttextureName: " << texturenames.str() << std::endl
 		<< "\tvertexShaderName: " << a.vertexShaderName << std::endl
 		<< "\tfragmentShaderName: " << a.fragmentShaderName << std::endl
 		<< "\tmodelLoaded: " << (a.modelLoaded ? "true" : "false") << std::endl

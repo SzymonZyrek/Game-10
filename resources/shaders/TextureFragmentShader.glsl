@@ -5,43 +5,35 @@ in vec3 Position_worldspace;
 in vec3 Normal_cameraspace;
 in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
+in vec3 LightDirection_tangentspace;
+in vec3 EyeDirection_tangentspace;
 flat in int material;
 
 // Ouput data
 out vec3 color;
 
 uniform sampler2DArray myTextureSampler;
+uniform sampler2DArray normalMap;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 
-in float testFloat;
-
-vec3 debugFloat(float value, float max){
-	if (value!=0.0f){
-		float ratio = (value/max);
-		
-		float nV = ratio*0.5f;
-		return vec3(0.5f+nV,0.0f,0.5f-nV);
-	}else{
-		return vec3(0.0f,1.0f,0.0f);
-		//return vec3(0.0f,0.0f,0.0f);
-	}
-}
 
 void main(){
-	int bebe = material;
 	// TODO: uniform that
 	vec3 lightColor = vec3(1,1,1);
-	float lightPower = 20.0f;
-	vec3 ambientOcclusion = vec3(0.01,0.01,0.01);
+	float lightPower = 80.0f;
+	vec3 ambientOcclusion = vec3(0.03,0.03,0.03);
 
 	vec3 materialDiffuseColor = texture( myTextureSampler, vec3(UV, material) ).rgb;
-	vec3 materialAmbientColor = ambientOcclusion * materialDiffuseColor;
+	vec3 test = texture(normalMap, vec3(UV, material)).rgb;
+	vec3 materialAmbientColor = ambientOcclusion * materialDiffuseColor*test;
 	vec3 materialSpecularColor = 3*ambientOcclusion;
+	// Local normal, in tangent space
+	vec3 TextureNormal_tangentspace = normalize(texture(normalMap, vec3(UV, material)).rgb*2.0 - 1.0);
 
 	float distanceToLight = length( LightPosition_worldspace - Position_worldspace );
-	vec3 fragmentNormal = normalize( Normal_cameraspace );
-	vec3 directionToLight = normalize( LightDirection_cameraspace );
+	vec3 fragmentNormal = normalize(TextureNormal_tangentspace);
+	vec3 directionToLight = normalize(LightDirection_tangentspace);
 	// Cosine of the angle between the normal and the light direction, 
 	// clamped above 0
 	//  - light is at the vertical of the triangle -> 1
@@ -56,34 +48,25 @@ void main(){
 	//  - Looking elsewhere -> < 1
 	float cosAlpha = clamp( dot( eyeVector,reflectDirection ), 0,1 );
 	// finally:
-	color = 
+	float minDistanceToLight = 7.2;
+	float clampedDistenceToLight;
+
+	if (distanceToLight<minDistanceToLight) {
+		clampedDistenceToLight = minDistanceToLight;
+	}
+	else{
+		clampedDistenceToLight = distanceToLight;
+	}
+	color =
 		// Ambient : simulates indirect lighting
-		materialAmbientColor +
+		materialAmbientColor
 		// Diffuse : "color" of the object
-		materialDiffuseColor * lightColor * lightPower * cosTheta / (distanceToLight*distanceToLight) +
+		+ (materialDiffuseColor * lightColor * lightPower * cosTheta / (clampedDistenceToLight*clampedDistenceToLight))
 		// Specular : reflective highlight, like a mirror
-		materialSpecularColor * lightColor * lightPower * pow(cosAlpha,5) / (distanceToLight*distanceToLight);
+		+ materialSpecularColor * lightColor * lightPower * pow(cosAlpha, 5) / (clampedDistenceToLight*clampedDistenceToLight);
 
 	//color = 
 	//(materialDiffuseColor * lightColor * (lightPower/100)/(distanceToLight*distanceToLight)) +
 	//(ambientOcclusion * materialDiffuseColor );
 
-  //------------ DEBUGGING ------------//
-    vec3 debugColor = vec3(0,0,0);
-   //debugColor = debugFloat(testFloat, 1.0);
- //  if (bebe==0){
-//		debugColor = vec3(1.0,0.0,0.0);
-//	}else if (bebe==1){
-//		debugColor = vec3(0.0,1.0,0.0);
-//	}else if (bebe==2){
-//		debugColor = vec3(0.0,0.0,1.0);
-//	}else if (bebe==3){
-//		debugColor = vec3(1.0,1.0,0.0);
-//	}
-//	else{
-//		debugColor = vec3(0.0,0.0,0.0);
-//	}
-	if (debugColor.x>0||debugColor.y>0||debugColor.z>0)
-	color = debugColor;
-  //------------ DEBUGGING ------------//
 }

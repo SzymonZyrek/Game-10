@@ -70,6 +70,12 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
 			const char *cString = materialsFlat[i].c_str();
 			binaryOut.write(const_cast<char*>(cString), length);
 		}
+		unsigned int tangentsSize = renderable.indexedTangents.size();
+		binaryOut.write(reinterpret_cast<const char *>(&tangentsSize), sizeof(tangentsSize));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedTangents[0]), sizeof(renderable.indexedTangents[0])*tangentsSize);
+		unsigned int bitangentsSize = renderable.indexedBitangents.size();
+		binaryOut.write(reinterpret_cast<const char *>(&bitangentsSize), sizeof(bitangentsSize));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.indexedBitangents[0]), sizeof(renderable.indexedBitangents[0])*bitangentsSize);
 	}else{
 		char type = 'p';
 		binaryOut.write(&type, sizeof(char));
@@ -92,8 +98,14 @@ void ModelLoader::saveAsBinary(std::string fileName, Renderable &renderable){
 			unsigned int length = materialsFlat[i].length();
 			binaryOut.write(reinterpret_cast<const char *>(&length), sizeof(length));
 			const char *cString = materialsFlat[i].c_str();
-			binaryOut.write(reinterpret_cast<const char *>(cString), sizeof(char)*length);
+			binaryOut.write(const_cast<char*>(cString), length);
 		}
+		unsigned int tangentsSize = renderable.tangents.size();
+		binaryOut.write(reinterpret_cast<const char *>(&tangentsSize), sizeof(tangentsSize));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.tangents[0]), sizeof(renderable.tangents[0])*tangentsSize);
+		unsigned int bitangentsSize = renderable.bitangents.size();
+		binaryOut.write(reinterpret_cast<const char *>(&bitangentsSize), sizeof(bitangentsSize));
+		binaryOut.write(reinterpret_cast<const char *>(&renderable.bitangents[0]), sizeof(renderable.bitangents[0])*bitangentsSize);
 	}
 	binaryOut.close();
 	clock_t end = clock();
@@ -144,6 +156,15 @@ void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 			materialString = materialString.substr(0, length);
 			renderable.materialMap[materialString] = i;
 		}
+		unsigned int tangentsSize;
+		binaryIn.read((char*)&tangentsSize, sizeof(tangentsSize));
+		renderable.indexedTangents.resize(tangentsSize);
+		binaryIn.read((char*)&renderable.indexedTangents[0], sizeof(renderable.indexedTangents[0])*tangentsSize);
+
+		unsigned int bitangentsSize;
+		binaryIn.read((char*)&bitangentsSize, sizeof(bitangentsSize));
+		renderable.indexedBitangents.resize(bitangentsSize);
+		binaryIn.read((char*)&renderable.indexedBitangents[0], sizeof(renderable.indexedBitangents[0])*bitangentsSize);
 
 		renderable.indexed = true;
 	}
@@ -171,6 +192,16 @@ void ModelLoader::loadBinary(std::string fileName, Renderable &renderable){
 			binaryIn.read((char*)material.c_str(), sizeof(char)*length);
 			renderable.materialMap[material] = i;
 		}
+
+		unsigned int tangentsSize;
+		binaryIn.read((char*)&tangentsSize, sizeof(tangentsSize));
+		renderable.tangents.resize(tangentsSize);
+		binaryIn.read((char*)&renderable.tangents[0], sizeof(renderable.tangents[0])*tangentsSize);
+
+		unsigned int bitangentsSize;
+		binaryIn.read((char*)&bitangentsSize, sizeof(bitangentsSize));
+		renderable.bitangents.resize(bitangentsSize);
+		binaryIn.read((char*)&renderable.bitangents[0], sizeof(renderable.bitangents[0])*bitangentsSize);
 
 		renderable.indexed = false;
 		renderable.modelName = fileName;
@@ -372,14 +403,14 @@ void ModelLoader::parse(std::shared_ptr<FileData> data){
 
 void ModelLoader::loadObjFile(std::string fileName, Renderable &renderable)
 {
+	std::vector<std::string> textureNames;
 	clock_t begin = clock();
 	if (!initialized){
 		std::stringstream ss;
 		ss << "../resources/meshes/" << fileName << ".obj";
 		std::shared_ptr<FileData> data = readObjFileIntoMemory(ss.str());
 		parse(data);
-		renderable.textureName = data->materials[0];
-		renderable.textureNames = data->materials;
+		textureNames = data->materials;
 		initialized = true;
 		GLubyte materialIndex = 0;
 		for (std::string materialName : data->materials){
@@ -392,10 +423,47 @@ void ModelLoader::loadObjFile(std::string fileName, Renderable &renderable)
 		renderable.meshVertices.push_back(vertices[vertexIndices[i] - 1]);
 		renderable.meshNormals.push_back(normals[normalIndices[i] - 1]);
 		renderable.meshUvs.push_back(uv[uvIndices[i] - 1]);
-		renderable.meshMaterialCoords.push_back(renderable.materialMap[renderable.textureNames[i/3]]);
+		renderable.meshMaterialCoords.push_back(renderable.materialMap[textureNames[i/3]]);
 	}
 	renderable.vertexCount = vertexIndices.size();
 	renderable.modelLoaded = true;
+	//Compute tangents and bitangents
+	for (int i = 0; i<renderable.meshVertices.size(); i += 3){
+
+		// Shortcuts for vertices
+		glm::vec3 & v0 = renderable.meshVertices[i + 0];
+		glm::vec3 & v1 = renderable.meshVertices[i + 1];
+		glm::vec3 & v2 = renderable.meshVertices[i + 2];
+
+		// Shortcuts for UVs
+		glm::vec2 & uv0 = renderable.meshUvs[i + 0];
+		glm::vec2 & uv1 = renderable.meshUvs[i + 1];
+		glm::vec2 & uv2 = renderable.meshUvs[i + 2];
+
+		// Edges of the triangle : postion delta
+		glm::vec3 deltaPos1 = v1 - v0;
+		glm::vec3 deltaPos2 = v2 - v0;
+
+		// UV delta
+		glm::vec2 deltaUV1 = uv1 - uv0;
+		glm::vec2 deltaUV2 = uv2 - uv0;
+
+		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		glm::vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
+		glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+		// Set the same tangent for all three vertices of the triangle.
+		// They will be merged later, in vboindexer.cpp
+		renderable.tangents.push_back(tangent);
+		renderable.tangents.push_back(tangent);
+		renderable.tangents.push_back(tangent);
+
+		// Same thing for binormals
+		renderable.bitangents.push_back(bitangent);
+		renderable.bitangents.push_back(bitangent);
+		renderable.bitangents.push_back(bitangent);
+
+	}
+
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::stringstream log;

@@ -28,11 +28,14 @@ void RenderableComponent::refreshFromRenderable(){
 	this->normalbufferID = renderable->normalbufferID;
 	this->uvBufferID = renderable->uvBufferID;
 	this->textureBufferID = renderable->textureBufferID;
+	this->normalMapID = renderable->normalMapID;
 	this->materialBufferID = renderable->materialBufferID;
 	this->programID = renderable->programID;
 	this->vertexCount = renderable->vertexCount;
 	this->indexCount = renderable->indexCount;
 	this->indexed = renderable->indexed;
+	this->tangentBufferID = renderable->tangentBufferID;
+	this->bitangentBufferID = renderable->bitangentBufferID;
 }
 void RenderableComponent::initRenderable(){
 	if (!renderable->modelLoaded){
@@ -84,7 +87,7 @@ void RenderableComponent::initRenderable(){
 		textureLoader.loadTextures(*renderable);
 		if (!renderable->textureLoaded) {
 			std::stringstream ss;
-			ss << "Cant load texture" << renderable->textureName;
+			ss << "Cant load textures for " << renderable->modelName;
 			Log::error(ss.str());
 			return;
 		}
@@ -114,9 +117,9 @@ void RenderableComponent::initRenderable(){
 	}
 }
 
-RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed) : Component(){
+RenderableComponent::RenderableComponent(std::string modelName, bool indexed) : Component(){
 	indexed = indexed;
-	this->renderable = std::make_shared<Renderable>(modelName, textureName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME), indexed);
+	this->renderable = std::make_shared<Renderable>(modelName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME), indexed);
 	initRenderable();
 	refreshFromRenderable();
 	this->_isNullComponent = false;
@@ -180,11 +183,15 @@ void RenderableComponent::update(double dT, std::vector<RenderableUpdateCommand>
 }
 
 std::ostream& operator<<(std::ostream &strm, RenderableComponent &a) {
+	std::stringstream texturenames;
+	for (auto pair : a.getRenderable()->materialMap){
+		texturenames << pair.first << ', ';
+	}
 	return strm
 		<< "RenderableComponent:[" << std::endl
 		<< "\tgameObjectId: " << a.getGameObjectId() << std::endl
 		<< "\tmodelName: " << a.getRenderable()->modelName << std::endl
-		<< "\ttextureName: " << a.getRenderable()->textureName << std::endl
+		<< "\ttextureNames: " << texturenames.str() << std::endl
 		<< "\tvertexShaderName: " << a.getRenderable()->vertexShaderName << std::endl
 		<< "\tfragmentShaderName: " << a.getRenderable()->fragmentShaderName << std::endl
 		<< "\tmodelLoaded: " << (a.getRenderable()->modelLoaded ? "true" : "false") << std::endl
