@@ -9,7 +9,7 @@ in vec3 LightDirection_cameraspace;
 // Ouput data
 out vec3 color;
 
-uniform sampler2D myTextureSampler;
+uniform sampler2DArray myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 
@@ -54,7 +54,7 @@ void main(){
 	//  - Looking elsewhere -> < 1
 	//float cosAlpha = clamp( dot( eyeVector,reflectDirection ), 0,1 );
 	// finally:
-	color = texture2D( myTextureSampler, UV ).rgb;
+	color = texture( myTextureSampler, vec3(UV,0.0) ).rgb;
 		// Ambient : simulates indirect lighting
 		//materialAmbientColor +
 		// Diffuse : "color" of the object
