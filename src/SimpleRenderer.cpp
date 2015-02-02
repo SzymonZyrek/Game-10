@@ -37,13 +37,13 @@ void SimpleRenderer::init()
 	this->camera = std::make_shared<Camera>(window);
 	glfwSetErrorCallback(error_callback);
 	// The framebuffer
-	glGenFramebuffers(1, &shadowFrameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFrameBuffer);
+	glGenFramebuffers(1, &fxFrameBufferID);
+	glBindFramebuffer(GL_FRAMEBUFFER, fxFrameBufferID);
 	//Target texture
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	TextureLoader loader;
-	shadowMapID = loader.createTargetTexture(width, height);
+	fxMapID = loader.createTargetTexture(width, height);
 	// The depth buffer
 	GLuint depthrenderbuffer;
 	glGenRenderbuffers(1, &depthrenderbuffer);
@@ -52,7 +52,7 @@ void SimpleRenderer::init()
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
 	// Set "targerTexture" as our colour attachement #0
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, shadowMapID, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fxMapID, 0);
 
 	// Set the list of draw buffers.
 	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
@@ -135,7 +135,7 @@ void SimpleRenderer::render(Scene &scene)
 {
 	int w, h;
 	glfwGetWindowSize(window, &w, &h);
-	renderToFramebuffer(scene, shadowFrameBuffer, w, h);
+	renderToFramebuffer(scene, fxFrameBufferID, w, h);
 	//TODO: remove this nasty hack!
 	// And now the ugliest hack, initializing some test game objects in.. the render method :D
 	// is he retarded? nnah, its just late
@@ -208,7 +208,7 @@ void SimpleRenderer::render(Scene &scene)
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, shadowMapID);
+	glBindTexture(GL_TEXTURE_2D, fxMapID);
 	// Set our "renderedTexture" sampler to user Texture Unit 0
 	glUniform1i(texID, 0);
 
@@ -311,7 +311,7 @@ void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
 	glUniform1i(normalMap, 1);
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, shadowMapID);
+	glBindTexture(GL_TEXTURE_2D, fxMapID);
 	glUniform1i(shadowMap, 2);
 
 	// Bind vertex data to vertexattribarray0

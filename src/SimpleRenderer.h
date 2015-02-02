@@ -24,8 +24,8 @@ private:
 	// uniform ids
 	GLuint vertexArrayID;
 	//virtual frame buffer
-	GLuint fxFrameBuffer = 0;
-	GLuint shadowMapID = 0;
+	GLuint fxFrameBufferID = 0;
+	GLuint fxMapID = 0;
 	//TODO: put shadowmap stuff here
 	std::shared_ptr<Camera> camera;
 
