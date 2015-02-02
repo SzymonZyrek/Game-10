@@ -10,10 +10,11 @@ in vec3 EyeDirection_tangentspace;
 flat in int material;
 
 // Ouput data
-out vec3 color;
+layout(location = 0) out vec3 color;
 
 uniform sampler2DArray myTextureSampler;
 uniform sampler2DArray normalMap;
+uniform sampler2DArray shadowMap;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 
@@ -21,7 +22,7 @@ uniform vec3 LightPosition_worldspace;
 void main(){
 	// TODO: uniform that
 	vec3 lightColor = vec3(1,1,1);
-	float lightPower = 80.0f;
+	float lightPower = 50.0f;
 	vec3 ambientOcclusion = vec3(0.03,0.03,0.03);
 
 	vec3 materialDiffuseColor = texture( myTextureSampler, vec3(UV, material) ).rgb;

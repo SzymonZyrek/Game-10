@@ -21,6 +21,20 @@ Logger logger(DebugKey::TEXTURES);
 TextureLoader::TextureLoader(){
 }
 
+GLuint TextureLoader::createTargetTexture(unsigned int width, unsigned int height){
+	// The texture we're going to render to
+	GLuint renderedTexture;
+	glGenTextures(1, &renderedTexture);
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	// Give an empty image to OpenGL ( the last "0" )
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	// Poor filtering. Needed !
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	return renderedTexture;
+}
+
 GLuint TextureLoader::reallyLoadTextures(std::vector<std::string> imagePaths){
 	int x, y, n;
 	std::stringstream ss;

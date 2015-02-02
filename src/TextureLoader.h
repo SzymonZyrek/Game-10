@@ -10,6 +10,7 @@ class TextureLoader {
 public:
 	TextureLoader();
 	void TextureLoader::loadTextures(Renderable &renderable);
+	GLuint createTargetTexture(unsigned int width, unsigned int height);
 private:
 	void loadTextures(Renderable &renderable, std::vector<std::string> imagePaths);
 	GLuint reallyLoadTextures(std::vector<std::string> imagePaths);

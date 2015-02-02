@@ -117,9 +117,9 @@ void RenderableComponent::initRenderable(){
 	}
 }
 
-RenderableComponent::RenderableComponent(std::string modelName, bool indexed) : Component(){
+RenderableComponent::RenderableComponent(std::string modelName, std::string vertexShaderName, std::string fragmentShaderName, bool indexed) : Component(){
 	indexed = indexed;
-	this->renderable = std::make_shared<Renderable>(modelName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME), indexed);
+	this->renderable = std::make_shared<Renderable>(modelName, vertexShaderName, fragmentShaderName, indexed);
 	initRenderable();
 	refreshFromRenderable();
 	this->_isNullComponent = false;

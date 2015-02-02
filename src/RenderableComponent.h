@@ -40,7 +40,7 @@ public:
 	bool indexed = false;
 
 	RenderableComponent();
-	RenderableComponent::RenderableComponent(std::string modelName, bool indexed);
+	RenderableComponent(std::string modelName, std::string vertexShaderName, std::string fragmentShaderName, bool indexed);
 	RenderableComponent(std::shared_ptr <Renderable> renderable);
 	RenderableComponent(RenderableComponent& other);
 	void setRenderable(std::shared_ptr <Renderable> renderable);

@@ -89,6 +89,33 @@ ShadersLoader::ShadersLoader(){
 	glDeleteShader(_fragmentShaderID);
 }
 
+GLuint ShadersLoader::loadShaderProgram(){
+	if (!vertexShaderLoaded) {
+		throw "VertexShader not loaded! Cannot create program!";
+	}
+	else if (!fragmentShaderLoaded){
+		throw "FragmentShader not loaded! Cannot create program!";
+	}
+	else{
+		glLinkProgram(_programID);
+
+		GLint Result = GL_FALSE;
+		int InfoLogLength;
+		// Check the program
+		glGetProgramiv(_programID, GL_LINK_STATUS, &Result);
+		glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		std::vector<char> ProgramErrorMessage(max(InfoLogLength, int(1)));
+		glGetProgramInfoLog(_programID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+		std::stringstream ss;
+		ss << &ProgramErrorMessage[0];
+		if (ss.str().size() > 2)
+		{
+			shadersLogger << ss;
+		}
+		return _programID;
+	}
+}
+
 void ShadersLoader::loadShaderProgram(Renderable &renderalbe){
 	if (!vertexShaderLoaded) {
 		throw "VertexShader not loaded! Cannot create program!";
