@@ -1,6 +1,7 @@
 #include "Win32EntryPoint.h"
 #include "TestResult.h"
 #include "Testing.h"
+#define _CRTDBG_MAP_ALLOC
 #define CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
