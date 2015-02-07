@@ -14,6 +14,9 @@ public:
 	virtual void init();
 	virtual void render(Scene &scene);
 	virtual void update();
+	void renderToFramebuffer(Scene &scene, GLuint frameBufferID, unsigned int width, unsigned int height);
 private:
 	std::shared_ptr<BaseRenderer> _renderer;
+	GLuint fxSurfaceFrameBufferID = 0;
+	GLuint fxSurfaceTextureID = 0;
 };
