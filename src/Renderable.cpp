@@ -123,7 +123,9 @@ void Renderable::index(){
 			//every three
 			//if (indexedVertices.size() % 3 == 0){
 				indexedMaterialCoords.push_back(meshMaterialCoords[i]);
-			//}
+				indexedTangents.push_back(tangents[i]);
+				indexedBitangents.push_back(bitangents[i]);
+				//}
 			inserted[key] = insertedCount;
 			insertedCount++;
 		}

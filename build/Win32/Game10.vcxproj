@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\src\CPPEventType.cpp" />
     <ClCompile Include="..\..\src\CPPIdentifiable.cpp" />
     <ClCompile Include="..\..\src\CPPLogger.cpp" />
+    <ClCompile Include="..\..\src\FXSurfaceRenderer.cpp" />
     <ClCompile Include="..\..\src\GameLoop.cpp" />
     <ClCompile Include="..\..\src\GameObject.cpp" />
     <ClCompile Include="..\..\src\GameObjectCommand.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="..\..\src\CPPIdentifiable.h" />
     <ClInclude Include="..\..\src\CPPLogger.h" />
     <ClInclude Include="..\..\src\CPPQueue.h" />
+    <ClInclude Include="..\..\src\FXSurfaceRenderer.h" />
     <ClInclude Include="..\..\src\GameLoop.h" />
     <ClInclude Include="..\..\src\GameObject.h" />
     <ClInclude Include="..\..\src\GameObjectCommand.h" />

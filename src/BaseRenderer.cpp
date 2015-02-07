@@ -6,13 +6,17 @@
 #include "CPPLogger.h"
 #include "Config.h"
 
+
+bool BaseRenderer::glfwInitialized = false;
+bool BaseRenderer::glewInitialized = false;
+GLFWwindow *BaseRenderer::defaultWindow;
+
 void errorCallback(int error, const char* description)
 {
 	std::cout << "GLError: " << description << std::endl;
 }
 
-BaseRenderer::BaseRenderer()
-{
+void BaseRenderer::initGlfw(){
 	if (!glfwInit())
 	{
 		Logger::error("Failed to initialize GLFW\n");
@@ -25,16 +29,9 @@ BaseRenderer::BaseRenderer()
 	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	resolutionX = mode->width;
 	resolutionY = mode->height;
-	if (Config::getStringProperty(FULLSCREEN)=="YES")
-	{
-		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", glfwGetPrimaryMonitor(), NULL);
-	} else {
-		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", NULL, NULL);
-	}
-	if (window == NULL){
-		Logger::error("Failed to open GLFW window, OpenGL version not supported\n");
-		glfwTerminate();
-	}
+}
+
+void BaseRenderer::initGlew(){
 	glfwMakeContextCurrent(window);
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
@@ -43,6 +40,59 @@ BaseRenderer::BaseRenderer()
 	glfwSetErrorCallback(errorCallback);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetCursorPos(window, resolutionX / 2, resolutionY / 2);
+}
+
+void BaseRenderer::createWindow(){
+	if (Config::getStringProperty(FULLSCREEN) == "YES")
+	{
+		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", glfwGetPrimaryMonitor(), NULL);
+	}
+	else {
+		this->window = glfwCreateWindow(resolutionX, resolutionY, "Game10", NULL, NULL);
+	}
+	if (window == NULL){
+		glfwTerminate();
+		throw "Failed to open GLFW window, OpenGL version not supported\n";
+	}
+}
+GLFWwindow* BaseRenderer::getWindow()
+{
+	return this->window;
+}
+BaseRenderer::BaseRenderer(GLFWwindow* window)
+{
+	if (!BaseRenderer::glfwInitialized)
+	{
+		initGlfw();
+	}
+	if (!BaseRenderer::glewInitialized)
+	{
+		initGlew();
+	}
+	this->window = window;
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
+}
+
+BaseRenderer::BaseRenderer()
+{
+	if (!BaseRenderer::glfwInitialized)
+	{
+		initGlfw();
+	}
+	if (defaultWindow == nullptr){
+		createWindow();
+		defaultWindow = window;
+	}
+	else{
+		window = defaultWindow;
+	}
+	if (!BaseRenderer::glewInitialized)
+	{
+		initGlew();
+	}
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);

@@ -16,14 +16,23 @@ public:
     virtual void render(Scene &scene) = 0;
     virtual void update() = 0;
 	BaseRenderer();
+	BaseRenderer::BaseRenderer(GLFWwindow* window);
+	bool initialised = false;
+	GLFWwindow* getWindow();
+	void flush();
 protected:
 	GLFWwindow *window;
+	static GLFWwindow *defaultWindow;
     void clear(float r=0,
                float g=0,
                float b=0,
                float a=0,
                bool depth=true);
-    void flush();
 	unsigned int resolutionX;
 	unsigned int resolutionY;
+	void initGlfw();
+	static bool glfwInitialized;
+	void initGlew();
+	static bool glewInitialized;
+	void createWindow();
 };

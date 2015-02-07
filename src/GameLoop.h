@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include "SimpleRenderer.h"
+#include "FXSurfaceRenderer.h"
 #include "Scene.h"
 
 class GameLoop
@@ -16,7 +17,7 @@ public:
 	void pause();
 private:
 	Scene _scene;
-	SimpleRenderer _renderer;
+	std::unique_ptr<BaseRenderer> _renderer;
 	float _lastTime;
 	float _accumulator = 0.0;
 	bool _paused;

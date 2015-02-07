@@ -63,6 +63,7 @@ void SimpleRenderer::init()
 		throw "Framebuffer is fucked up m8";
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	this->initialised = true;
 }
 
 void SimpleRenderer::update()
@@ -149,29 +150,29 @@ void SimpleRenderer::render(Scene &scene)
 		//scene.registerGameObject(go);
 		
 		GameObject* viking_s = new GameObject;
-		viking_s->setRenderableComponent(std::make_shared<RenderableComponent>("viking_flat", "TransformVertexShader", "TextureFragmentShader", false));
+		viking_s->setRenderableComponent(std::make_shared<RenderableComponent>("viking_flat", "TransformVertexShader", "TextureFragmentShader", true));
 		viking_s->getRenderableComponent()->position.z -= 2.5;
 		viking_s->getRenderableComponent()->position.y += 0.5;
 		viking_s->setPhysicalComponent(std::make_shared<PhysicalComponent>());
 		scene.registerGameObject(viking_s);
 
 		GameObject* viking = new GameObject;
-		viking->setRenderableComponent(std::make_shared<RenderableComponent>("viking_smooth", "TransformVertexShader", "TextureFragmentShader", false));
+		viking->setRenderableComponent(std::make_shared<RenderableComponent>("viking_smooth", "TransformVertexShader", "TextureFragmentShader", true));
 		viking->getRenderableComponent()->position.z -= 1.5;
 		viking->getRenderableComponent()->position.y += 0.5;
 		viking->setPhysicalComponent(std::make_shared<PhysicalComponent>());
 		scene.registerGameObject(viking);
 
 		GameObject* gameObject2 = new GameObject;
-		gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>("longship", "TransformVertexShader", "TextureFragmentShader", false));
+		gameObject2->setRenderableComponent(std::make_shared<RenderableComponent>("longship", "TransformVertexShader", "TextureFragmentShader", true));
 		scene.registerGameObject(gameObject2);
 
 		ModelLoader loader;
 		GameObject* sky = new GameObject;
-		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "TransformVertexShader", "SkyboxFragmentShader", false)));
+		sky->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("skydome_s", "TransformVertexShader", "SkyboxFragmentShader", true)));
 		scene.registerGameObject(sky);
 		GameObject* ground = new GameObject;
-		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "TransformVertexShader", "TextureFragmentShader", false)));
+		ground->setRenderableComponent(std::make_shared<RenderableComponent>(std::make_shared<Renderable>("ground_simplest", "TransformVertexShader", "TextureFragmentShader", true)));
 		scene.registerGameObject(ground);
 		test = false;
 	}
@@ -248,7 +249,6 @@ void SimpleRenderer::render(Scene &scene)
 	//	}
 	//}
 	//// swap buffers and poll glfw events
-    flush();
 }
 
 void  SimpleRenderer::draw(RenderableComponent &theRenderable) {
