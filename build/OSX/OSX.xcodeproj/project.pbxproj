@@ -191,7 +191,7 @@
 		92F4375D1AD1C9E40042D74E = {
 			isa = PBXGroup;
 			children = (
-				92F437891AD1CA490042D74E /* SOURCE */,
+				92F4384B1AD1D9F00042D74E /* C++ */,
 				92F437681AD1C9E40042D74E /* OSX */,
 				92F4377C1AD1C9E50042D74E /* OSXTests */,
 				92F437671AD1C9E40042D74E /* Products */,
@@ -245,16 +245,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		92F437891AD1CA490042D74E /* SOURCE */ = {
-			isa = PBXGroup;
-			children = (
-				92F4384A1AD1CAE80042D74E /* OBJ-C */,
-				92F438491AD1CADA0042D74E /* C++ */,
-			);
-			name = SOURCE;
-			sourceTree = "<group>";
-		};
-		92F438491AD1CADA0042D74E /* C++ */ = {
+		92F4384B1AD1D9F00042D74E /* C++ */ = {
 			isa = PBXGroup;
 			children = (
 				92F4378C1AD1CAD40042D74E /* Aggregation.h */,
@@ -349,13 +340,6 @@
 				92F4378A1AD1CABA0042D74E /* Aggregation.cpp */,
 			);
 			name = "C++";
-			sourceTree = "<group>";
-		};
-		92F4384A1AD1CAE80042D74E /* OBJ-C */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "OBJ-C";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
