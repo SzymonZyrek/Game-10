@@ -29,7 +29,7 @@ static void error_callback(int error, const char* description)
 	std::cout << "GLERROR: "<< description;
 }
 void SimpleRenderer::init()
-{	
+{
 	// VAO initialization
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);

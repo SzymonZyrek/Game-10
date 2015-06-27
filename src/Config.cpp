@@ -24,7 +24,7 @@ const static std::map<std::string, std::string> __defaults = {
 };
 
 Config Config::_mainConfig;
-bool Config::_mainConfigLoaded = false;
+bool Config::isConfigLoaded = false;
 
 bool parseYesNo(std::string val, std::string key)
 {
@@ -74,7 +74,7 @@ void Config::registerConfig()
 
 Config::Config()
 {
-	if (!_mainConfigLoaded)
+	if (!isConfigLoaded)
 	{
 		std::cout << "-------------------------\n"
 			<< "| Loading configuration |\n"
@@ -121,7 +121,7 @@ Config::Config()
 				}
 			}
 		}
-		_mainConfigLoaded = true;
+		isConfigLoaded = true;
 	}
 }
 
