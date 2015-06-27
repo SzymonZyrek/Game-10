@@ -1,13 +1,13 @@
 //
 //  TestWorlds.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__TestWorlds__
-#define __OpenGLTutorial__TestWorlds__
+#ifndef __Game10__TestWorlds__
+#define __Game10__TestWorlds__
 
 #include "Testing.h"
 
@@ -17,4 +17,4 @@ public:
 private:
     TestResult testScene(bool stopOnFailure);
 };
-#endif /* defined(__OpenGLTutorial__TestWorlds__) */
+#endif /* defined(__Game10__TestWorlds__) */

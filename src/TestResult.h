@@ -1,13 +1,13 @@
 //
 //  TestResult.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 25/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__CPPResult__
-#define __OpenGLTutorial__CPPResult__
+#ifndef __Game10__CPPResult__
+#define __Game10__CPPResult__
 
 #include <string>
 #include <vector>

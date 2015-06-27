@@ -1,17 +1,17 @@
 //
 //  Playground.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 30/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__Playground__
-#define __OpenGLTutorial__Playground__
+#ifndef __Game10__Playground__
+#define __Game10__Playground__
 
 class Playground {
 public:
     static void p_main();
 };
 
-#endif /* defined(__OpenGLTutorial__Playground__) */
+#endif /* defined(__Game10__Playground__) */

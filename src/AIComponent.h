@@ -1,13 +1,13 @@
 //
 //  AIComponent.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__AIComponent__
-#define __OpenGLTutorial__AIComponent__
+#ifndef __Game10__AIComponent__
+#define __Game10__AIComponent__
 
 #include "Component.h"
 #include <vector>
@@ -30,4 +30,4 @@ private:
 	Attitude _attitude;
 };
 
-#endif /* defined(__OpenGLTutorial__AIComponent__) */
+#endif /* defined(__Game10__AIComponent__) */

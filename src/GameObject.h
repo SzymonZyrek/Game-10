@@ -1,13 +1,13 @@
 //
 //  GameObject.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__GameObject__
-#define __OpenGLTutorial__GameObject__
+#ifndef __Game10__GameObject__
+#define __Game10__GameObject__
 
 #include<vector>
 #include<memory>
@@ -55,4 +55,4 @@ private:
 	std::vector<std::shared_ptr<Component>> _specialComponents;
 };
 
-#endif /* defined(__OpenGLTutorial__GameObject__) */
+#endif /* defined(__Game10__GameObject__) */

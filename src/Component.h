@@ -1,13 +1,13 @@
 //
 //  Component.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__Component__
-#define __OpenGLTutorial__Component__
+#ifndef __Game10__Component__
+#define __Game10__Component__
 
 #include <iostream>
 #include "RenderableUpdateCommand.h"
