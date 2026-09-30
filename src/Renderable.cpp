@@ -4,6 +4,8 @@
 #include <map>
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include <cmath>
+#include <sstream>
 #define EPSILON 0.01
 
 struct triplet {
@@ -82,19 +84,18 @@ namespace std {
 }
 
 Renderable::Renderable(std::string modelName,
-	std::string textureName,
 	std::string vertexShaderName,
-	std::string fragmentShaderName) {
-
+	std::string fragmentShaderName,
+	bool indexed) {
+	this->indexed = indexed;
 	this->modelName = modelName;
-	this->textureName = textureName;
 	this->vertexShaderName = vertexShaderName;
 	this->fragmentShaderName = fragmentShaderName;
 }
 Renderable::Renderable(std::string modelName,
-	std::string textureName) {
+	bool indexed) {
+	this->indexed = indexed;
 	modelName = modelName;
-	textureName = textureName;
 	vertexShaderName = Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
 	fragmentShaderName = Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
 }
@@ -107,6 +108,11 @@ void Renderable::index(){
 		key.first = meshVertices[i];
 		key.second = meshNormals[i];
 		key.third = meshUvs[i];
+		// we dont use material as part of the key, as it is highly unlikely that
+		// we get a vertex with same position, normal, uv but different material.
+		// and by higly i mean... well I hope you know what that means, you're 
+		// obivuosly a game programmer. Why am i writing this? Its late. I need coffe.
+	
 		// check if we already have that vertex
 		std::map<triplet, unsigned int>::iterator it = inserted.find(key);
 		if (it == inserted.end()){
@@ -114,6 +120,12 @@ void Renderable::index(){
 			indexedVertices.push_back(key.first);
 			indexedNormals.push_back(key.second);
 			indexedUvs.push_back(key.third);
+			//every three
+			//if (indexedVertices.size() % 3 == 0){
+				indexedMaterialCoords.push_back(meshMaterialCoords[i]);
+				indexedTangents.push_back(tangents[i]);
+				indexedBitangents.push_back(bitangents[i]);
+				//}
 			inserted[key] = insertedCount;
 			insertedCount++;
 		}
@@ -125,10 +137,14 @@ void Renderable::index(){
 }
 
 std::ostream& operator<<(std::ostream &strm, Renderable &a) {
+	std::stringstream texturenames;
+	for (auto pair : a.materialMap){
+		texturenames << pair.first << ', ';
+	}
 	return strm
 		<< "Renderable:[" << std::endl
 		<< "\tmodelName: " << a.modelName <<std::endl
-		<< "\ttextureName: " << a.textureName << std::endl
+		<< "\ttextureName: " << texturenames.str() << std::endl
 		<< "\tvertexShaderName: " << a.vertexShaderName << std::endl
 		<< "\tfragmentShaderName: " << a.fragmentShaderName << std::endl
 		<< "\tmodelLoaded: " << (a.modelLoaded ? "true" : "false") << std::endl

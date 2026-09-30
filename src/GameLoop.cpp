@@ -5,6 +5,7 @@
 #include <regex>
 #include <random>
 #include "SimpleRenderer.h"
+#include "FXSurfaceRenderer.h"
 #include "Scene.h"
 #define STEP 1/60
 
@@ -24,6 +25,7 @@ GameLoop::GameLoop()
 	_rendererInitialized = false;
 	_accumulator = 0;
 	_lastTime = frameTime;
+	_renderer = std::make_unique<FXSurfaceRenderer>(std::make_shared<SimpleRenderer>());
 }
 GameLoop::~GameLoop()
 {
@@ -34,7 +36,7 @@ void GameLoop::start()
 	_paused = false;
 	if (!_rendererInitialized)
 	{
-		_renderer.init();
+		_renderer->init();
 		_rendererInitialized = true;
 	}
 	while (!_paused)
@@ -66,8 +68,9 @@ void GameLoop::run()
 			//LOG("Accumulator overflow: Min: " << AggregationParam(_accumulator - STEP)
 			//	<< " Max: " << AggregationParam(_accumulator - STEP)
 			//	<< " Avg: " << AggregationParam(_accumulator - STEP));
-			_renderer.update();
-			_renderer.render(_scene);
+			_renderer->update();
+			_renderer->render(_scene);
+			_renderer->flush();
 			_scene.update(deltaTime);
 			_accumulator = 0;
 		}

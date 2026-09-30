@@ -1,13 +1,13 @@
 //
 //  GameObject.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__GameObjectIds__
-#define __OpenGLTutorial__GameObjectIds__
+#ifndef __Game10__GameObjectIds__
+#define __Game10__GameObjectIds__
 
 #include<vector>
 #include "CPPIdentifiable.h"
@@ -50,4 +50,4 @@ private:
     std::vector<int> _specialComponentIndices;
 };
 
-#endif /* defined(__OpenGLTutorial__GameObjectIds__) */
+#endif /* defined(__Game10__GameObjectIds__) */

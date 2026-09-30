@@ -1,6 +1,6 @@
 //
 //  TestModule.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 25/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
@@ -10,8 +10,8 @@
 // the macros aren't rly that complicated
 // it's just notation convenience, to be
 // able to run simple tests quickly
-#ifndef __OpenGLTutorial__TestModule__
-#define __OpenGLTutorial__TestModule__
+#ifndef __Game10__TestModule__
+#define __Game10__TestModule__
 #define assert(__EXPR__,__ERR__) if (!__EXPR__){result += TestResult(__ERR__); if (stopOnFailure) return result;}
 #define assertFormat(__EXPR__,__ERR_FRMT__,...) if (!__EXPR__){char buffer[100]; int n = sprintf(buffer,__EXPR__,...); result += TestResult(std::string(buffer,n)); if (stopOnFailure) return result;}
 #define assertEquals(__EXPR1__,__EXPR2__,__ERR__) if (__EXPR1__!=__EXPR2__){result += TestResult(__ERR__); if (stopOnFailure) return result;}
@@ -31,11 +31,10 @@
 class TestResult;
 class Testing{
 public:
-
 	static TestResult performTests(bool stopOnFailure);
 };
 class Test {
 public:
     virtual TestResult doTest(bool stopOnFailure) = 0;
 };
-#endif /* defined(__OpenGLTutorial__TestModule__) */
+#endif /* defined(__Game10__TestModule__) */

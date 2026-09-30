@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include "Config.h"
@@ -9,46 +10,61 @@
 class Renderable {
 public:
 	Renderable(std::string modelName,
-	std::string textureName,
-	std::string vertexShaderName,
-	std::string fragmentShaderName);
+		std::string vertexShaderName,
+		std::string fragmentShaderName,
+		bool indexed);
 
-	Renderable(std::string modelName,
-		std::string textureName);
+	Renderable(std::string modelName, bool indexed);
 
+	// Loading stage status bools
 	bool modelLoaded = false;
-	bool indexed = false;
 	bool textureLoaded = false;
 	bool shadersLoaded = false;
+	bool modelInitialized = false;
+	bool indexed = false;
 
 	// Metadata: where is my data, dude?
 	std::string modelName = Config::getStringProperty(DEFAULT_MODEL_FILE_NAME);
-	std::string textureName = Config::getStringProperty(DEFAULT_TEXTURE_FILE_NAME);
 	std::string vertexShaderName = Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME);
 	std::string fragmentShaderName = Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME);
 
-	// Second step- data loaded from files
+	// Plain data- contingous arrays of data
 	std::vector<glm::vec3> meshVertices;
 	std::vector<glm::vec3> meshNormals;
 	std::vector<glm::vec2> meshUvs;
+	std::vector<glm::vec3> tangents;
+	std::vector<glm::vec3> bitangents;
+	std::vector<GLint> meshMaterialCoords;
+	std::map<std::string, int> materialMap;
 
-	// Third step- index data back..
+	// This method transforms plain data
+	// into indexed data
+	void index();
+
+	// Indexed data- arrays of unique vertices,
+	// indexed with indices array
 	std::vector<unsigned int> indices;
 	std::vector<glm::vec3> indexedVertices;
 	std::vector<glm::vec3> indexedNormals;
 	std::vector<glm::vec2> indexedUvs;
+	std::vector<glm::vec3> indexedTangents;
+	std::vector<glm::vec3> indexedBitangents;
+	std::vector<GLint> indexedMaterialCoords;
 
-	unsigned int vertexCount;
-	unsigned int indexCount;
+	// Data counters
+	unsigned int vertexCount = 0;
+	unsigned int indexCount = 0;
 
-	bool modelInitialized = false;
-	// Third step- data initialized into opengl
+	// Id's of opengl data hook-ups
 	GLuint textureBufferID;
+	GLuint normalMapID;
 	GLuint indexBufferID;
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
+	GLuint materialBufferID;
+	GLuint tangentBufferID;
+	GLuint bitangentBufferID;
 	GLuint programID;
-	void index();
 };
 std::ostream& operator<<(std::ostream &strm, Renderable &a);

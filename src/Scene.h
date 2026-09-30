@@ -1,13 +1,13 @@
 //
 //  Scene.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__Scene__
-#define __OpenGLTutorial__Scene__
+#ifndef __Game10__Scene__
+#define __Game10__Scene__
 #define MAX_GAME_OBJECTS 20
 
 #include <vector>
@@ -56,4 +56,4 @@ private:
 	unsigned int lookupIndexById(unsigned int id);
 };
 
-#endif /* defined(__OpenGLTutorial__Scene__) */
+#endif /* defined(__Game10__Scene__) */

@@ -18,13 +18,15 @@ public:
     void resetShift();
 private:
 	void draw(RenderableComponent &renderable);
-
+	void SimpleRenderer::renderToFramebuffer(Scene &scene, GLuint frameBufferID, unsigned int width, unsigned int height);
 	Scene scene;
 	bool test = true;
 	// uniform ids
 	GLuint vertexArrayID;
-
-
+	//virtual frame buffer
+	GLuint fxFrameBufferID = 0;
+	GLuint fxMapID = 0;
+	//TODO: put shadowmap stuff here
 	std::shared_ptr<Camera> camera;
 
 	float testValue = 0;

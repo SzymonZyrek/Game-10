@@ -45,11 +45,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\DEV\Projects\Game10\lib\glm-0.9.4.0;C:\DEV\Projects\Game10\lib\glew-1.9.0\include;C:\DEV\Projects\Game10\lib\glfw-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib\glm-0.9.4.0;..\..\lib\glew-1.9.0\include;..\..\lib\glfw-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\DEV\Projects\Game10\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32d.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\src\CPPEventType.cpp" />
     <ClCompile Include="..\..\src\CPPIdentifiable.cpp" />
     <ClCompile Include="..\..\src\CPPLogger.cpp" />
+    <ClCompile Include="..\..\src\FXSurfaceRenderer.cpp" />
     <ClCompile Include="..\..\src\GameLoop.cpp" />
     <ClCompile Include="..\..\src\GameObject.cpp" />
     <ClCompile Include="..\..\src\GameObjectCommand.cpp" />
@@ -94,11 +95,12 @@
     <ClCompile Include="..\..\src\ModelLoader.cpp" />
     <ClCompile Include="..\..\src\PhysicalComponent.cpp" />
     <ClCompile Include="..\..\src\PhysicsUpdateCommand.cpp" />
-    <ClCompile Include="..\..\src\Playground.cpp" />
+    <ClCompile Include="..\..\src\RunPlayground.cpp" />
     <ClCompile Include="..\..\src\Renderable.cpp" />
     <ClCompile Include="..\..\src\RenderableComponent.cpp" />
     <ClCompile Include="..\..\src\RenderableUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\RenderDataLoader.cpp" />
+    <ClCompile Include="..\..\src\RunTests.cpp" />
     <ClCompile Include="..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\src\ShadersLoader.cpp" />
     <ClCompile Include="..\..\src\TestConfig.cpp" />
@@ -129,6 +131,7 @@
     <ClInclude Include="..\..\src\CPPIdentifiable.h" />
     <ClInclude Include="..\..\src\CPPLogger.h" />
     <ClInclude Include="..\..\src\CPPQueue.h" />
+    <ClInclude Include="..\..\src\FXSurfaceRenderer.h" />
     <ClInclude Include="..\..\src\GameLoop.h" />
     <ClInclude Include="..\..\src\GameObject.h" />
     <ClInclude Include="..\..\src\GameObjectCommand.h" />
@@ -139,11 +142,12 @@
     <ClInclude Include="..\..\src\ModelLoader.h" />
     <ClInclude Include="..\..\src\PhysicalComponent.h" />
     <ClInclude Include="..\..\src\PhysicsUpdateCommand.h" />
-    <ClInclude Include="..\..\src\Playground.h" />
+    <ClInclude Include="..\..\src\RunPlayground.h" />
     <ClInclude Include="..\..\src\Renderable.h" />
     <ClInclude Include="..\..\src\RenderableComponent.h" />
     <ClInclude Include="..\..\src\RenderableUpdateCommand.h" />
     <ClInclude Include="..\..\src\RenderDataLoader.h" />
+    <ClInclude Include="..\..\src\RunTests.h" />
     <ClInclude Include="..\..\src\Scene.h" />
     <ClInclude Include="..\..\src\ShadersLoader.h" />
     <ClInclude Include="..\..\src\STBImage.h" />
@@ -160,8 +164,10 @@
     <ClInclude Include="..\..\src\Win32EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\resources\shaders\DebugFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\SimplestFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\SimplestVertexShader.glsl" />
+    <None Include="..\..\resources\shaders\SkyboxFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\TextureFragmentShader.glsl" />
     <None Include="..\..\resources\shaders\TransformVertexShader.glsl" />
   </ItemGroup>

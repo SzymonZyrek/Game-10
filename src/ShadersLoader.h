@@ -10,6 +10,7 @@ public:
 	bool vertexShaderLoaded = false;
 	void loadVertexShader(std::string shaderName);
 	void loadShaderProgram(Renderable& renderable);
+	GLuint loadShaderProgram();
 	void loadFragmentShader(std::string shaderName);
 private:
 	static Logger shadersLogger;

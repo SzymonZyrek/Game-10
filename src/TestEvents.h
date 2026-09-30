@@ -1,13 +1,13 @@
 //
 //  TestEvents.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 25/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__TestEvents__
-#define __OpenGLTutorial__TestEvents__
+#ifndef __Game10__TestEvents__
+#define __Game10__TestEvents__
 
 #include "Testing.h"
 #include "CPPEventHandler.h"
@@ -38,4 +38,4 @@ public:
     TestHandler();
     virtual void handleEvent(std::shared_ptr<CPPEvent> event);
 };
-#endif /* defined(__OpenGLTutorial__TestEvents__) */
+#endif /* defined(__Game10__TestEvents__) */

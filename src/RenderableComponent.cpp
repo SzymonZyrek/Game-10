@@ -1,6 +1,6 @@
 //
 //  RenderableComponent.cpp
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
@@ -23,16 +23,19 @@ std::shared_ptr<Renderable> RenderableComponent::getRenderable() {
 }
 
 void RenderableComponent::refreshFromRenderable(){
-	this->renderable = renderable;
 	this->indexBufferId = renderable->indexBufferID;
 	this->vertexBufferID = renderable->vertexBufferID;
 	this->normalbufferID = renderable->normalbufferID;
 	this->uvBufferID = renderable->uvBufferID;
 	this->textureBufferID = renderable->textureBufferID;
+	this->normalMapID = renderable->normalMapID;
+	this->materialBufferID = renderable->materialBufferID;
 	this->programID = renderable->programID;
 	this->vertexCount = renderable->vertexCount;
 	this->indexCount = renderable->indexCount;
 	this->indexed = renderable->indexed;
+	this->tangentBufferID = renderable->tangentBufferID;
+	this->bitangentBufferID = renderable->bitangentBufferID;
 }
 void RenderableComponent::initRenderable(){
 	if (!renderable->modelLoaded){
@@ -51,9 +54,9 @@ void RenderableComponent::initRenderable(){
 				if (renderable->indexed){
 					renderable->index();
 					this->indexed = true;
-					ModelLoader loader;
-					loader.saveAsBinary(renderable->modelName, *renderable);
 				}
+				ModelLoader loader;
+				loader.saveAsBinary(renderable->modelName, *renderable);
 			}
 			catch (std::string err2){
 				std::stringstream error;
@@ -75,11 +78,16 @@ void RenderableComponent::initRenderable(){
 		}
 	}
 	if (!renderable->textureLoaded){
-		TextureLoader textureLoader(renderable->textureName);
-		textureLoader.loadTexture(*renderable);
+		TextureLoader textureLoader;
+		if (renderable->materialMap.size()<1){
+			// if no material names were loaded from file,
+			// use default texture
+			renderable->materialMap[Config::getStringProperty(DEFAULT_TEXTURE_FILE_NAME)] = 0;
+		}
+		textureLoader.loadTextures(*renderable);
 		if (!renderable->textureLoaded) {
 			std::stringstream ss;
-			ss << "Cant load texture" << renderable->textureName;
+			ss << "Cant load textures for " << renderable->modelName;
 			Log::error(ss.str());
 			return;
 		}
@@ -109,12 +117,9 @@ void RenderableComponent::initRenderable(){
 	}
 }
 
-RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed) : Component(){
+RenderableComponent::RenderableComponent(std::string modelName, std::string vertexShaderName, std::string fragmentShaderName, bool indexed) : Component(){
 	indexed = indexed;
-	this->renderable = std::make_shared<Renderable>(modelName, textureName, Config::getStringProperty(DEFAULT_VERTEX_SHADER_FILE_NAME), Config::getStringProperty(DEFAULT_FRAGMENT_SHADER_FILE_NAME));
-	if (indexed){
-		renderable->indexed = true;
-	}
+	this->renderable = std::make_shared<Renderable>(modelName, vertexShaderName, fragmentShaderName, indexed);
 	initRenderable();
 	refreshFromRenderable();
 	this->_isNullComponent = false;
@@ -178,11 +183,15 @@ void RenderableComponent::update(double dT, std::vector<RenderableUpdateCommand>
 }
 
 std::ostream& operator<<(std::ostream &strm, RenderableComponent &a) {
+	std::stringstream texturenames;
+	for (auto pair : a.getRenderable()->materialMap){
+		texturenames << pair.first << ', ';
+	}
 	return strm
 		<< "RenderableComponent:[" << std::endl
 		<< "\tgameObjectId: " << a.getGameObjectId() << std::endl
 		<< "\tmodelName: " << a.getRenderable()->modelName << std::endl
-		<< "\ttextureName: " << a.getRenderable()->textureName << std::endl
+		<< "\ttextureNames: " << texturenames.str() << std::endl
 		<< "\tvertexShaderName: " << a.getRenderable()->vertexShaderName << std::endl
 		<< "\tfragmentShaderName: " << a.getRenderable()->fragmentShaderName << std::endl
 		<< "\tmodelLoaded: " << (a.getRenderable()->modelLoaded ? "true" : "false") << std::endl

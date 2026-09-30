@@ -1,13 +1,13 @@
 //
 //  TestGameObjects.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__TestGameObjects__
-#define __OpenGLTutorial__TestGameObjects__
+#ifndef __Game10__TestGameObjects__
+#define __Game10__TestGameObjects__
 
 
 #include "Testing.h"
@@ -22,4 +22,4 @@ private:
 	static GameObject* testGameObject;
 };
 
-#endif /* defined(__OpenGLTutorial__TestGameObjects__) */
+#endif /* defined(__Game10__TestGameObjects__) */

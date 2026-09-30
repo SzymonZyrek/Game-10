@@ -1,6 +1,6 @@
 //
 //  RenderableComponent.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
@@ -23,10 +23,14 @@ public:
 	glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0);;
 	// buffer ids
 	GLuint textureBufferID;
+	GLuint normalMapID;
 	GLuint vertexBufferID;
 	GLuint uvBufferID;
 	GLuint normalbufferID;
+	GLuint materialBufferID;
 	GLuint indexBufferId;
+	GLuint tangentBufferID;
+	GLuint bitangentBufferID;
 	// shader id
 	GLuint programID;
 	// how much stuff we've got
@@ -36,7 +40,7 @@ public:
 	bool indexed = false;
 
 	RenderableComponent();
-	RenderableComponent::RenderableComponent(std::string modelName, std::string textureName, bool indexed);
+	RenderableComponent(std::string modelName, std::string vertexShaderName, std::string fragmentShaderName, bool indexed);
 	RenderableComponent(std::shared_ptr <Renderable> renderable);
 	RenderableComponent(RenderableComponent& other);
 	void setRenderable(std::shared_ptr <Renderable> renderable);

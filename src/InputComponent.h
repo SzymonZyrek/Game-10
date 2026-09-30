@@ -1,13 +1,13 @@
 //
 //  InputComponent.h
-//  OpenGLTutorial
+//  Game10
 //
 //  Created by Szymon Żyrek on 31/10/14.
 //  Copyright (c) 2014 Szymon Żyrek. All rights reserved.
 //
 
-#ifndef __OpenGLTutorial__InputComponent__
-#define __OpenGLTutorial__InputComponent__
+#ifndef __Game10__InputComponent__
+#define __Game10__InputComponent__
 
 #include "Component.h"
 #include "PhysicsUpdateCommand.h"
@@ -22,4 +22,4 @@ public:
 	void initWith(InputComponent &component);
 };
 
-#endif /* defined(__OpenGLTutorial__InputComponent__) */
+#endif /* defined(__Game10__InputComponent__) */
